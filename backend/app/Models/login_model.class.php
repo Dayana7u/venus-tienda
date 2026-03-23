@@ -1,0 +1,346 @@
+<?php
+require_once __DIR__ . '/../../config/configdb.php';
+
+class login_model {
+  private $dbh;
+  private $configuracion;
+  private $modulo = __FILE__;
+  private $datos  = [];
+  private $constante;
+  private const CONSTANTE = true;
+  public $usuario_id;
+
+  public function __construct() {
+    if (session_status() === PHP_SESSION_NONE) {
+      session_start();
+    }
+
+    $this->configuracion = configdb_obtener_configuracion();
+    $this->dbh           = configdb_obtener_conexion();
+    $this->usuario_id    = $_SESSION['admin_usuario_id'] ?? 0;
+  }
+
+  public function login_inicializar() {
+    $this->constante = self::CONSTANTE;
+    $this->datos     = [
+      'sesion_activa' => !empty($_SESSION['admin_usuario_id']),
+      'token'         => $_SESSION['admin_token'] ?? '',
+    ];
+
+    return [
+      'estado'    => true,
+      'mensaje'   => 'Inicialización correcta.',
+      'constante' => $this->constante,
+      'datos'     => $this->datos,
+    ];
+  }
+
+  public function login_autenticar($login, $clave) {
+    $stmt = null;
+
+    try {
+      $login = trim($login);
+      $clave = trim($clave);
+
+      if ($login === '' || $clave === '') {
+        return [
+          'estado'  => false,
+          'mensaje' => 'Debe ingresar usuario y clave.',
+          'datos'   => [],
+        ];
+      }
+
+      $sql = "SELECT
+"
+           . "  usuario_id,
+"
+           . "  nombres,
+"
+           . "  apellidos,
+"
+           . "  login,
+"
+           . "  correo,
+"
+           . "  sw_superusuario
+"
+           . "FROM
+"
+           . "  public.usuarios
+"
+           . "WHERE
+"
+           . "  login = :login
+"
+           . "  AND clave = :clave
+"
+           . "  AND estado = B'1'
+"
+           . "  AND borrado = B'0'
+"
+           . "LIMIT 1;";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':login', $login, PDO::PARAM_STR);
+      $stmt->bindValue(':clave', $clave, PDO::PARAM_STR);
+      $stmt->execute();
+
+      $usuario = $stmt->fetch();
+
+      if (!$usuario) {
+        return [
+          'estado'  => false,
+          'mensaje' => 'Usuario o clave incorrectos.',
+          'datos'   => [],
+        ];
+      }
+
+      session_regenerate_id(true);
+      $_SESSION['admin_usuario_id']              = (int) $usuario['usuario_id'];
+      $_SESSION['admin_usuario_login']           = $usuario['login'];
+      $_SESSION['admin_usuario_correo']          = $usuario['correo'];
+      $_SESSION['admin_usuario_nombre_completo'] = trim($usuario['nombres'] . ' ' . $usuario['apellidos']);
+      $_SESSION['admin_sw_superusuario']         = $usuario['sw_superusuario'];
+      $_SESSION['admin_roles']                   = $this->consultar_roles_usuario($usuario['usuario_id']);
+      $_SESSION['admin_token_sesion']            = bin2hex(random_bytes(32));
+
+      $this->actualizar_ultimo_ingreso($usuario['usuario_id']);
+      $this->registrar_sesion_usuario($usuario['usuario_id']);
+
+      return [
+        'estado'  => true,
+        'mensaje' => 'Ingreso realizado correctamente.',
+        'datos'   => [
+          'usuario_id'              => (int) $usuario['usuario_id'],
+          'usuario_login'           => $usuario['login'],
+          'usuario_nombre_completo' => $_SESSION['admin_usuario_nombre_completo'],
+          'roles'                   => $_SESSION['admin_roles'],
+          'redireccion'             => '../../app/Views/parametrizacion.php',
+        ],
+      ];
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log(
+        $this->modulo,
+        __FUNCTION__,
+        $e->getMessage(),
+        $login
+      );
+
+      return [
+        'estado'  => false,
+        'mensaje' => 'No fue posible validar el acceso.',
+        'datos'   => [],
+      ];
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
+  public function login_validar_sesion() {
+    if (empty($_SESSION['admin_usuario_id'])) {
+      return [
+        'estado'  => false,
+        'mensaje' => 'No existe una sesión activa.',
+        'datos'   => [],
+      ];
+    }
+
+    return [
+      'estado'  => true,
+      'mensaje' => 'Sesión activa.',
+      'datos'   => [
+        'usuario_id'              => (int) $_SESSION['admin_usuario_id'],
+        'usuario_login'           => $_SESSION['admin_usuario_login'] ?? '',
+        'usuario_nombre_completo' => $_SESSION['admin_usuario_nombre_completo'] ?? '',
+        'roles'                   => $_SESSION['admin_roles'] ?? [],
+      ],
+    ];
+  }
+
+  private function consultar_roles_usuario($usuario_id) {
+    $stmt  = null;
+    $datos = [];
+
+    try {
+      $sql = "SELECT
+"
+           . "  r.rol_id,
+"
+           . "  r.codigo,
+"
+           . "  r.nombre
+"
+           . "FROM
+"
+           . "  public.usuarios_roles ur
+"
+           . "INNER JOIN public.roles r
+"
+           . "  ON r.rol_id = ur.rol_id
+"
+           . "WHERE
+"
+           . "  ur.usuario_id = :usuario_id
+"
+           . "  AND ur.estado = B'1'
+"
+           . "  AND ur.borrado = B'0'
+"
+           . "  AND r.estado = B'1'
+"
+           . "  AND r.borrado = B'0'
+"
+           . "ORDER BY
+"
+           . "  r.rol_id ASC;";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':usuario_id', $usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      while ($registro = $stmt->fetch()) {
+        $datos[] = $registro;
+      }
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log(
+        $this->modulo,
+        __FUNCTION__,
+        $e->getMessage(),
+        (string) $usuario_id
+      );
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+
+    return $datos;
+  }
+
+  private function actualizar_ultimo_ingreso($usuario_id) {
+    $stmt = null;
+
+    try {
+      $sql = "UPDATE public.usuarios
+"
+           . "SET
+"
+           . "  ultimo_ingreso = NOW(),
+"
+           . "  usuario_modificacion = :usuario_id,
+"
+           . "  fecha_modificacion = NOW()
+"
+           . "WHERE
+"
+           . "  usuario_id = :usuario_id_actualiza;";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':usuario_id', $usuario_id, PDO::PARAM_INT);
+      $stmt->bindValue(':usuario_id_actualiza', $usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log(
+        $this->modulo,
+        __FUNCTION__,
+        $e->getMessage(),
+        (string) $usuario_id
+      );
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
+  private function registrar_sesion_usuario($usuario_id) {
+    $stmt = null;
+
+    try {
+      $sql = "INSERT INTO public.usuarios_sesiones
+"
+           . "(
+"
+           . "  usuario_id,
+"
+           . "  token,
+"
+           . "  fecha_inicio,
+"
+           . "  fecha_expiracion,
+"
+           . "  ip,
+"
+           . "  user_agent,
+"
+           . "  estado,
+"
+           . "  borrado,
+"
+           . "  usuario_creacion,
+"
+           . "  fecha_creacion
+"
+           . ")
+"
+           . "VALUES
+"
+           . "(
+"
+           . "  :usuario_id,
+"
+           . "  :token,
+"
+           . "  NOW(),
+"
+           . "  NOW() + interval '8 hours',
+"
+           . "  :ip,
+"
+           . "  :user_agent,
+"
+           . "  B'1',
+"
+           . "  B'0',
+"
+           . "  :usuario_creacion,
+"
+           . "  NOW()
+"
+           . ") RETURNING usuario_sesion_id;";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':usuario_id', $usuario_id, PDO::PARAM_INT);
+      $stmt->bindValue(':token', $_SESSION['admin_token_sesion'], PDO::PARAM_STR);
+      $stmt->bindValue(':ip', $_SERVER['REMOTE_ADDR'] ?? '', PDO::PARAM_STR);
+      $stmt->bindValue(':user_agent', $_SERVER['HTTP_USER_AGENT'] ?? '', PDO::PARAM_STR);
+      $stmt->bindValue(':usuario_creacion', $usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $resultado = $stmt->fetch();
+      $_SESSION['admin_usuario_sesion_id'] = $resultado ? (int) $resultado['usuario_sesion_id'] : 0;
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log(
+        $this->modulo,
+        __FUNCTION__,
+        $e->getMessage(),
+        (string) $usuario_id
+      );
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+}
+?>

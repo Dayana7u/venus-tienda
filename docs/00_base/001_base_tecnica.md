@@ -1,70 +1,31 @@
 # Base técnica del proyecto
 
-## Nombre del proyecto
-Tienda Virtual
+## Entorno oficial
+El proyecto tienda_virtual se trabaja sobre Docker + Ubuntu + Git como flujo oficial.
 
-## Objetivo general
-Construir una aplicación web de tienda virtual bajo arquitectura MVC, reutilizable para distintos clientes mediante parametrización visual, funcional y de integración, conservando la misma lógica de negocio.
+## Base de datos
+- motor: PostgreSQL
+- esquema transaccional y de seguridad: `public`
+- esquema de parametrización: `system`
 
-## Alcance inicial
-La primera etapa corresponde a la definición de la base técnica, la estructura documental, el orden del repositorio y el modelo de parametrización general. En esta etapa no se crean tablas definitivas ni se implementan módulos funcionales.
+## Conexión
+La conexión centralizada se maneja desde:
 
-## Arquitectura
-La aplicación se manejará bajo el patrón Modelo Vista Controlador (MVC), separando responsabilidades de acceso a datos, lógica de negocio, controladores, vistas, configuración, rutas, documentación, scripts SQL y trazabilidad técnica.
+- `backend/config/configdb.php`
 
-## Stack base aprobado
-### Backend
-- PHP
-- Arquitectura MVC
-- Manejo de logs de error
-- Manejo de configuración centralizada
-- Rutas separadas
-- Repositorios y servicios separados por responsabilidad
+## Punto de entrada actual
+Para iniciar validación en navegador se habilitó:
 
-### Frontend
-- TypeScript / Angular
-- Consumo de endpoints del backend
-- Parametrización visual mediante temas
-- Componentes reutilizables
+- `backend/index.php`
 
-### Base de datos
-- PostgreSQL
+## Flujo actual
+1. el navegador entra por `backend/index.php`
+2. si no existe sesión activa se redirecciona a `backend/app/Views/login.php`
+3. el login valida el usuario contra `public.usuarios`
+4. con sesión activa se redirecciona a `backend/app/Views/parametrizacion.php`
+5. la salida de sesión se hace desde `backend/cerrar_sesion.php`
 
-### Contenedores
-- Docker Desktop
-- WSL2
-- Ubuntu como entorno principal de trabajo
-
-### Control de versiones
-- Git
-
-## Estructura inicial del repositorio
-```text
-tienda_virtual/
-├── backend/
-│   ├── app/
-│   │   ├── Controllers/
-│   │   ├── Models/
-│   │   ├── Views/
-│   │   ├── Services/
-│   │   └── Repositories/
-│   ├── config/
-│   ├── routes/
-│   └── storage/
-│       ├── logs/
-│       └── cache/
-├── frontend/
-├── database/
-│   ├── sql/
-│   ├── migrations/
-│   └── seeds/
-├── docker/
-├── docs/
-│   ├── 00_base/
-│   ├── 01_funcional/
-│   ├── 02_bd/
-│   ├── 03_api/
-│   ├── 04_front/
-│   └── 05_cambios/
-├── .gitignore
-└── README.md
+## Observaciones
+- las tablas del esquema `system` quedan cerradas a nivel estructural en esta etapa
+- la validación visual ya puede comenzar desde el flujo de login
+- el avance siguiente debe centrarse en pruebas y ajustes funcionales del acceso y de parametrización

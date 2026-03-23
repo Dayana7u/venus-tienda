@@ -1,20 +1,38 @@
-# Tienda Virtual
+# tienda_virtual
+
+Proyecto base MVC en PHP con PostgreSQL para parametrización, acceso inicial y administración.
 
 ## Estado actual
-Proyecto en construcción sobre Docker + Ubuntu + Git.
 
-## Base implementada
-- Estructura base del repositorio.
-- SQL inicial de public y system.
-- Configuración local de PostgreSQL sobre Docker.
-- Capa base backend para system.
-- Módulo base de parametrización para consulta del esquema system.
+- Login funcional con sesión en `public.usuarios_sesiones`
+- Parametrización con CRUD base para:
+  - temas
+  - branding
+  - parámetros
+  - módulos
+  - integraciones
+  - menús
+  - roles
+  - usuarios
+- Diseño administrativo minimalista para login y parametrización
+- Login administrativo separado del acceso futuro de la tienda
+- Ajustes responsive para escritorio, tableta y móvil
+- Alertas informativas, de error y confirmación visual
+- PostgreSQL local por Docker en `docker/docker-compose.postgres.local.yml`
 
-## Flujo oficial
-- Docker Desktop
-- WSL2
-- Ubuntu
-- Git
+## SQL pendientes del flujo actual
 
-## Continuidad
-La validación en navegador se realizará cuando exista login e inicio de sesión. Mientras tanto, el avance se concentra en parametrización, backend y documentación de trazabilidad.
+1. `database/sql/001_sql_parametrizacion_base_v2.sql`
+2. `database/sql/003_sql_login_token_base.sql`
+
+## Apertura local
+
+```bash
+php -S localhost:8080 -t backend
+```
+
+Abrir:
+
+```text
+http://localhost:8080/index.php
+```

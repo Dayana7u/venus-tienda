@@ -1,83 +1,125 @@
 <?php
-if (session_status() === PHP_SESSION_NONE)
+if (session_status() === PHP_SESSION_NONE) {
   session_start();
+}
 
-if (empty($_SESSION['token']))
-  $_SESSION['token'] = bin2hex(random_bytes(32));
+if (empty($_SESSION['admin_usuario_id'])) {
+  header('Location: login.php');
+  exit;
+}
 
-$token = $_SESSION['token'];
+if (empty($_SESSION['admin_token'])) {
+  $_SESSION['admin_token'] = bin2hex(random_bytes(32));
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parametrización</title>
+  <title>Parametrización administrativa</title>
+  <link rel="stylesheet" href="../../public/assets/css/parametrizacion.css">
 </head>
-<body class="bg-light">
-  <div class="container-fluid">
-    <div class="row justify-content-center">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body px-3 px-md-4">
-            <input
-              value = "<?php echo htmlspecialchars($token, ENT_QUOTES, 'UTF-8'); ?>"
-              type  = "hidden"
-              name  = "token"
-              id    = "token"
-            >
-            <div class="card mb-3">
-              <div class="card-header bg-orange text-white px-3 p-2 text-start d-flex justify-content-start">
-                <span class="material-icons pe-1">tune</span>
-                <text>Parametrización</text>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-8 mb-3">
-                    <p class="mb-0">Consulta base del esquema system para temas, branding, parámetros, módulos, integraciones y menús.</p>
-                  </div>
-                  <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4 mb-3">
-                    <div class="d-flex gap-2 justify-content-lg-end">
-                      <button
-                        class = "btn btn-sm btn-success d-flex align-items-center"
-                        type  = "button"
-                        id    = "btn_recargar_parametrizacion"
-                      >
-                        <span class="material-icons fs-6 pe-1">refresh</span>
-                        <span>Recargar</span>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 mb-3">
-                    <div class="form-outline">
-                      <input
-                        autocomplete = "off"
-                        class        = "form-control form-control-sm"
-                        type         = "text"
-                        name         = "buscar_parametrizacion"
-                        id           = "buscar_parametrizacion"
-                      >
-                      <label class="form-label small" for="buscar_parametrizacion">Buscar</label>
-                    </div>
-                  </div>
-                  <div class="col-12 mb-3" id="div_resumen_parametrizacion"></div>
-                  <div class="col-12 mb-3" id="div_contenido_temas_parametrizacion"></div>
-                  <div class="col-12 mb-3" id="div_contenido_branding_parametrizacion"></div>
-                  <div class="col-12 mb-3" id="div_contenido_parametros_parametrizacion"></div>
-                  <div class="col-12 mb-3" id="div_contenido_modulos_parametrizacion"></div>
-                  <div class="col-12 mb-3" id="div_contenido_integraciones_parametrizacion"></div>
-                  <div class="col-12 mb-3" id="div_contenido_menus_parametrizacion"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+<body>
+  <input type="hidden" id="token" value="<?php echo htmlspecialchars($_SESSION['admin_token'], ENT_QUOTES, 'UTF-8'); ?>">
+
+  <main class="dx_layout">
+    <aside class="dx_sidebar" id="dx_sidebar_parametrizacion">
+      <div class="dx_sidebar_encabezado">
+        <span class="dx_sidebar_badge">Administración</span>
+        <h1>Parametrización</h1>
+        <p>Gestión base del proyecto, acceso administrativo y configuración inicial.</p>
+      </div>
+
+      <nav class="dx_sidebar_nav" id="dx_sidebar_nav_parametrizacion">
+        <a href="#seccion_temas" data-menu-link="true">Temas</a>
+        <a href="#seccion_branding" data-menu-link="true">Branding</a>
+        <a href="#seccion_parametros" data-menu-link="true">Parámetros</a>
+        <a href="#seccion_modulos" data-menu-link="true">Módulos</a>
+        <a href="#seccion_integraciones" data-menu-link="true">Integraciones</a>
+        <a href="#seccion_menus" data-menu-link="true">Menús</a>
+        <a href="#seccion_roles" data-menu-link="true">Roles</a>
+        <a href="#seccion_usuarios" data-menu-link="true">Usuarios</a>
+      </nav>
+    </aside>
+
+    <button type="button" id="btn_menu_parametrizacion" class="dx_menu_movil" aria-label="Abrir menú">Menú</button>
+    <div id="dx_sidebar_backdrop" class="dx_sidebar_backdrop dx_oculto"></div>
+
+    <section class="dx_contenido">
+      <header class="dx_header">
+        <div class="dx_header_identidad">
+          <p class="dx_header_etiqueta">Usuario activo</p>
+          <h2><?php echo htmlspecialchars($_SESSION['admin_usuario_nombre_completo'] ?? 'Administrador', ENT_QUOTES, 'UTF-8'); ?></h2>
+          
         </div>
+
+        <div class="dx_header_acciones">
+          <input type="text" id="buscar_parametrizacion" placeholder="Buscar registros" autocomplete="off">
+          <button type="button" id="btn_recargar_parametrizacion" class="dx_btn dx_btn_secundario">Recargar</button>
+          <a href="../../cerrar_sesion.php" class="dx_btn dx_btn_principal">Cerrar sesión</a>
+        </div>
+      </header>
+
+      <section id="div_mensaje_parametrizacion" class="dx_mensajes" aria-live="polite"></section>
+      <section id="div_resumen_parametrizacion" class="dx_resumen"></section>
+
+      <section id="div_secciones_parametrizacion" class="dx_secciones">
+        <div id="seccion_temas"></div>
+        <div id="seccion_branding"></div>
+        <div id="seccion_parametros"></div>
+        <div id="seccion_modulos"></div>
+        <div id="seccion_integraciones"></div>
+        <div id="seccion_menus"></div>
+        <div id="seccion_roles"></div>
+        <div id="seccion_usuarios"></div>
+      </section>
+    </section>
+  </main>
+
+  <section id="panel_formulario_parametrizacion" class="dx_panel_formulario dx_oculto" aria-hidden="true">
+    <div class="dx_panel_backdrop" id="btn_cerrar_panel_backdrop"></div>
+
+    <div class="dx_panel_contenido">
+      <div class="dx_panel_encabezado">
+        <div>
+          <p class="dx_header_etiqueta" id="texto_panel_seccion">Formulario</p>
+          <h3 id="titulo_panel_parametrizacion">Nuevo registro</h3>
+        </div>
+
+        <button type="button" id="btn_cerrar_panel_parametrizacion" class="dx_btn dx_btn_secundario">Cerrar</button>
+      </div>
+
+      <form id="formulario_parametrizacion" class="dx_formulario" autocomplete="off">
+        <input type="hidden" id="form_seccion" name="seccion" value="">
+        <input type="hidden" id="form_registro_id" name="registro_id" value="">
+        <div id="div_campos_parametrizacion" class="dx_campos"></div>
+
+        <div class="dx_formulario_acciones">
+          <button type="submit" id="btn_guardar_parametrizacion" class="dx_btn dx_btn_principal">Guardar</button>
+          <button type="button" id="btn_limpiar_parametrizacion" class="dx_btn dx_btn_secundario">Limpiar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section id="modal_confirmacion_parametrizacion" class="dx_modal_confirmacion dx_oculto" aria-hidden="true">
+    <div class="dx_modal_backdrop" id="btn_cancelar_confirmacion_backdrop"></div>
+
+    <div class="dx_modal_contenido">
+      <p class="dx_header_etiqueta">Confirmación</p>
+      <h3 id="titulo_confirmacion_parametrizacion">Confirmar acción</h3>
+      <p id="texto_confirmacion_parametrizacion">¿Desea continuar con la acción seleccionada?</p>
+
+      <div class="dx_modal_acciones">
+        <button type="button" id="btn_cancelar_confirmacion_parametrizacion" class="dx_btn dx_btn_secundario">Cancelar</button>
+        <button type="button" id="btn_confirmar_parametrizacion" class="dx_btn dx_btn_principal">Confirmar</button>
       </div>
     </div>
-  </div>
+  </section>
 
-  <script src="../../public/assets/js/parametrizacion_peticiones.js"></script>
   <script src="../../public/assets/js/parametrizacion_template.js"></script>
+  <script src="../../public/assets/js/parametrizacion_peticiones.js"></script>
   <script src="../../public/assets/js/parametrizacion.js"></script>
 </body>
 </html>

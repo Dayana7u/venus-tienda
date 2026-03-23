@@ -1,177 +1,121 @@
-const URL_CONTROLADOR_PARAMETRIZACION = `../../app/Controllers/parametrizacion_controller.php`;
+let par_pet = {};
+// Datos generales
+  par_pet.controlador = `../../app/Controllers/parametrizacion_controller.php`;
 /**
- * Función encargada de realizar la petición POST al controlador del módulo
+ * Función encargada de realizar peticiones POST al controlador parametrización
  *
- * @param      string  accion       Acción a ejecutar en el controlador
- * @param      string  token_param  Token de seguridad de la sesión
+ * @param      string  accion      Acción a ejecutar
+ * @param      object  parametros  Parámetros de la petición
  *
- * @return     object  Respuesta del controlador
+ * @return     object  Resultado de la petición
  */
-const parametrizacion_peticion_fetch = async function(accion, token_param) {
-  let params = {
-    accion : accion,
-    token  : token_param,
-  };
-  let peticion = null;
+async function parametrizacion_peticion_post(accion, parametros = {}) {
+  const form_data = new FormData();
 
-  if (typeof petición_fetch === `function`) {
-    peticion = await petición_fetch(URL_CONTROLADOR_PARAMETRIZACION, params);
+  form_data.append(`accion`, accion);
 
-    if (typeof validar_estado_peticion_ajax === `function`)
-      validar_estado_peticion_ajax(peticion);
+  Object.keys(parametros).forEach(function(key) {
+    form_data.append(key, parametros[key]);
+  });
 
-    return peticion;
+  try {
+    const peticion = await fetch(par_pet.controlador, {
+      method : `POST`,
+      body   : form_data
+    });
+
+    return await peticion.json();
   }
+  catch (error) {
+    return {
+      estado  : false,
+      mensaje : `No fue posible completar la petición de parametrización.`,
+      datos   : [],
+    };
+  }
+}
+/**
+ * Función encargada de inicializar el módulo parametrización
+ *
+ * @param      string  token  Token de la sesión
+ *
+ * @return     object  Resultado de la petición
+ */
+async function parametrizacion_inicializar_peticiones(token) {
+  const params = {token};
+  let peticion = await parametrizacion_peticion_post(`parametrizacion_inicializar`, params);
+  return peticion;
+}
+/**
+ * Función encargada de consultar un registro puntual
+ *
+ * @param      string   token       Token de la sesión
+ * @param      string   seccion     Sección del registro
+ * @param      integer  registro_id Identificador del registro
+ *
+ * @return     object  Resultado de la petición
+ */
+async function parametrizacion_consultar_registro_peticiones(token, seccion, registro_id) {
+  const params = {
+    token,
+    seccion,
+    registro_id
+  };
+  let peticion = await parametrizacion_peticion_post(`parametrizacion_consultar_registro`, params);
+  return peticion;
+}
+/**
+ * Función encargada de guardar un registro
+ *
+ * @param      string  token       Token de la sesión
+ * @param      object  parametros  Datos del formulario
+ *
+ * @return     object  Resultado de la petición
+ */
+async function parametrizacion_guardar_registro_peticiones(token, parametros) {
+  const params = {
+    token,
+    ...parametros
+  };
+  let peticion = await parametrizacion_peticion_post(`parametrizacion_guardar_registro`, params);
+  return peticion;
+}
+/**
+ * Función encargada de cambiar el estado de un registro
+ *
+ * @param      string   token       Token de la sesión
+ * @param      string   seccion     Sección del registro
+ * @param      integer  registro_id Identificador del registro
+ * @param      string   estado      Estado a aplicar
+ *
+ * @return     object  Resultado de la petición
+ */
+async function parametrizacion_cambiar_estado_registro_peticiones(token, seccion, registro_id, estado) {
+  const params = {
+    token,
+    seccion,
+    registro_id,
+    estado
+  };
+  let peticion = await parametrizacion_peticion_post(`parametrizacion_cambiar_estado_registro`, params);
+  return peticion;
+}
 
-  const formulario = new FormData();
-  Object.keys(params).forEach(function(parametro) {
-    formulario.append(parametro, params[parametro]);
-  });
-
-  peticion = await fetch(URL_CONTROLADOR_PARAMETRIZACION, {
-    method : `POST`,
-    body   : formulario,
-  });
-
-  return await peticion.json();
-};
 /**
- * Función encargada de consultar la información inicial del módulo
+ * Función encargada de borrar un registro
  *
- * @param      string  token_param  Token de seguridad de la sesión
+ * @param      string   token       Token de la sesión
+ * @param      string   seccion     Sección del registro
+ * @param      integer  registro_id Identificador del registro
  *
- * @return     object  Respuesta con la información inicial del módulo
+ * @return     object  Resultado de la petición
  */
-const parametrizacion_inicializar_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_inicializar`, token_param);
-};
-/**
- * Función encargada de consultar el listado de temas
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_temas_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_temas`, token_param);
-};
-/**
- * Función encargada de consultar el listado de tokens de temas
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_tema_tokens_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_tema_tokens`, token_param);
-};
-/**
- * Función encargada de consultar el listado de componentes de temas
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_tema_componentes_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_tema_componentes`, token_param);
-};
-/**
- * Función encargada de consultar el listado de branding
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_branding_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_branding`, token_param);
-};
-/**
- * Función encargada de consultar el listado de grupos de parámetros
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_parametro_grupos_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_parametro_grupos`, token_param);
-};
-/**
- * Función encargada de consultar el listado de parámetros
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_parametros_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_parametros`, token_param);
-};
-/**
- * Función encargada de consultar el listado de valores de parámetros
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_parametro_valores_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_parametro_valores`, token_param);
-};
-/**
- * Función encargada de consultar el listado de módulos
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_modulos_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_modulos`, token_param);
-};
-/**
- * Función encargada de consultar el listado de configuraciones de módulos
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_modulo_configuraciones_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_modulo_configuraciones`, token_param);
-};
-/**
- * Función encargada de consultar el listado de integraciones
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_integraciones_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_integraciones`, token_param);
-};
-/**
- * Función encargada de consultar el listado de configuraciones de integraciones
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_integracion_configuraciones_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_integracion_configuraciones`, token_param);
-};
-/**
- * Función encargada de consultar el listado de plantillas
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_plantillas_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_plantillas`, token_param);
-};
-/**
- * Función encargada de consultar el listado de menús
- *
- * @param      string  token_param  Token de seguridad de la sesión
- *
- * @return     object  Respuesta con el listado consultado
- */
-const parametrizacion_listar_menus_peticiones = async function(token_param) {
-  return await parametrizacion_peticion_fetch(`parametrizacion_listar_menus`, token_param);
-};
+async function parametrizacion_borrar_registro_peticiones(token, seccion, registro_id) {
+  const params = {
+    token,
+    seccion,
+    registro_id
+  };
+  let peticion = await parametrizacion_peticion_post(`parametrizacion_borrar_registro`, params);
+  return peticion;
+}

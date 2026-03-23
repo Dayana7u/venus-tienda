@@ -1,12 +1,22 @@
 <?php
-if (session_status() === PHP_SESSION_NONE)
+if (session_status() === PHP_SESSION_NONE) {
   session_start();
+}
 
 header('Content-Type: application/json; charset=UTF-8');
 
+if (empty($_SESSION['admin_usuario_id'])) {
+  echo json_encode([
+    'estado'  => false,
+    'mensaje' => 'Sesión no válida.',
+    'datos'   => [],
+  ]);
+  exit;
+}
+
 $token = $_POST['token'] ?? '';
 
-if (empty($_SESSION['token']) || $_SESSION['token'] !== $token) {
+if (empty($_SESSION['admin_token']) || $_SESSION['admin_token'] !== $token) {
   echo json_encode([
     'estado'  => false,
     'mensaje' => 'Token inválido.',
@@ -25,56 +35,30 @@ switch ($accion) {
     echo json_encode($model->parametrizacion_inicializar());
     break;
 
-  case 'parametrizacion_listar_temas':
-    echo json_encode($model->parametrizacion_listar_temas());
+  case 'parametrizacion_consultar_registro':
+    $seccion     = $_POST['seccion'] ?? '';
+    $registro_id = (int) ($_POST['registro_id'] ?? 0);
+
+    echo json_encode($model->parametrizacion_consultar_registro($seccion, $registro_id));
     break;
 
-  case 'parametrizacion_listar_tema_tokens':
-    echo json_encode($model->parametrizacion_listar_tema_tokens());
+  case 'parametrizacion_guardar_registro':
+    $seccion = $_POST['seccion'] ?? '';
+    echo json_encode($model->parametrizacion_guardar_registro($seccion, $_POST));
     break;
 
-  case 'parametrizacion_listar_tema_componentes':
-    echo json_encode($model->parametrizacion_listar_tema_componentes());
-    break;
+  case 'parametrizacion_cambiar_estado_registro':
+    $seccion     = $_POST['seccion'] ?? '';
+    $registro_id = (int) ($_POST['registro_id'] ?? 0);
+    $estado      = $_POST['estado'] ?? '0';
 
-  case 'parametrizacion_listar_branding':
-    echo json_encode($model->parametrizacion_listar_branding());
+    echo json_encode($model->parametrizacion_cambiar_estado_registro($seccion, $registro_id, $estado));
     break;
+  case 'parametrizacion_borrar_registro':
+    $seccion     = $_POST['seccion'] ?? '';
+    $registro_id = (int) ($_POST['registro_id'] ?? 0);
 
-  case 'parametrizacion_listar_parametro_grupos':
-    echo json_encode($model->parametrizacion_listar_parametro_grupos());
-    break;
-
-  case 'parametrizacion_listar_parametros':
-    echo json_encode($model->parametrizacion_listar_parametros());
-    break;
-
-  case 'parametrizacion_listar_parametro_valores':
-    echo json_encode($model->parametrizacion_listar_parametro_valores());
-    break;
-
-  case 'parametrizacion_listar_modulos':
-    echo json_encode($model->parametrizacion_listar_modulos());
-    break;
-
-  case 'parametrizacion_listar_modulo_configuraciones':
-    echo json_encode($model->parametrizacion_listar_modulo_configuraciones());
-    break;
-
-  case 'parametrizacion_listar_integraciones':
-    echo json_encode($model->parametrizacion_listar_integraciones());
-    break;
-
-  case 'parametrizacion_listar_integracion_configuraciones':
-    echo json_encode($model->parametrizacion_listar_integracion_configuraciones());
-    break;
-
-  case 'parametrizacion_listar_plantillas':
-    echo json_encode($model->parametrizacion_listar_plantillas());
-    break;
-
-  case 'parametrizacion_listar_menus':
-    echo json_encode($model->parametrizacion_listar_menus());
+    echo json_encode($model->parametrizacion_borrar_registro($seccion, $registro_id));
     break;
 
   default:

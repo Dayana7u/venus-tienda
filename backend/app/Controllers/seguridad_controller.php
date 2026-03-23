@@ -3,7 +3,18 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
+header('Content-Type: application/json; charset=UTF-8');
+
 $token = $_POST['token'] ?? '';
+
+if (empty($_SESSION['usuario_id'])) {
+  echo json_encode([
+    'estado'  => false,
+    'mensaje' => 'Sesión no válida.',
+    'datos'   => [],
+  ]);
+  exit;
+}
 
 if (empty($_SESSION['token']) || $_SESSION['token'] !== $token) {
   echo json_encode([
@@ -16,7 +27,7 @@ if (empty($_SESSION['token']) || $_SESSION['token'] !== $token) {
 
 require_once __DIR__ . '/../Models/seguridad_model.class.php';
 
-$model = new seguridad_model();
+$model  = new seguridad_model();
 $accion = $_POST['accion'] ?? '';
 
 switch ($accion) {
@@ -44,3 +55,4 @@ switch ($accion) {
     ]);
     break;
 }
+?>

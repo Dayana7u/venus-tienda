@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/configdb.php';
+
 class seguridad_model {
   private $dbh;
   private $configuracion;
@@ -8,33 +9,37 @@ class seguridad_model {
   private $constante;
   private const CONSTANTE = true;
   public  $usuario_id;
+
   /**
    * Método constructor.
    */
   public function __construct() {
-    if (session_status() === PHP_SESSION_NONE)
+    if (session_status() === PHP_SESSION_NONE) {
       session_start();
+    }
 
     $this->configuracion = configdb_obtener_configuracion();
     $this->dbh           = configdb_obtener_conexion();
     $this->usuario_id    = $_SESSION['usuario_id'] ?? 0;
   }
   /**
-   * Método encargado de inicializar el módulo de seguridad.
+   * Método encargado de inicializar el módulo seguridad.
    *
-   * @return     array  Arreglo con la información inicial.
+   * @return     array  Arreglo con la información inicial del módulo.
    */
   public function seguridad_inicializar() {
     $this->constante = self::CONSTANTE;
     $this->datos     = [
-      'usuarios' => $this->seguridad_listar_usuarios()['datos'],
-      'roles'    => $this->seguridad_listar_roles()['datos'],
-      'permisos' => $this->seguridad_listar_permisos()['datos'],
+      'tablas' => [
+        'usuarios',
+        'roles',
+        'permisos'
+      ],
     ];
 
     return [
       'estado'    => true,
-      'mensaje'   => 'El módulo de seguridad fue inicializado correctamente.',
+      'mensaje'   => 'Inicialización correcta.',
       'constante' => $this->constante,
       'datos'     => $this->datos,
     ];
@@ -45,7 +50,7 @@ class seguridad_model {
    * @return     array  Arreglo con el resultado de la consulta.
    */
   public function seguridad_listar_usuarios() {
-    return $this->consultar_listado_simple('public.usuarios', 'usuario_id');
+    return $this->consultar_listado_simple('public.usuarios');
   }
   /**
    * Método encargado de consultar los roles.
@@ -53,7 +58,7 @@ class seguridad_model {
    * @return     array  Arreglo con el resultado de la consulta.
    */
   public function seguridad_listar_roles() {
-    return $this->consultar_listado_simple('public.roles', 'rol_id');
+    return $this->consultar_listado_simple('public.roles');
   }
   /**
    * Método encargado de consultar los permisos.
@@ -61,34 +66,21 @@ class seguridad_model {
    * @return     array  Arreglo con el resultado de la consulta.
    */
   public function seguridad_listar_permisos() {
-    return $this->consultar_listado_simple('public.permisos', 'permiso_id');
+    return $this->consultar_listado_simple('public.permisos');
   }
   /**
-   * Método encargado de consultar listados simples del esquema public.
+   * Método encargado de consultar listados simples.
    *
-   * @param      string  $tabla        Nombre completo de la tabla.
-   * @param      string  $campo_orden  Campo de orden principal.
+   * @param      string  $tabla  Nombre completo de la tabla.
    *
    * @return     array  Arreglo con el resultado de la consulta.
    */
-  private function consultar_listado_simple($tabla, $campo_orden) {
-    $sql = "SELECT
-"
-         . "  *
-"
-         . "FROM
-"
-         . "  {$tabla}
-"
-         . "WHERE
-"
-         . "  estado  = B'1'
-"
-         . "  AND borrado = B'0'
-"
-         . "ORDER BY
-"
-         . "  {$campo_orden} ASC;";
+  private function consultar_listado_simple($tabla) {
+    $sql = "SELECT *\n"
+         . "FROM\n"
+         . "  {$tabla}\n"
+         . "ORDER BY\n"
+         . "  1 ASC;";
 
     return $this->ejecutar_consulta($sql);
   }
@@ -96,7 +88,7 @@ class seguridad_model {
    * Método encargado de ejecutar la consulta recibida.
    *
    * @param      string  $sql         Consulta SQL a ejecutar.
-   * @param      array   $parametros  Parámetros de la consulta.
+   * @param      array   $parametros  Parámetros para la consulta.
    *
    * @return     array  Arreglo con el resultado de la consulta.
    */
@@ -106,12 +98,12 @@ class seguridad_model {
 
     try {
       $stmt = $this->dbh->prepare($sql);
-      foreach ($parametros as $parametro => $valor)
-        $stmt->bindValue($parametro, $valor, PDO::PARAM_STR);
+      $this->gestionar_parametros_consulta($stmt, $parametros);
       $stmt->execute();
 
-      while ($registro = $stmt->fetch())
+      while ($registro = $stmt->fetch()) {
         $datos[] = $registro;
+      }
 
       return [
         'estado'  => true,
@@ -129,13 +121,25 @@ class seguridad_model {
 
       return [
         'estado'  => false,
-        'mensaje' => 'No fue posible consultar la información de seguridad.',
+        'mensaje' => 'No fue posible consultar la información.',
         'datos'   => [],
       ];
     }
     finally {
-      if ($stmt)
+      if ($stmt) {
         $stmt = null;
+      }
+    }
+  }
+  /**
+   * Método encargado de asociar los parámetros de la consulta.
+   *
+   * @param      PDOStatement  $stmt        Sentencia preparada.
+   * @param      array         $parametros  Parámetros de la consulta.
+   */
+  private function gestionar_parametros_consulta(&$stmt, $parametros) {
+    foreach ($parametros as $parametro => $valor) {
+      $stmt->bindValue($parametro, $valor, PDO::PARAM_STR);
     }
   }
 }

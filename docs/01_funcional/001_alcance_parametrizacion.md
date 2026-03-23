@@ -92,5 +92,5 @@ No se parametrizarán en esta etapa:
 ## Resultado esperado
 La parametrización deberá permitir reutilizar la aplicación en otros clientes cambiando configuración, identidad visual, integraciones y módulos habilitados, sin alterar la lógica central ni romper la estructura base.
 
-## Estado del alcance
-El alcance aquí descrito corresponde a la definición base de parametrización ya aterrizada en tablas del esquema system. En esta etapa no se proyectan más cambios estructurales sobre dichas tablas; el siguiente frente de trabajo se centra en código, documentación y continuidad técnica.
+## Estado actual del alcance
+Actualmente el módulo base de parametrización ya consulta visualmente las tablas principales del esquema `system`, con separación entre vista, peticiones, template y lógica principal de JavaScript. El siguiente frente corresponde a formularios, validaciones y operaciones CRUD por sección.

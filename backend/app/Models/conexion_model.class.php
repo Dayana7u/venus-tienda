@@ -12,7 +12,7 @@ class conexion_model {
   private $charset;
   private $ruta_log;
   private $contexto = [];
-  private const CONSTANTE = 'constante';
+  private const constante = 'constante';
   private $constante;
   public $usuario_id;
   /**
@@ -26,7 +26,7 @@ class conexion_model {
    * Método encargado de inicializar las variables del módulo
    */
   private function inicializar_variables() {
-    $constante        = self::CONSTANTE;
+    $constante        = self::constante;
     $this->$constante = false;
     $this->host       = APP_DB_HOST;
     $this->puerto     = APP_DB_PORT;

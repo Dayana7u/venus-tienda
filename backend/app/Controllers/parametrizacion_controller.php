@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE)
   session_start();
 
-header('Content-Type: application/json; charset=UTF-8');
+header('Content-Type: application/json; charset=utf-8');
 
 $token = $_POST['token'] ?? '';
 
@@ -11,42 +11,70 @@ if (empty($_SESSION['token']) || $_SESSION['token'] !== $token) {
     'estado'  => false,
     'mensaje' => 'Token inválido.',
     'datos'   => []
-  ], JSON_UNESCAPED_UNICODE);
+  ]);
   exit;
 }
 
 require_once __DIR__ . '/../Models/parametrizacion_model.class.php';
 
-$model  = new parametrizacion_model();
-$accion = $_POST['accion'] ?? '';
+$parametrizacion = new parametrizacion_model();
+$accion          = $_POST['accion'] ?? '';
 
 switch ($accion) {
   case 'parametrizacion_inicializar':
-    echo json_encode($model->parametrizacion_inicializar(), JSON_UNESCAPED_UNICODE);
+    echo json_encode($parametrizacion->parametrizacion_inicializar());
     break;
 
   case 'parametrizacion_listar_temas':
-    echo json_encode($model->parametrizacion_listar_temas(), JSON_UNESCAPED_UNICODE);
+    echo json_encode($parametrizacion->parametrizacion_listar_temas());
+    break;
+
+  case 'parametrizacion_listar_tema_tokens':
+    echo json_encode($parametrizacion->parametrizacion_listar_tema_tokens());
+    break;
+
+  case 'parametrizacion_listar_tema_componentes':
+    echo json_encode($parametrizacion->parametrizacion_listar_tema_componentes());
     break;
 
   case 'parametrizacion_listar_branding':
-    echo json_encode($model->parametrizacion_listar_branding(), JSON_UNESCAPED_UNICODE);
+    echo json_encode($parametrizacion->parametrizacion_listar_branding());
+    break;
+
+  case 'parametrizacion_listar_parametro_grupos':
+    echo json_encode($parametrizacion->parametrizacion_listar_parametro_grupos());
     break;
 
   case 'parametrizacion_listar_parametros':
-    echo json_encode($model->parametrizacion_listar_parametros(), JSON_UNESCAPED_UNICODE);
+    echo json_encode($parametrizacion->parametrizacion_listar_parametros());
+    break;
+
+  case 'parametrizacion_listar_parametro_valores':
+    echo json_encode($parametrizacion->parametrizacion_listar_parametro_valores());
     break;
 
   case 'parametrizacion_listar_modulos':
-    echo json_encode($model->parametrizacion_listar_modulos(), JSON_UNESCAPED_UNICODE);
+    echo json_encode($parametrizacion->parametrizacion_listar_modulos());
+    break;
+
+  case 'parametrizacion_listar_modulo_configuraciones':
+    echo json_encode($parametrizacion->parametrizacion_listar_modulo_configuraciones());
     break;
 
   case 'parametrizacion_listar_integraciones':
-    echo json_encode($model->parametrizacion_listar_integraciones(), JSON_UNESCAPED_UNICODE);
+    echo json_encode($parametrizacion->parametrizacion_listar_integraciones());
+    break;
+
+  case 'parametrizacion_listar_integracion_configuraciones':
+    echo json_encode($parametrizacion->parametrizacion_listar_integracion_configuraciones());
+    break;
+
+  case 'parametrizacion_listar_plantillas':
+    echo json_encode($parametrizacion->parametrizacion_listar_plantillas());
     break;
 
   case 'parametrizacion_listar_menus':
-    echo json_encode($model->parametrizacion_listar_menus(), JSON_UNESCAPED_UNICODE);
+    echo json_encode($parametrizacion->parametrizacion_listar_menus());
     break;
 
   default:
@@ -54,7 +82,7 @@ switch ($accion) {
       'estado'  => false,
       'mensaje' => 'Acción no válida.',
       'datos'   => []
-    ], JSON_UNESCAPED_UNICODE);
+    ]);
     break;
 }
 ?>

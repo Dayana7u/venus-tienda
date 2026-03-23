@@ -1,14 +1,14 @@
+const token = document.getElementById('token').value;
+
 const seguridad = {
-  token: document.getElementById('token').value,
-  constante: false,
-  usuarios: [],
-  roles: [],
-  permisos: [],
   btn_recargar_seguridad: document.getElementById('btn_recargar_seguridad'),
   div_contenido_permisos_seguridad: document.getElementById('div_contenido_permisos_seguridad'),
   div_contenido_roles_seguridad: document.getElementById('div_contenido_roles_seguridad'),
   div_contenido_usuarios_seguridad: document.getElementById('div_contenido_usuarios_seguridad'),
-  input_buscar_seguridad: document.getElementById('buscar_seguridad')
+  input_buscar_seguridad: document.getElementById('buscar_seguridad'),
+  permisos: [],
+  roles: [],
+  usuarios: [],
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -16,22 +16,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 /**
- * Método encargado de inicializar el módulo de seguridad y cargar su información base.
+ * Inicializa el módulo seguridad y carga su información base.
  *
  * @returns {Promise<void>}
  */
 const inicializar_seguridad = async function inicializar_seguridad() {
-  const petición = await seguridad_inicializar_peticiones(seguridad.token);
-
-  if (petición.estado)
-    seguridad.constante = Boolean(petición.datos.constante);
-
+  await seguridad_inicializar_peticiones(token);
   await listar_seguridad();
   eventos_seguridad();
 };
 
 /**
- * Método encargado de registrar los eventos principales del módulo.
+ * Registra los eventos principales del módulo.
+ *
+ * @returns {void}
  */
 const eventos_seguridad = function eventos_seguridad() {
   seguridad.btn_recargar_seguridad.addEventListener('click', async () => {
@@ -44,7 +42,7 @@ const eventos_seguridad = function eventos_seguridad() {
 };
 
 /**
- * Método encargado de consultar los listados base del módulo de seguridad.
+ * Consulta los listados base del módulo seguridad.
  *
  * @returns {Promise<void>}
  */
@@ -52,22 +50,24 @@ const listar_seguridad = async function listar_seguridad() {
   const [
     usuarios_resultado,
     roles_resultado,
-    permisos_resultado
+    permisos_resultado,
   ] = await Promise.all([
-    seguridad_listar_usuarios_peticiones(seguridad.token),
-    seguridad_listar_roles_peticiones(seguridad.token),
-    seguridad_listar_permisos_peticiones(seguridad.token)
+    seguridad_listar_usuarios_peticiones(token),
+    seguridad_listar_roles_peticiones(token),
+    seguridad_listar_permisos_peticiones(token),
   ]);
 
   seguridad.usuarios = usuarios_resultado.datos || [];
-  seguridad.roles    = roles_resultado.datos || [];
+  seguridad.roles = roles_resultado.datos || [];
   seguridad.permisos = permisos_resultado.datos || [];
 
   renderizar_seguridad();
 };
 
 /**
- * Método encargado de renderizar la información del módulo de seguridad.
+ * Renderiza la información del módulo seguridad.
+ *
+ * @returns {void}
  */
 const renderizar_seguridad = function renderizar_seguridad() {
   const texto_busqueda = seguridad.input_buscar_seguridad.value.trim().toLowerCase();
@@ -87,19 +87,19 @@ const renderizar_seguridad = function renderizar_seguridad() {
 };
 
 /**
- * Método encargado de filtrar un listado según el texto recibido.
+ * Filtra un listado de datos según el texto ingresado.
  *
- * @param      {Array}   datos            Datos a filtrar.
- * @param      {string}  texto_busqueda   Texto de búsqueda aplicado al listado.
- *
- * @returns    {Array}   Arreglo con los datos filtrados.
+ * @param array datos Datos a filtrar.
+ * @param string texto_busqueda Texto de búsqueda aplicado al listado.
+ * @returns {array}
  */
 const filtrar_seguridad_datos = function filtrar_seguridad_datos(
   datos,
   texto_busqueda
 ) {
-  if (texto_busqueda === '')
+  if (texto_busqueda === '') {
     return datos;
+  }
 
   return datos.filter((item) => {
     const valor = JSON.stringify(item).toLowerCase();
@@ -109,25 +109,25 @@ const filtrar_seguridad_datos = function filtrar_seguridad_datos(
 };
 
 /**
- * Método encargado de construir la tabla HTML de un listado.
+ * Construye la tabla HTML para un listado.
  *
- * @param      {Array}   datos           Datos a renderizar.
- * @param      {string}  mensaje_vacio   Mensaje a mostrar cuando no existan datos.
- *
- * @returns    {string}  HTML del listado.
+ * @param array datos Datos a renderizar.
+ * @param string mensaje_vacio Mensaje a mostrar cuando no existan datos.
+ * @returns {string}
  */
 const template_seguridad_tabla = function template_seguridad_tabla(
   datos,
   mensaje_vacio
 ) {
-  if (datos.length === 0)
+  if (datos.length === 0) {
     return `<p>${mensaje_vacio}</p>`;
+  }
 
-  const columnas   = Object.keys(datos[0]);
+  const columnas = Object.keys(datos[0]);
   const encabezado = columnas
     .map((columna) => `<th>${columna}</th>`)
     .join('');
-  const filas      = datos
+  const filas = datos
     .map((item) => {
       const celdas = columnas
         .map((columna) => `<td>${item[columna] ?? ''}</td>`)

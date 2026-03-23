@@ -24,5 +24,5 @@
 - bitacora_cambios
 - logs_aplicacion
 
-## Ajustes posteriores
-- `002_sql_ajuste_columna_accion_parametrizacion.sql`
+## Estado actual
+Se evidencia que, las tablas del esquema system quedan cerradas a nivel estructural en esta etapa y el avance siguiente se concentra en código, peticiones, vistas y trazabilidad documental.

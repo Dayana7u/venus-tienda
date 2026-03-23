@@ -9,7 +9,6 @@ La aplicación corresponderá a una sola tienda base, reutilizable para otros cl
 ## Componentes parametrizables
 ### 1. Identidad visual
 Deberá poder parametrizarse como mínimo:
-
 - nombre comercial
 - logo principal
 - logo alterno
@@ -25,7 +24,6 @@ Deberá poder parametrizarse como mínimo:
 
 ### 2. Temas visuales
 La aplicación deberá permitir manejar temas para modificar la apariencia general sin alterar la lógica base. Los temas deberán cubrir, como mínimo:
-
 - paleta de colores
 - fuentes
 - tamaños
@@ -39,7 +37,6 @@ La aplicación deberá permitir manejar temas para modificar la apariencia gener
 
 ### 3. Parámetros funcionales
 Deberán poder configurarse sin tocar código aspectos como:
-
 - datos generales del negocio
 - moneda
 - idioma
@@ -54,7 +51,6 @@ Deberán poder configurarse sin tocar código aspectos como:
 
 ### 4. Integraciones
 La estructura deberá permitir registrar parámetros para integraciones futuras, incluyendo:
-
 - servicios externos
 - facturación electrónica
 - RIPS
@@ -65,7 +61,6 @@ La estructura deberá permitir registrar parámetros para integraciones futuras,
 
 ### 5. Contenido administrable
 Deberán contemplarse elementos administrables como:
-
 - banners
 - textos informativos
 - contenido de pie de página
@@ -74,14 +69,6 @@ Deberán contemplarse elementos administrables como:
 - términos
 - mensajes configurables
 
-## Componentes no parametrizables en etapa inicial
-No se parametrizarán en esta etapa:
-
-- reglas internas complejas de negocio no definidas aún
-- estructuras transaccionales no documentadas
-- flujos funcionales no aprobados
-- variaciones de arquitectura entre clientes
-
 ## Restricciones
 - No se crearán parámetros sin uso definido.
 - No se crearán catálogos ambiguos.
@@ -89,8 +76,9 @@ No se parametrizarán en esta etapa:
 - No se mezclarán parámetros visuales con datos transaccionales.
 - No se crearán tablas duplicadas para cubrir variaciones de apariencia.
 
-## Resultado esperado
-La parametrización deberá permitir reutilizar la aplicación en otros clientes cambiando configuración, identidad visual, integraciones y módulos habilitados, sin alterar la lógica central ni romper la estructura base.
+## Estado actual
+Se evidencia que, el módulo base de parametrización consulta desde backend las tablas temas, tema_tokens, tema_componentes, branding, parametro_grupos, parametros, parametro_valores, modulos, modulo_configuraciones, integraciones, integracion_configuraciones, plantillas y menus del esquema system.
 
-## Estado actual del alcance
-Actualmente el módulo base de parametrización ya consulta visualmente las tablas principales del esquema `system`, con separación entre vista, peticiones, template y lógica principal de JavaScript. El siguiente frente corresponde a formularios, validaciones y operaciones CRUD por sección.
+Se evidencia que, la visualización actual corresponde a un bloque de consulta y trazabilidad previo al login, con resumen general, búsqueda local y renderizado por secciones.
+
+Se evidencia que, la validación en navegador queda pendiente hasta disponer de login e inicio de sesión dentro del flujo Docker + Ubuntu + Git.

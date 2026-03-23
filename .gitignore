@@ -8,9 +8,11 @@ dist/
 build/
 
 storage/logs/*.log
+backend/storage/logs/*.log
 
 .DS_Store
 Thumbs.db
+*Zone.Identifier
 
 .vscode/
 .idea/

@@ -93,5 +93,4 @@ No se parametrizarán en esta etapa:
 La parametrización deberá permitir reutilizar la aplicación en otros clientes cambiando configuración, identidad visual, integraciones y módulos habilitados, sin alterar la lógica central ni romper la estructura base.
 
 ## Estado del alcance
-El alcance aquí descrito corresponde únicamente a la definición base de parametrización. La definición detallada de tablas y relaciones se documentará posteriormente.
-EOF
+El alcance aquí descrito corresponde a la definición base de parametrización ya aterrizada en tablas del esquema system. En esta etapa no se proyectan más cambios estructurales sobre dichas tablas; el siguiente frente de trabajo se centra en código, documentación y continuidad técnica.

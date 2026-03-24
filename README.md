@@ -30,7 +30,6 @@ Proyecto base MVC en PHP con PostgreSQL para parametrización, acceso inicial y 
 1. `database/sql/001_sql_parametrizacion_base_v2.sql`
 2. `database/sql/003_sql_login_token_base.sql`
 3. `database/sql/004_sql_seguridad_hash_claves.sql`
-4. `database/sql/010_sql_tienda_admin_catalogo.sql`
 
 ## Apertura local
 
@@ -43,13 +42,3 @@ Abrir:
 ```text
 http://localhost:8080/index.php
 ```
-
-
-## Rutas actuales
-
-- `http://localhost:8080/` tienda pública
-- `http://localhost:8080/catalogo/` catálogo
-- `http://localhost:8080/producto/?slug=serum-glow-rose` detalle de producto
-- `http://localhost:8080/carrito/` carrito
-- `http://localhost:8080/admin/` acceso administrativo
-- `http://localhost:8080/admin/tienda/` panel comercial de productos

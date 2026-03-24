@@ -39,7 +39,6 @@ if (empty($_SESSION['admin_token'])) {
       <div class="dx_modulos_admin">
         <a href="parametrizacion.php" class="dx_modulo_link">Parametrización</a>
         <a href="seguridad.php" class="dx_modulo_link dx_modulo_link_activo">Seguridad</a>
-        <a href="/admin/tienda/" class="dx_modulo_link">Tienda</a>
       </div>
 
       <nav class="dx_sidebar_nav" id="dx_sidebar_nav_seguridad">
@@ -65,7 +64,6 @@ if (empty($_SESSION['admin_token'])) {
           <button type="button" id="btn_recargar_seguridad" class="dx_btn dx_btn_secundario">Recargar</button>
           <button type="button" id="btn_cerrar_otras_sesiones" class="dx_btn dx_btn_secundario">Cerrar otras sesiones</button>
           <a href="parametrizacion.php" class="dx_btn dx_btn_secundario">Parametrización</a>
-          <a href="/admin/tienda/" class="dx_btn dx_btn_secundario">Tienda</a>
           <a href="../../cerrar_sesion.php" class="dx_btn dx_btn_principal">Cerrar sesión</a>
         </div>
       </header>

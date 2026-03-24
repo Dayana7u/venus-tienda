@@ -1,0 +1,215 @@
+:root {
+  --tda-login-background: linear-gradient(180deg, #fff7f9, #f8eef2);
+  --tda-login-panel: #ffffff;
+  --tda-login-border: #eed4db;
+  --tda-login-text: #3f2a31;
+  --tda-login-text-soft: #7d6770;
+  --tda-login-primary: #c97f97;
+  --tda-login-primary-soft: #f7dbe3;
+  --tda-login-shadow: 0 24px 60px rgba(120, 74, 88, 0.12);
+  --tda-login-radius: 28px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body.tda_login_body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--tda-login-text);
+  background: var(--tda-login-background);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.tda_login_principal {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.tda_login_panel {
+  width: min(1120px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
+  border: 1px solid var(--tda-login-border);
+  border-radius: var(--tda-login-radius);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--tda-login-shadow);
+  overflow: hidden;
+}
+
+.tda_login_info,
+.tda_login_formulario_columna {
+  padding: 44px;
+}
+
+.tda_login_info {
+  background: linear-gradient(160deg, rgba(255, 242, 246, 0.96), rgba(255, 255, 255, 0.96));
+  border-right: 1px solid var(--tda-login-border);
+}
+
+.tda_login_badge,
+.tda_login_etiqueta {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--tda-login-primary-soft);
+  color: #a15870;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tda_login_info h1,
+.tda_login_encabezado h2 {
+  margin: 18px 0 12px;
+  font-size: 2.6rem;
+  line-height: 1.05;
+}
+
+.tda_login_info p,
+.tda_login_lista,
+.tda_login_resumen {
+  color: var(--tda-login-text-soft);
+}
+
+.tda_login_lista {
+  margin: 22px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.tda_login_formulario_columna {
+  background: #ffffff;
+}
+
+.tda_login_mensaje {
+  min-height: 24px;
+  margin: 16px 0;
+}
+
+.tda_login_alerta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid var(--tda-login-border);
+}
+
+.tda_login_alerta.success {
+  background: #eef8f1;
+  color: #1e7a45;
+}
+
+.tda_login_alerta.error {
+  background: #fff3f5;
+  color: #b34963;
+}
+
+.tda_login_alerta.info {
+  background: #fff7f9;
+  color: #8f5a6c;
+}
+
+.tda_login_alerta button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.tda_login_formulario {
+  display: grid;
+  gap: 18px;
+}
+
+.tda_login_grupo label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.tda_login_grupo input {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--tda-login-border);
+  border-radius: 18px;
+  padding: 12px 14px;
+}
+
+.tda_login_campo_clave {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.tda_btn_icono,
+.tda_btn {
+  border: 1px solid var(--tda-login-border);
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+.tda_btn_icono {
+  min-width: 74px;
+  background: #fff;
+}
+
+.tda_login_acciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tda_btn {
+  min-height: 48px;
+  font-weight: 700;
+}
+
+.tda_btn_principal {
+  background: var(--tda-login-primary);
+  border-color: var(--tda-login-primary);
+  color: #fff;
+}
+
+.tda_btn_secundario {
+  background: #fff;
+  color: var(--tda-login-text);
+}
+
+.tda_login_resumen_card {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid var(--tda-login-border);
+  border-radius: 20px;
+  background: #fff8fa;
+}
+
+.tda_login_resumen_card strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+  .tda_login_panel {
+    grid-template-columns: 1fr;
+  }
+
+  .tda_login_info {
+    border-right: 0;
+    border-bottom: 1px solid var(--tda-login-border);
+  }
+}

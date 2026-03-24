@@ -71,8 +71,34 @@ Se agregó el script database/sql/009_sql_avance_tienda_publica_catalogo_real.sq
 
 Se separó el frente comercial en rutas y vistas independientes: `/`, `/catalogo/`, `/ofertas/`, `/producto/`, `/carrito/` y `/contacto/`. El acceso `/admin/` se mantiene aparte. En esta etapa el carrito se maneja en sesión para avanzar el flujo comercial sin crear nuevas tablas.
 
+## Corrección de continuidad del frente público
+- El frente comercial vuelve a quedar separado por módulos y rutas independientes.
+- El acceso administrativo de tienda se mantiene totalmente aparte del acceso de parametrización y seguridad.
+- La base conserva soporte para categorías, productos e imágenes desde la administración de tienda.
 
-14. Avance de catálogo comercial y panel tienda
-Se evidencia que, el frente público deja de depender únicamente de datos quemados y empieza a consumir el catálogo comercial desde public.categorias, public.productos y public.producto_imagenes cuando dichas tablas existan y contengan información.
-Se evidencia que, el carrito público fue ajustado para responder por AJAX en agregar, actualizar, eliminar y consultar resumen, mostrando alerta visible y panel lateral de compra sin recargar la página.
-Se evidencia que, se creó un panel administrativo inicial en /admin/tienda/ para gestionar categorías, productos, descuentos, stock y recurso visual principal del catálogo comercial.
+11. Continuidad del frente comercial multivista
+Se evidencia que, el frente público de la tienda continúa sobre una estructura multivista compuesta por inicio, catálogo, producto, carrito, ofertas y contacto, manteniendo el panel `/admin/` para parametrización y seguridad, y `/admin/tienda/` para la operación comercial independiente.
+Se evidencia que, el carrito lateral queda como componente reutilizable del frente público y no reemplaza la vista `/carrito/`, sino que la complementa para sostener una experiencia de compra rápida sin perder la separación de módulos.
+Se evidencia que, el catálogo y el detalle del producto quedan preparados para consumir registros administrativos reales de categorías, productos e imágenes desde base de datos, utilizando la data estática únicamente como respaldo de continuidad cuando la operación comercial aún no haya cargado información.
+
+
+## Avance v12 - separación de admin tienda
+- El panel `/admin/tienda/` se mantiene independiente de parametrización y seguridad.
+- La administración comercial ya no se concentra en una sola vista; queda separada por submódulos `dashboard`, `categorias`, `productos` e `imagenes`, reutilizando el mismo controlador/modelo y manteniendo JS externo por módulo administrativo.
+- El carrito lateral del frente público se conserva como componente global y se mejora visualmente sin reemplazar la vista `/carrito/`.
+
+
+## Panel administrativo de tienda - operacion comercial
+El panel administrativo de tienda continua separado del acceso de parametrizacion y seguridad del proyecto base. Sobre esta linea se agregan submodulos propios para dashboard comercial, pedidos, clientes y ventas, conservando el acceso en `/admin/tienda/` y manteniendo la gestion de catalogo, productos e imagenes en rutas independientes por modulo.
+
+A nivel de datos, la operacion comercial queda apoyada en tablas propias del frente de tienda para clientes, direcciones, pedidos y detalle de pedidos, de modo que el panel ya pueda mostrar informacion de ventas y no solo configuracion de catalogo.
+
+
+## Panel administrativo de tienda - dashboard modular visual
+Se evidencia que, el panel administrativo de tienda continúa sobre rutas separadas por módulo (`dashboard`, `pedidos`, `clientes`, `ventas`, `categorias`, `productos`, `imagenes`) y se fortalece con una plantilla administrativa propia, distinta de parametrización y seguridad.
+Se evidencia que, la navegación lateral, la búsqueda general, los indicadores métricos y los paneles de resumen se implementan sobre la estructura ya existente del panel tienda, sin concentrar la operación comercial en una sola vista.
+Se evidencia que, este ajuste se soporta en `tienda_admin_helper.php`, `tienda_admin.css`, `tienda_admin.js` y `tienda_admin_template.js`, conservando la separación entre vista, controlador, modelo y archivos JavaScript externos.
+
+
+## 2026-03-24 - Ajuste de estabilidad V15
+Se corrigieron errores del frente público y del panel de tienda asociados al uso de funciones multibyte no disponibles en el entorno PHP (`mb_substr`, `mb_strtoupper`, `mb_strlen`, `mb_strpos`, `mb_strtolower`). También se corrigió la redirección del login de administración de tienda para enviar a `/admin/tienda/dashboard/` cuando la sesión ya está activa, evitando bucles de redirección.

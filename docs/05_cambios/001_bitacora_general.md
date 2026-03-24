@@ -80,10 +80,59 @@ Se evidencia que, el frente público continuó sobre PINK_NUDE con una organizac
 - Se separa la tienda pública en módulos y rutas limpias (`/`, `/catalogo/`, `/ofertas/`, `/producto/`, `/carrito/`, `/contacto/`) y se deja `/admin/` aparte del flujo comercial.
 - Se agrega carrito funcional en sesión para permitir agregar, actualizar y eliminar productos sin crear estructura nueva de base de datos.
 
+## Corrección de continuidad del frente público
 
-## 2026-03-24 - Avance tienda pública carrito y panel comercial
-- Se agregó el SQL 010 para categorías, productos e imágenes comerciales.
-- Se ajustó tienda_catalogo_base_model.class.php para consultar catálogo desde base de datos y conservar respaldo estático mientras se ejecuta el SQL incremental.
-- Se agregó el panel /admin/tienda/ con vista, controlador, modelo y estilos propios para categorías y productos.
-- Se ajustó el carrito para manejar AJAX, panel lateral y alerta visual al agregar productos.
-- Se amplió la vista /carrito/ con resumen de ahorro, envío y total.
+- Se restablece la tienda pública sobre rutas y vistas separadas (`/`, `/catalogo/`, `/ofertas/`, `/producto/`, `/carrito/`, `/contacto/`) para evitar que el frente vuelva a una sola vista.
+- Se conserva `/admin/` para parametrización y seguridad, y `/admin/tienda/` como acceso independiente para la administración comercial de la tienda.
+- Se integran nuevamente los archivos del panel de tienda sobre la base multivista ya funcional, manteniendo cargue de imágenes para categorías y productos.
+
+## Avance multivista tienda pública y carrito lateral
+Se evidencia que, se retoma como base válida el frente multivista de la tienda pública, manteniendo separadas las vistas de inicio, catálogo, producto, carrito, ofertas y contacto, sin volver a concentrar la operación comercial en una sola página.
+
+Se evidencia que, el carrito lateral se conserva como comportamiento global del frente público y se mejora para operar por peticiones asíncronas, con apertura desde el encabezado, actualización de cantidades, eliminación de líneas, resumen económico y alerta visible al agregar productos.
+
+Se evidencia que, el catálogo y el detalle de producto quedan preparados para consumir información de `public.productos`, `public.categorias` y `public.producto_imagenes` cuando existan registros en base de datos, usando el catálogo estático solo como respaldo mientras se completa la carga administrativa.
+
+Novedades y Modificaciones
+- Se ajustó `backend/app/Models/tienda_catalogo_base_model.class.php` para consultar productos, precios, descuentos, stock e imágenes desde base de datos y calcular el estado del carrito con subtotal, ahorro, envío y total.
+- Se ajustó `backend/app/Controllers/tienda_carrito_controller.php` para responder por AJAX sin recargar la página al agregar, actualizar o eliminar productos del carrito lateral.
+- Se ajustaron `backend/app/Views/tienda_inicio.php`, `backend/app/Views/tienda_catalogo.php`, `backend/app/Views/tienda_producto.php`, `backend/app/Views/tienda_carrito.php`, `backend/app/Views/tienda_ofertas.php` y `backend/app/Views/tienda_contacto.php` para mantener la navegación por módulos y reutilizar el carrito lateral en todo el frente público.
+- Se ajustó `backend/app/Views/tienda/tienda_helper.php` para centralizar encabezado, cards de producto, drawer del carrito y carga común de scripts del frente comercial.
+- Se agregaron `backend/public/assets/js/tienda_store.js`, `backend/public/assets/js/tienda_store_peticiones.js` y `backend/public/assets/js/tienda_store_template.js` para manejar la interacción global del carrito lateral y las alertas del frente comercial.
+- Se ajustó `backend/public/assets/css/tienda_publica.css` para mejorar hero de inicio, cards de producto, detalle, carrito lateral y vista dedicada de carrito.
+
+
+## 2026-03-24 - Avance v12
+- Se mantiene la base multivista del ecommerce.
+- Se mejora el carrito lateral existente sin regresarlo a otra implementación.
+- Se separa el panel de tienda en submódulos visuales: resumen, categorías, productos e imágenes.
+- No se agregan tablas ni SQL nuevos en este bloque.
+
+
+## 2026-03-24 - Avance v13
+Se evidencia que, el frente de administracion comercial de la tienda se amplia con una base operativa mas cercana a un ecommerce real, separando dashboard, pedidos, clientes y ventas del bloque de catalogo ya existente.
+
+Novedades y Modificaciones
+- Se agrega `database/sql/013_sql_tienda_admin_operacion.sql` para crear `public.clientes_tienda`, `public.clientes_tienda_direcciones`, `public.pedidos_tienda` y `public.pedido_tienda_detalles`, junto con indices, permisos base y registros iniciales de prueba.
+- Se ajusta `backend/app/Models/tienda_admin_model.class.php` para consultar resumen comercial, clientes, pedidos, ingresos, descuentos y productos top sin romper el catalogo ni las imagenes ya registradas.
+- Se ajusta `backend/app/Views/tienda_admin_dashboard.php` para mostrar indicadores y accesos directos a pedidos, clientes, ventas y catalogo.
+- Se agregan `backend/app/Views/tienda_admin_clientes.php`, `backend/app/Views/tienda_admin_pedidos.php` y `backend/app/Views/tienda_admin_ventas.php` como submodulos propios del panel tienda.
+- Se agregan las rutas `backend/admin/tienda/clientes/index.php`, `backend/admin/tienda/pedidos/index.php` y `backend/admin/tienda/ventas/index.php` para mantener el panel separado por modulo.
+- Se ajustan `backend/public/assets/js/tienda_admin.js` y `backend/public/assets/js/tienda_admin_template.js` para renderizar clientes, pedidos, indicadores de ventas y productos top desde el panel tienda.
+- Se ajusta `backend/public/assets/css/tienda_admin.css` para mejorar la presentacion del dashboard comercial con cards, filas operativas y bloques de resumen.
+
+
+## 2026-03-24 - Avance v14
+Se evidencia que, el panel administrativo de tienda se reorganiza visualmente hacia una experiencia más cercana a un dashboard ecommerce real, manteniendo la separación por módulos ya construida y sin devolver la operación a una sola vista.
+
+Novedades y Modificaciones
+- Se ajusta `backend/app/Views/tienda_admin/tienda_admin_helper.php` para centralizar una plantilla administrativa con sidebar, topbar, búsqueda general y sesión activa sin mezclarla con parametrización y seguridad.
+- Se ajusta `backend/public/assets/css/tienda_admin.css` para llevar el panel tienda a una apariencia más profesional, con navegación lateral, cards métricas, paneles analíticos y listados comerciales en la misma línea visual del tema `PINK_NUDE`.
+- Se ajusta `backend/public/assets/js/tienda_admin.js` para soportar búsqueda en el módulo actual y renderización controlada del dashboard, clientes, pedidos, ventas, categorías, productos e imágenes sin romper formularios ni listados existentes.
+- Se ajusta `backend/public/assets/js/tienda_admin_template.js` para imprimir cards métricas, paneles de resumen y listados operativos más cercanos a un panel ecommerce real.
+- Se ajustan `backend/app/Views/tienda_admin_dashboard.php`, `backend/app/Views/tienda_admin_categorias.php`, `backend/app/Views/tienda_admin_productos.php`, `backend/app/Views/tienda_admin_imagenes.php`, `backend/app/Views/tienda_admin_clientes.php`, `backend/app/Views/tienda_admin_pedidos.php` y `backend/app/Views/tienda_admin_ventas.php` para mantener submódulos separados y alineados a la nueva plantilla visual del panel tienda.
+- En este bloque no se agregan tablas ni SQL nuevos.
+
+
+## 2026-03-24 - Ajuste de estabilidad V15
+Se corrigieron errores del frente público y del panel de tienda asociados al uso de funciones multibyte no disponibles en el entorno PHP (`mb_substr`, `mb_strtoupper`, `mb_strlen`, `mb_strpos`, `mb_strtolower`). También se corrigió la redirección del login de administración de tienda para enviar a `/admin/tienda/dashboard/` cuando la sesión ya está activa, evitando bucles de redirección.

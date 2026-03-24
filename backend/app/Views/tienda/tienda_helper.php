@@ -3,6 +3,38 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
+if (empty($_SESSION['tienda_publica_token'])) {
+  $_SESSION['tienda_publica_token'] = bin2hex(random_bytes(32));
+}
+
+function tienda_mbstring_disponible() {
+  return extension_loaded('mbstring');
+}
+
+function tienda_texto_substring($texto, $inicio, $longitud = null) {
+  $texto = (string) $texto;
+
+  if (tienda_mbstring_disponible()) {
+    return $longitud === null
+      ? mb_substr($texto, (int) $inicio, null, 'UTF-8')
+      : mb_substr($texto, (int) $inicio, (int) $longitud, 'UTF-8');
+  }
+
+  if (function_exists('iconv_substr')) {
+    return $longitud === null
+      ? iconv_substr($texto, (int) $inicio, iconv_strlen($texto, 'UTF-8'), 'UTF-8')
+      : iconv_substr($texto, (int) $inicio, (int) $longitud, 'UTF-8');
+  }
+
+  return $longitud === null ? substr($texto, (int) $inicio) : substr($texto, (int) $inicio, (int) $longitud);
+}
+
+function tienda_texto_inicial($texto, $predeterminado = 'T') {
+  $inicial = trim(tienda_texto_substring((string) $texto, 0, 1));
+
+  return $inicial !== '' ? $inicial : $predeterminado;
+}
+
 function tienda_obtener_ruta_publica($codigo_menu = '', $ruta_defecto = '/') {
   $codigo_menu = strtoupper((string) $codigo_menu);
 
@@ -25,10 +57,6 @@ function tienda_obtener_ruta_publica($codigo_menu = '', $ruta_defecto = '/') {
     default:
       return $ruta_defecto !== '' ? $ruta_defecto : '/';
   }
-}
-
-function tienda_formatear_precio($valor) {
-  return '$' . number_format((int) $valor, 0, ',', '.');
 }
 
 function tienda_obtener_total_carrito() {
@@ -112,6 +140,7 @@ function tienda_generar_variables_css($tema_tokens = [], $componentes = []) {
 
 function tienda_render_head($titulo, $tema_tokens = [], $componentes = []) {
   $css_variables = tienda_generar_variables_css($tema_tokens, $componentes);
+
   echo '<!DOCTYPE html>';
   echo '<html lang="es">';
   echo '<head>';
@@ -156,7 +185,10 @@ function tienda_render_header($branding = [], $menus = [], $pagina_activa = '') 
   echo '      <form action="/catalogo/" method="get" class="tv_buscador_campo">';
   echo '        <input type="text" name="buscar" placeholder="Buscar productos">';
   echo '      </form>';
-  echo '      <button type="button" class="tv_btn tv_btn_secundario js_btn_abrir_carrito">Carrito <span id="tv_contador_carrito" class="tv_contador_inline">' . (int) $total_carrito . '</span></button>';
+  echo '      <button type="button" id="btn_abrir_carrito_tienda_publica" class="tv_btn tv_btn_secundario tv_btn_carrito_encabezado">';
+  echo '        Carrito';
+  echo '        <span id="span_contador_carrito_tienda_publica" class="tv_contador_inline">' . (int) $total_carrito . '</span>';
+  echo '      </button>';
   echo '    </div>';
   echo '  </div>';
   echo '</header>';
@@ -215,67 +247,91 @@ function tienda_render_footer($branding = [], $menus = []) {
   echo '    </div>';
   echo '  </div>';
   echo '</footer>';
-
-  tienda_render_storefront_componentes();
-
-  echo '<script src="/public/assets/js/tienda_storefront_template.js"></script>';
-  echo '<script src="/public/assets/js/tienda_storefront_peticiones.js"></script>';
-  echo '<script src="/public/assets/js/tienda_storefront.js"></script>';
 }
 
-function tienda_render_storefront_componentes() {
-  echo '<div class="tv_overlay_carrito" id="tv_overlay_carrito"></div>';
-  echo '<aside class="tv_drawer_carrito" id="tv_drawer_carrito" aria-hidden="true">';
-  echo '  <div class="tv_drawer_encabezado">';
-  echo '    <div>';
-  echo '      <p class="tv_drawer_titulo">Tu carrito</p>';
-  echo '      <small id="tv_drawer_resumen_items">Sin productos</small>';
-  echo '    </div>';
-  echo '    <button type="button" class="tv_btn_cerrar_drawer" id="tv_btn_cerrar_drawer">×</button>';
-  echo '  </div>';
-  echo '  <div class="tv_drawer_items" id="tv_drawer_items"></div>';
-  echo '  <div class="tv_drawer_resumen" id="tv_drawer_resumen"></div>';
-  echo '</aside>';
-  echo '<div class="tv_toast_wrap" id="tv_toast_wrap"></div>';
+function tienda_render_producto_media($producto, $clase_adicional = '', $lazy = true) {
+  $imagen_url = trim((string) ($producto['imagen_url'] ?? ''));
+  $texto_alternativo = trim((string) ($producto['texto_alternativo'] ?? ($producto['nombre'] ?? 'Producto')));
+  $clase_media = trim('tv_producto_media ' . $clase_adicional);
+
+  echo '<div class="' . htmlspecialchars($clase_media, ENT_QUOTES, 'UTF-8') . '">';
+
+  if ($imagen_url !== '') {
+    echo '  <img src="' . htmlspecialchars($imagen_url, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($texto_alternativo, ENT_QUOTES, 'UTF-8') . '" class="tv_producto_imagen"' . ($lazy ? ' loading="lazy"' : '') . '>';
+  }
+  else {
+    echo '  <div class="tv_producto_media_placeholder tv_producto_media_' . htmlspecialchars((string) ($producto['media'] ?? 'base'), ENT_QUOTES, 'UTF-8') . '">';
+    echo '    <span>' . htmlspecialchars(tienda_texto_inicial((string) ($producto['nombre'] ?? 'TV'), 'T'), ENT_QUOTES, 'UTF-8') . '</span>';
+    echo '  </div>';
+  }
+
+  echo '</div>';
 }
 
 function tienda_render_producto_card($producto) {
-  $url = '/producto/?slug=' . urlencode($producto['slug']);
-  $imagen_url = trim((string) ($producto['imagen_url'] ?? ''));
-  $media = (string) ($producto['media'] ?? 'default');
-  $style = $imagen_url !== '' ? ' style="background-image: url(' . htmlspecialchars($imagen_url, ENT_QUOTES, 'UTF-8') . ');"' : '';
+  $url = '/producto/?slug=' . urlencode((string) $producto['slug']);
+  $descuento = (int) ($producto['descuento_porcentaje'] ?? 0);
 
   echo '<article class="tv_producto_card tv_producto_card_tienda">';
-  echo '  <a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" class="tv_producto_media tv_producto_media_' . htmlspecialchars($media, ENT_QUOTES, 'UTF-8') . '"' . $style . '>';
 
-  if ((int) ($producto['porcentaje_descuento'] ?? 0) > 0) {
-    echo '    <span class="tv_producto_badge_descuento">-' . (int) $producto['porcentaje_descuento'] . '%</span>';
+  if ($descuento > 0) {
+    echo '  <span class="tv_producto_descuento">-' . $descuento . '%</span>';
   }
 
+  echo '  <a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" class="tv_producto_media_enlace">';
+  tienda_render_producto_media($producto, 'tv_producto_media_card');
   echo '  </a>';
   echo '  <div class="tv_producto_contenido">';
-  echo '    <span class="tv_etiqueta">' . htmlspecialchars($producto['etiqueta'], ENT_QUOTES, 'UTF-8') . '</span>';
-  echo '    <h3><a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($producto['nombre'], ENT_QUOTES, 'UTF-8') . '</a></h3>';
-  echo '    <p>' . htmlspecialchars($producto['resumen'], ENT_QUOTES, 'UTF-8') . '</p>';
+  echo '    <span class="tv_etiqueta">' . htmlspecialchars((string) ($producto['etiqueta'] ?? ''), ENT_QUOTES, 'UTF-8') . '</span>';
+  echo '    <h3><a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars((string) ($producto['nombre'] ?? ''), ENT_QUOTES, 'UTF-8') . '</a></h3>';
+  echo '    <p>' . htmlspecialchars((string) ($producto['resumen'] ?? ''), ENT_QUOTES, 'UTF-8') . '</p>';
   echo '    <div class="tv_producto_meta">';
-  echo '      <strong>' . tienda_formatear_precio($producto['precio']) . '</strong>';
+  echo '      <strong>$' . number_format((int) ($producto['precio'] ?? 0), 0, ',', '.') . '</strong>';
 
-  if ((int) $producto['precio_anterior'] > (int) $producto['precio']) {
-    echo '      <span>' . tienda_formatear_precio($producto['precio_anterior']) . '</span>';
+  if ((int) ($producto['precio_anterior'] ?? 0) > (int) ($producto['precio'] ?? 0)) {
+    echo '      <span>$' . number_format((int) ($producto['precio_anterior'] ?? 0), 0, ',', '.') . '</span>';
   }
 
   echo '    </div>';
+  echo '    <div class="tv_producto_extra">';
+  echo '      <span>★ ' . number_format((float) ($producto['rating'] ?? 0), 1, ',', '.') . '</span>';
+  echo '      <span>' . ((int) ($producto['stock'] ?? 0) > 0 ? 'Disponible' : 'Sin stock') . '</span>';
+  echo '    </div>';
   echo '    <div class="tv_producto_acciones">';
   echo '      <a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" class="tv_btn tv_btn_secundario">Ver detalle</a>';
-  echo '      <form action="/carrito/" method="post" class="js_form_carrito js_form_agregar_carrito">';
+  echo '      <form action="/carrito/" method="post" class="tv_form_agregar_carrito">';
   echo '        <input type="hidden" name="accion" value="agregar">';
-  echo '        <input type="hidden" name="slug" value="' . htmlspecialchars($producto['slug'], ENT_QUOTES, 'UTF-8') . '">';
+  echo '        <input type="hidden" name="slug" value="' . htmlspecialchars((string) ($producto['slug'] ?? ''), ENT_QUOTES, 'UTF-8') . '">';
   echo '        <input type="hidden" name="cantidad" value="1">';
-  echo '        <input type="hidden" name="redireccion" value="' . htmlspecialchars($_SERVER['REQUEST_URI'] ?? '/', ENT_QUOTES, 'UTF-8') . '">';
+  echo '        <input type="hidden" name="redireccion" value="' . htmlspecialchars((string) ($_SERVER['REQUEST_URI'] ?? '/'), ENT_QUOTES, 'UTF-8') . '">';
   echo '        <button type="submit" class="tv_btn tv_btn_principal">Agregar</button>';
   echo '      </form>';
   echo '    </div>';
   echo '  </div>';
   echo '</article>';
+}
+
+function tienda_render_carrito_drawer($carrito = []) {
+  echo '<input type="hidden" id="token_tienda_publica" value="' . htmlspecialchars($_SESSION['tienda_publica_token'], ENT_QUOTES, 'UTF-8') . '">';
+  echo '<input type="hidden" id="controlador_tienda_carrito_publica" value="/app/Controllers/tienda_carrito_controller.php">';
+  echo '<div id="div_toast_tienda_publica" class="tv_toast_contenedor" aria-live="polite"></div>';
+  echo '<div id="div_backdrop_carrito_tienda_publica" class="tv_drawer_backdrop tv_oculto"></div>';
+  echo '<aside id="aside_carrito_tienda_publica" class="tv_drawer_carrito" aria-hidden="true">';
+  echo '  <div class="tv_drawer_encabezado">';
+  echo '    <div>';
+  echo '      <h3>Tu carrito</h3>';
+  echo '      <p id="p_resumen_carrito_tienda_publica">' . (int) ($carrito['cantidad'] ?? 0) . ' producto(s) agregado(s)</p>';
+  echo '    </div>';
+  echo '    <button type="button" id="btn_cerrar_carrito_tienda_publica" class="tv_btn_icono tv_btn_icono_cerrar">×</button>';
+  echo '  </div>';
+  echo '  <div id="div_items_carrito_tienda_publica" class="tv_drawer_items"></div>';
+  echo '  <div id="div_resumen_carrito_tienda_publica" class="tv_drawer_resumen"></div>';
+  echo '</aside>';
+}
+
+function tienda_render_public_scripts() {
+  echo '<script src="/public/assets/js/tienda_store_template.js"></script>';
+  echo '<script src="/public/assets/js/tienda_store_peticiones.js"></script>';
+  echo '<script src="/public/assets/js/tienda_store.js"></script>';
 }
 ?>

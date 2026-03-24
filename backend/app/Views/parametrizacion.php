@@ -37,7 +37,6 @@ if (empty($_SESSION['admin_token'])) {
       <div class="dx_modulos_admin">
         <a href="parametrizacion.php" class="dx_modulo_link dx_modulo_link_activo">Parametrización</a>
         <a href="seguridad.php" class="dx_modulo_link">Seguridad</a>
-        <a href="/admin/tienda/" class="dx_modulo_link">Tienda</a>
       </div>
 
       <nav class="dx_sidebar_nav" id="dx_sidebar_nav_parametrizacion">
@@ -66,7 +65,6 @@ if (empty($_SESSION['admin_token'])) {
           <input type="text" id="buscar_parametrizacion" placeholder="Buscar registros" autocomplete="off">
           <button type="button" id="btn_recargar_parametrizacion" class="dx_btn dx_btn_secundario">Recargar</button>
           <a href="seguridad.php" class="dx_btn dx_btn_secundario">Seguridad</a>
-          <a href="/admin/tienda/" class="dx_btn dx_btn_secundario">Tienda</a>
           <a href="../../cerrar_sesion.php" class="dx_btn dx_btn_principal">Cerrar sesión</a>
         </div>
       </header>

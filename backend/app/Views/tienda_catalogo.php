@@ -1,14 +1,15 @@
 <?php
 require_once __DIR__ . '/tienda/tienda_helper.php';
-$contexto   = $tv_datos['contexto'] ?? [];
-$branding   = $contexto['branding'] ?? [];
-$menus      = $contexto['menus'] ?? [];
+$contexto = $tv_datos['contexto'] ?? [];
+$branding = $contexto['branding'] ?? [];
+$menus = $contexto['menus'] ?? [];
 $tema_tokens = $contexto['tema_tokens'] ?? [];
 $componentes = $contexto['componentes'] ?? [];
-$productos  = $tv_datos['productos'] ?? [];
-$lineas     = $tv_datos['lineas'] ?? [];
-$filtros    = $tv_datos['filtros'] ?? [];
-$buscar     = $filtros['buscar'] ?? '';
+$productos = $tv_datos['productos'] ?? [];
+$lineas = $tv_datos['lineas'] ?? [];
+$filtros = $tv_datos['filtros'] ?? [];
+$carrito = $tv_datos['carrito'] ?? [];
+$buscar = $filtros['buscar'] ?? '';
 $linea_activa = $filtros['linea'] ?? '';
 
 tienda_render_head('Catálogo', $tema_tokens, $componentes);
@@ -25,6 +26,7 @@ tienda_render_head('Catálogo', $tema_tokens, $componentes);
         <div>
           <span class="tv_etiqueta">Catálogo</span>
           <h2>Explora la tienda por línea y producto</h2>
+          <p>Vista separada para catálogo real, búsqueda y navegación por línea.</p>
         </div>
         <form method="get" action="/catalogo/" class="tv_filtros_catalogo">
           <select name="linea">
@@ -48,5 +50,7 @@ tienda_render_head('Catálogo', $tema_tokens, $componentes);
   </main>
 
   <?php tienda_render_footer($branding, $menus); ?>
+  <?php tienda_render_carrito_drawer($carrito); ?>
+  <?php tienda_render_public_scripts(); ?>
 </body>
 </html>

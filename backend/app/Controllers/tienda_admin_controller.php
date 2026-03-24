@@ -3,47 +3,55 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-require_once __DIR__ . '/../Models/tienda_admin_model.class.php';
+header('Content-Type: application/json; charset=UTF-8');
 
-$tienda_admin_model = new tienda_admin_model();
-$editar_producto = [];
+$accion = $_POST['accion'] ?? '';
+$token  = $_POST['token'] ?? '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $accion = $_POST['accion'] ?? '';
-  $usuario_id = (int) ($_SESSION['admin_usuario_id'] ?? 1);
-  $resultado = false;
-  $mensaje = 'No fue posible procesar la acción en el panel tienda.';
+if (empty($_SESSION['tienda_admin_token'])) {
+  $_SESSION['tienda_admin_token'] = bin2hex(random_bytes(32));
+}
 
-  switch ($accion) {
-    case 'guardar_categoria':
-      $resultado = $tienda_admin_model->guardar_categoria_tienda_admin($_POST, $usuario_id);
-      $mensaje = $resultado === true ? 'Categoría registrada correctamente.' : 'No fue posible registrar la categoría.';
-      break;
-
-    case 'guardar_producto':
-      $resultado = $tienda_admin_model->guardar_producto_tienda_admin($_POST, $usuario_id);
-      $mensaje = $resultado === true ? 'Producto guardado correctamente.' : 'No fue posible guardar el producto.';
-      break;
-
-    case 'cambiar_estado_producto':
-      $resultado = $tienda_admin_model->cambiar_estado_producto_tienda_admin((int) ($_POST['producto_id'] ?? 0), $usuario_id);
-      $mensaje = $resultado === true ? 'Estado del producto actualizado correctamente.' : 'No fue posible actualizar el estado.';
-      break;
-  }
-
-  $_SESSION['tienda_admin_mensaje'] = $mensaje;
-  header('Location: /admin/tienda/');
+if ($token === '' || $_SESSION['tienda_admin_token'] !== $token) {
+  echo json_encode([
+    'estado'  => false,
+    'mensaje' => 'Token inválido.',
+    'datos'   => [],
+  ]);
   exit;
 }
 
-if (!empty($_GET['editar_producto_id'])) {
-  $editar_producto = $tienda_admin_model->consultar_producto_tienda_admin((int) $_GET['editar_producto_id']);
-}
+require_once __DIR__ . '/../Models/tienda_admin_model.class.php';
 
-$tv_admin_datos = [
-  'resumen'          => $tienda_admin_model->consultar_resumen_tienda_admin(),
-  'categorias'       => $tienda_admin_model->consultar_categorias_tienda_admin(),
-  'productos'        => $tienda_admin_model->consultar_productos_tienda_admin(),
-  'editar_producto'  => $editar_producto,
-];
+$model = new tienda_admin_model();
+
+switch ($accion) {
+  case 'tienda_admin_inicializar':
+    echo json_encode($model->tienda_admin_inicializar());
+    break;
+
+  case 'tienda_admin_listar_dashboard':
+    echo json_encode($model->tienda_admin_listar_dashboard());
+    break;
+
+  case 'tienda_admin_guardar_categoria':
+    echo json_encode($model->tienda_admin_guardar_categoria());
+    break;
+
+  case 'tienda_admin_guardar_producto':
+    echo json_encode($model->tienda_admin_guardar_producto());
+    break;
+
+  case 'tienda_admin_guardar_imagen':
+    echo json_encode($model->tienda_admin_guardar_imagen());
+    break;
+
+  default:
+    echo json_encode([
+      'estado'  => false,
+      'mensaje' => 'Acción no válida.',
+      'datos'   => [],
+    ]);
+    break;
+}
 ?>

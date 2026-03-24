@@ -45,9 +45,19 @@ Se evidencia que, la portada pública ya incorpora bloques de líneas de product
 
 Se reemplazó la vista única de tienda por rutas y módulos separados: inicio, catálogo, ofertas, detalle, carrito y contacto. El carrito quedó funcional con manejo en sesión y el frente comercial sigue consumiendo branding, menús y tema activo desde la parametrización existente.
 
+## Ajuste funcional del frente comercial multivista
+Se evidencia que, el frente comercial mantiene las vistas separadas de inicio, catálogo, detalle, carrito, ofertas y contacto, y que el carrito lateral queda disponible desde cualquier vista para agregar, actualizar y eliminar productos sin recargar la página.
 
-Novedades y Modificaciones
-Se dejó el carrito lateral visible desde toda la tienda pública con apertura desde el encabezado, actualización de cantidades, eliminación de productos y alerta de confirmación sin recarga completa de la página.
-Se dejó la vista /carrito/ con resumen de ahorro, envío, total y controles más cercanos a una tienda virtual real.
-Se dejó la base del catálogo comercial lista para dejar de depender de arreglos estáticos una vez se ejecute el SQL 010 sobre categorías, productos e imágenes.
-Se agregó el panel /admin/tienda/ para administrar categorías y productos del frente comercial.
+Se evidencia que, el comportamiento del carrito lateral ya contempla total de productos, subtotal, ahorro, envío y total, además de alerta visible cuando un producto es agregado correctamente.
+
+Se evidencia que, la visualización del producto ya contempla imagen principal y galería adicional cuando existan registros en `public.producto_imagenes`, de modo que la operación del panel `/admin/tienda/` pueda reflejarse directamente en el frente público.
+
+
+## Panel tienda - avance de operacion comercial
+Se agrega una capa administrativa separada para la tienda con enfoque en operacion comercial. Esta capa incorpora dashboard, pedidos, clientes y ventas como vistas propias, manteniendo categorias, productos e imagenes como modulos independientes.
+
+La base funcional queda lista para evolucionar luego a autenticacion de clientes, checkout y gestion de estados de compra, sin mezclar estos procesos con parametrizacion ni con seguridad administrativa general.
+
+
+## 2026-03-24 - Ajuste de estabilidad V15
+Se corrigieron errores del frente público y del panel de tienda asociados al uso de funciones multibyte no disponibles en el entorno PHP (`mb_substr`, `mb_strtoupper`, `mb_strlen`, `mb_strpos`, `mb_strtolower`). También se corrigió la redirección del login de administración de tienda para enviar a `/admin/tienda/dashboard/` cuando la sesión ya está activa, evitando bucles de redirección.

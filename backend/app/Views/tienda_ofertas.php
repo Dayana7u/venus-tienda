@@ -1,11 +1,12 @@
 <?php
 require_once __DIR__ . '/tienda/tienda_helper.php';
-$contexto   = $tv_datos['contexto'] ?? [];
-$branding   = $contexto['branding'] ?? [];
-$menus      = $contexto['menus'] ?? [];
+$contexto = $tv_datos['contexto'] ?? [];
+$branding = $contexto['branding'] ?? [];
+$menus = $contexto['menus'] ?? [];
 $tema_tokens = $contexto['tema_tokens'] ?? [];
 $componentes = $contexto['componentes'] ?? [];
-$productos  = $tv_datos['productos'] ?? [];
+$productos = $tv_datos['productos'] ?? [];
+$carrito = $tv_datos['carrito'] ?? [];
 
 tienda_render_head('Ofertas', $tema_tokens, $componentes);
 ?>
@@ -29,5 +30,7 @@ tienda_render_head('Ofertas', $tema_tokens, $componentes);
   </main>
 
   <?php tienda_render_footer($branding, $menus); ?>
+  <?php tienda_render_carrito_drawer($carrito); ?>
+  <?php tienda_render_public_scripts(); ?>
 </body>
 </html>

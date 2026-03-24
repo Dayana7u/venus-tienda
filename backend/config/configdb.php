@@ -54,6 +54,93 @@ function configdb_obtener_conexion() {
   );
 }
 /**
+ * Método encargado de validar la sesión administrativa actual contra la base de datos.
+ *
+ * @return     bool  Retorna true cuando la sesión sigue activa y false en caso contrario.
+ */
+function configdb_validar_sesion_administrativa() {
+  $dbh  = null;
+  $stmt = null;
+
+  try {
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+      return false;
+    }
+
+    if (
+      empty($_SESSION['admin_usuario_id'])
+      || empty($_SESSION['admin_usuario_sesion_id'])
+      || empty($_SESSION['admin_token_sesion'])
+    ) {
+      return false;
+    }
+
+    $dbh = configdb_obtener_conexion();
+    $sql = "SELECT
+"
+         . "  usuario_sesion_id
+"
+         . "FROM
+"
+         . "  public.usuarios_sesiones
+"
+         . "WHERE
+"
+         . "  usuario_sesion_id = :usuario_sesion_id
+"
+         . "  AND usuario_id = :usuario_id
+"
+         . "  AND token = :token
+"
+         . "  AND estado = B'1'
+"
+         . "  AND borrado = B'0'
+"
+         . "  AND fecha_expiracion >= NOW()
+"
+         . "LIMIT 1;";
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(':usuario_sesion_id', (int) $_SESSION['admin_usuario_sesion_id'], PDO::PARAM_INT);
+    $stmt->bindValue(':usuario_id', (int) $_SESSION['admin_usuario_id'], PDO::PARAM_INT);
+    $stmt->bindValue(':token', (string) $_SESSION['admin_token_sesion'], PDO::PARAM_STR);
+    $stmt->execute();
+
+    return $stmt->fetch() ? true : false;
+  }
+  catch (Throwable $throwable) {
+    configdb_registrar_log(__FILE__, __FUNCTION__, $throwable->getMessage(), '');
+
+    return false;
+  }
+  finally {
+    if ($stmt) {
+      $stmt = null;
+    }
+
+    if ($dbh) {
+      $dbh = null;
+    }
+  }
+}
+/**
+ * Método encargado de limpiar la sesión administrativa actual.
+ */
+function configdb_limpiar_sesion_administrativa() {
+  unset(
+    $_SESSION['admin_usuario_id'],
+    $_SESSION['admin_usuario_login'],
+    $_SESSION['admin_usuario_correo'],
+    $_SESSION['admin_usuario_nombre_completo'],
+    $_SESSION['admin_sw_superusuario'],
+    $_SESSION['admin_roles'],
+    $_SESSION['admin_token_sesion'],
+    $_SESSION['admin_usuario_sesion_id']
+  );
+
+  $_SESSION['admin_token'] = bin2hex(random_bytes(32));
+}
+/**
  * Método encargado de registrar logs técnicos en archivo.
  *
  * @param      string  $modulo    Ruta del archivo que genera el log.

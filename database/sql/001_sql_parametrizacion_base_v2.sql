@@ -55,7 +55,7 @@
       COMMENT ON COLUMN public.usuarios.apellidos               IS 'Apellidos del usuario.';
       COMMENT ON COLUMN public.usuarios.login                   IS 'Login del usuario.';
       COMMENT ON COLUMN public.usuarios.correo                  IS 'Correo electrónico del usuario.';
-      COMMENT ON COLUMN public.usuarios.clave                   IS 'Clave del usuario.';
+      COMMENT ON COLUMN public.usuarios.clave                   IS 'Hash de la clave del usuario.';
       COMMENT ON COLUMN public.usuarios.sw_superusuario         IS 'Superusuario: (0) No, (1) Sí.';
       COMMENT ON COLUMN public.usuarios.ultimo_ingreso          IS 'Fecha del último ingreso del usuario.';
       COMMENT ON COLUMN public.usuarios.token_recuperacion      IS 'Token temporal para recuperación de acceso.';
@@ -101,7 +101,7 @@
         'Inicial',
         'admin',
         'admin@localhost',
-        'CAMBIAR_EN_DESARROLLO',
+        '$2y$12$5AeD/e9B7B8400QW4DxaXO958ag4x.eu0f3iQ5XEZIuAjGYQsQryu',
         B'1',
         NULL,
         NULL,

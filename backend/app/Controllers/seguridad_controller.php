@@ -5,9 +5,13 @@ if (session_status() === PHP_SESSION_NONE) {
 
 header('Content-Type: application/json; charset=UTF-8');
 
+require_once __DIR__ . '/../../config/configdb.php';
+
 $token = $_POST['token'] ?? '';
 
-if (empty($_SESSION['usuario_id'])) {
+if (empty($_SESSION['admin_usuario_id']) || !configdb_validar_sesion_administrativa()) {
+  configdb_limpiar_sesion_administrativa();
+
   echo json_encode([
     'estado'  => false,
     'mensaje' => 'Sesión no válida.',
@@ -16,7 +20,7 @@ if (empty($_SESSION['usuario_id'])) {
   exit;
 }
 
-if (empty($_SESSION['token']) || $_SESSION['token'] !== $token) {
+if (empty($_SESSION['admin_token']) || $_SESSION['admin_token'] !== $token) {
   echo json_encode([
     'estado'  => false,
     'mensaje' => 'Token inválido.',
@@ -35,16 +39,26 @@ switch ($accion) {
     echo json_encode($model->seguridad_inicializar());
     break;
 
-  case 'seguridad_listar_usuarios':
-    echo json_encode($model->seguridad_listar_usuarios());
+  case 'seguridad_listar_panel':
+    echo json_encode($model->seguridad_listar_panel());
     break;
 
-  case 'seguridad_listar_roles':
-    echo json_encode($model->seguridad_listar_roles());
+  case 'seguridad_cerrar_sesion':
+    $usuario_sesion_id = (int) ($_POST['usuario_sesion_id'] ?? 0);
+
+    echo json_encode($model->seguridad_cerrar_sesion($usuario_sesion_id));
     break;
 
-  case 'seguridad_listar_permisos':
-    echo json_encode($model->seguridad_listar_permisos());
+  case 'seguridad_cerrar_otras_sesiones':
+    echo json_encode($model->seguridad_cerrar_otras_sesiones());
+    break;
+
+  case 'seguridad_cambiar_clave_usuario':
+    $usuario_id          = (int) ($_POST['usuario_id'] ?? 0);
+    $clave_nueva         = $_POST['clave_nueva'] ?? '';
+    $clave_confirmacion  = $_POST['clave_confirmacion'] ?? '';
+
+    echo json_encode($model->seguridad_cambiar_clave_usuario($usuario_id, $clave_nueva, $clave_confirmacion));
     break;
 
   default:

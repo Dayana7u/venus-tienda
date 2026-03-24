@@ -603,7 +603,7 @@ WHERE
     foreach ($metadata['campos'] as $campo) {
       if ($campo === 'clave') {
         if (isset($datos[$campo]) && trim((string) $datos[$campo]) !== '') {
-          $datos_limpios[$campo] = trim((string) $datos[$campo]);
+          $datos_limpios[$campo] = password_hash(trim((string) $datos[$campo]), PASSWORD_DEFAULT);
         }
       }
       else {

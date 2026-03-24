@@ -22,10 +22,11 @@ Para iniciar validación en navegador se habilitó:
 1. el navegador entra por `backend/index.php`
 2. si no existe sesión activa se redirecciona a `backend/app/Views/login.php`
 3. el login valida el usuario contra `public.usuarios`
-4. con sesión activa se redirecciona a `backend/app/Views/parametrizacion.php`
-5. la salida de sesión se hace desde `backend/cerrar_sesion.php`
+4. si la sesión administrativa existe y sigue activa en `public.usuarios_sesiones`, el acceso se conserva
+5. con sesión activa se puede navegar entre `parametrizacion.php` y `seguridad.php`
+6. la salida de sesión se hace desde `backend/cerrar_sesion.php`
 
 ## Observaciones
 - las tablas del esquema `system` quedan cerradas a nivel estructural en esta etapa
-- la validación visual ya puede comenzar desde el flujo de login
-- el avance siguiente debe centrarse en pruebas y ajustes funcionales del acceso y de parametrización
+- parametrización se mantiene como bloque CRUD base sin ampliar alcance funcional
+- el frente actual se centra en seguridad administrativa, sesiones y claves encriptadas

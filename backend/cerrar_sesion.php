@@ -18,7 +18,7 @@ try {
 "
          . "  estado = B'0',
 "
-         . "  fecha_cierre = NOW(),
+         . "  fecha_expiracion = NOW(),
 "
          . "  usuario_modificacion = :usuario_modificacion,
 "
@@ -68,18 +68,7 @@ finally {
   }
 }
 
-unset(
-  $_SESSION['admin_usuario_id'],
-  $_SESSION['admin_usuario_login'],
-  $_SESSION['admin_usuario_correo'],
-  $_SESSION['admin_usuario_nombre_completo'],
-  $_SESSION['admin_sw_superusuario'],
-  $_SESSION['admin_roles'],
-  $_SESSION['admin_token_sesion'],
-  $_SESSION['admin_usuario_sesion_id']
-);
-
-$_SESSION['admin_token'] = bin2hex(random_bytes(32));
+configdb_limpiar_sesion_administrativa();
 session_regenerate_id(true);
 
 header('Location: app/Views/login.php');

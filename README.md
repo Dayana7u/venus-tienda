@@ -1,10 +1,11 @@
 # tienda_virtual
 
-Proyecto base MVC en PHP con PostgreSQL para parametrización, acceso inicial y administración.
+Proyecto base MVC en PHP con PostgreSQL para parametrización, acceso inicial y seguridad administrativa.
 
 ## Estado actual
 
 - Login funcional con sesión en `public.usuarios_sesiones`
+- Validación de sesión administrativa contra base de datos en login, parametrización y seguridad
 - Parametrización con CRUD base para:
   - temas
   - branding
@@ -14,16 +15,21 @@ Proyecto base MVC en PHP con PostgreSQL para parametrización, acceso inicial y 
   - menús
   - roles
   - usuarios
-- Diseño administrativo minimalista para login y parametrización
-- Login administrativo separado del acceso futuro de la tienda
-- Ajustes responsive para escritorio, tableta y móvil
-- Alertas informativas, de error y confirmación visual
+- Seguridad administrativa con:
+  - sesiones activas
+  - accesos recientes
+  - cierre de otras sesiones
+  - cambio de claves de usuarios
+- Claves nuevas y actualizadas almacenadas con hash bcrypt
+- Compatibilidad temporal para claves legadas sin hash y migración sugerida por SQL
+- Diseño administrativo responsive para login, parametrización y seguridad
 - PostgreSQL local por Docker en `docker/docker-compose.postgres.local.yml`
 
 ## SQL pendientes del flujo actual
 
 1. `database/sql/001_sql_parametrizacion_base_v2.sql`
 2. `database/sql/003_sql_login_token_base.sql`
+3. `database/sql/004_sql_seguridad_hash_claves.sql`
 
 ## Apertura local
 

@@ -62,6 +62,8 @@ class login_model {
 "
            . "  correo,
 "
+           . "  clave,
+"
            . "  sw_superusuario
 "
            . "FROM
@@ -72,8 +74,6 @@ class login_model {
 "
            . "  login = :login
 "
-           . "  AND clave = :clave
-"
            . "  AND estado = B'1'
 "
            . "  AND borrado = B'0'
@@ -82,18 +82,19 @@ class login_model {
 
       $stmt = $this->dbh->prepare($sql);
       $stmt->bindValue(':login', $login, PDO::PARAM_STR);
-      $stmt->bindValue(':clave', $clave, PDO::PARAM_STR);
       $stmt->execute();
 
       $usuario = $stmt->fetch();
 
-      if (!$usuario) {
+      if (!$usuario || !$this->validar_clave_usuario($clave, (string) $usuario['clave'])) {
         return [
           'estado'  => false,
           'mensaje' => 'Usuario o clave incorrectos.',
           'datos'   => [],
         ];
       }
+
+      $this->actualizar_hash_clave_usuario((int) $usuario['usuario_id'], $clave, (string) $usuario['clave']);
 
       session_regenerate_id(true);
       $_SESSION['admin_usuario_id']              = (int) $usuario['usuario_id'];
@@ -149,6 +150,16 @@ class login_model {
       ];
     }
 
+    if (!configdb_validar_sesion_administrativa()) {
+      configdb_limpiar_sesion_administrativa();
+
+      return [
+        'estado'  => false,
+        'mensaje' => 'La sesión administrativa ya no está disponible.',
+        'datos'   => [],
+      ];
+    }
+
     return [
       'estado'  => true,
       'mensaje' => 'Sesión activa.',
@@ -159,6 +170,70 @@ class login_model {
         'roles'                   => $_SESSION['admin_roles'] ?? [],
       ],
     ];
+  }
+
+  private function validar_clave_usuario($clave, $clave_guardada) {
+    if ($clave_guardada === '') {
+      return false;
+    }
+
+    if ($this->es_hash_bcrypt($clave_guardada)) {
+      if (password_verify($clave, $clave_guardada)) {
+        return true;
+      }
+
+      return hash_equals($clave_guardada, crypt($clave, $clave_guardada));
+    }
+
+    return hash_equals($clave_guardada, $clave);
+  }
+
+  private function actualizar_hash_clave_usuario($usuario_id, $clave, $clave_guardada) {
+    $stmt = null;
+
+    try {
+      if ($this->es_hash_bcrypt($clave_guardada) && !password_needs_rehash($clave_guardada, PASSWORD_DEFAULT)) {
+        return;
+      }
+
+      $hash = password_hash($clave, PASSWORD_DEFAULT);
+      $sql  = "UPDATE public.usuarios
+"
+            . "SET
+"
+            . "  clave = :clave,
+"
+            . "  usuario_modificacion = :usuario_modificacion,
+"
+            . "  fecha_modificacion = NOW()
+"
+            . "WHERE
+"
+            . "  usuario_id = :usuario_id;";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':clave', $hash, PDO::PARAM_STR);
+      $stmt->bindValue(':usuario_modificacion', $usuario_id, PDO::PARAM_INT);
+      $stmt->bindValue(':usuario_id', $usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log(
+        $this->modulo,
+        __FUNCTION__,
+        $e->getMessage(),
+        (string) $usuario_id
+      );
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
+  private function es_hash_bcrypt($clave_guardada) {
+    return preg_match('/^\$2[aby]\$/', $clave_guardada) === 1;
   }
 
   private function consultar_roles_usuario($usuario_id) {

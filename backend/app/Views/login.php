@@ -3,9 +3,15 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-if (!empty($_SESSION['admin_usuario_id'])) {
+require_once __DIR__ . '/../../config/configdb.php';
+
+if (!empty($_SESSION['admin_usuario_id']) && configdb_validar_sesion_administrativa()) {
   header('Location: parametrizacion.php');
   exit;
+}
+
+if (!empty($_SESSION['admin_usuario_id'])) {
+  configdb_limpiar_sesion_administrativa();
 }
 
 if (empty($_SESSION['admin_token'])) {
@@ -28,7 +34,7 @@ if (empty($_SESSION['admin_token'])) {
       <div class="dx_login_columna dx_login_columna_info">
         <span class="dx_login_badge">Panel administrativo</span>
         <h1>Ingreso</h1>
-        <p>Acceso independiente para la administración de parametrización, usuarios y seguridad inicial.</p>
+        <p>Acceso independiente para la administración de parametrización y seguridad.</p>
       </div>
 
       <div class="dx_login_columna dx_login_columna_formulario">

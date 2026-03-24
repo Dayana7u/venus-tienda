@@ -5,7 +5,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 header('Content-Type: application/json; charset=UTF-8');
 
-if (empty($_SESSION['admin_usuario_id'])) {
+require_once __DIR__ . '/../../config/configdb.php';
+
+if (empty($_SESSION['admin_usuario_id']) || !configdb_validar_sesion_administrativa()) {
+  configdb_limpiar_sesion_administrativa();
+
   echo json_encode([
     'estado'  => false,
     'mensaje' => 'Sesión no válida.',

@@ -3,7 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-if (empty($_SESSION['admin_usuario_id'])) {
+require_once __DIR__ . '/../../config/configdb.php';
+
+if (empty($_SESSION['admin_usuario_id']) || !configdb_validar_sesion_administrativa()) {
+  configdb_limpiar_sesion_administrativa();
   header('Location: login.php');
   exit;
 }
@@ -31,6 +34,11 @@ if (empty($_SESSION['admin_token'])) {
         <p>Gestión base del proyecto, acceso administrativo y configuración inicial.</p>
       </div>
 
+      <div class="dx_modulos_admin">
+        <a href="parametrizacion.php" class="dx_modulo_link dx_modulo_link_activo">Parametrización</a>
+        <a href="seguridad.php" class="dx_modulo_link">Seguridad</a>
+      </div>
+
       <nav class="dx_sidebar_nav" id="dx_sidebar_nav_parametrizacion">
         <a href="#seccion_temas" data-menu-link="true">Temas</a>
         <a href="#seccion_branding" data-menu-link="true">Branding</a>
@@ -51,12 +59,12 @@ if (empty($_SESSION['admin_token'])) {
         <div class="dx_header_identidad">
           <p class="dx_header_etiqueta">Usuario activo</p>
           <h2><?php echo htmlspecialchars($_SESSION['admin_usuario_nombre_completo'] ?? 'Administrador', ENT_QUOTES, 'UTF-8'); ?></h2>
-          
         </div>
 
         <div class="dx_header_acciones">
           <input type="text" id="buscar_parametrizacion" placeholder="Buscar registros" autocomplete="off">
           <button type="button" id="btn_recargar_parametrizacion" class="dx_btn dx_btn_secundario">Recargar</button>
+          <a href="seguridad.php" class="dx_btn dx_btn_secundario">Seguridad</a>
           <a href="../../cerrar_sesion.php" class="dx_btn dx_btn_principal">Cerrar sesión</a>
         </div>
       </header>

@@ -186,7 +186,9 @@ function template_formulario_parametrizacion(configuracion, datos, catalogos) {
  * @return     string  Estructura HTML
  */
 function template_campo_parametrizacion(campo, valor, catalogos, datos) {
-  const valor_campo = valor !== null && valor !== undefined ? valor : ``;
+  const valor_campo = campo.nombre === `clave`
+    ? ``
+    : valor !== null && valor !== undefined ? valor : ``;
   const requerido   = campo.requerido === true ? `required` : ``;
   const ayuda       = campo.ayuda ? `<small>${campo.ayuda}</small>` : ``;
   const placeholder = obtener_placeholder_campo_parametrizacion(campo, datos);

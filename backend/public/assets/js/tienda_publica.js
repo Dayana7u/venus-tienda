@@ -1,36 +1,41 @@
 let tpub = {};
 // Datos generales
-  tpub.token                     = document.getElementById(`token`).value;
-  tpub.temporizador_alerta       = null;
-  tpub.branding                  = {};
-  tpub.modulo                    = {};
-  tpub.menus                     = [];
-  tpub.tema                      = {};
-  tpub.tema_tokens               = {};
-  tpub.componentes               = {};
-  tpub.parametros                = {};
+  tpub.token                        = document.getElementById(`token`).value;
+  tpub.temporizador_alerta          = null;
+  tpub.branding                     = {};
+  tpub.modulo                       = {};
+  tpub.menus                        = [];
+  tpub.tema                         = {};
+  tpub.tema_tokens                  = {};
+  tpub.componentes                  = {};
+  tpub.parametros                   = {};
 // Botones
-  tpub.btn_menu_tienda_publica   = document.getElementById(`btn_menu_tienda_publica`);
+  tpub.btn_menu_tienda_publica      = document.getElementById(`btn_menu_tienda_publica`);
 // Divs
-  tpub.div_topbar_tienda_publica     = document.getElementById(`div_topbar_tienda_publica`);
-  tpub.tv_nav_tienda_publica         = document.getElementById(`tv_nav_tienda_publica`);
-  tpub.div_backdrop_tienda_publica   = document.getElementById(`div_backdrop_tienda_publica`);
-  tpub.div_mensaje_tienda_publica    = document.getElementById(`div_mensaje_tienda_publica`);
-  tpub.div_hero_tienda_publica       = document.getElementById(`div_hero_tienda_publica`);
+  tpub.div_topbar_tienda_publica    = document.getElementById(`div_topbar_tienda_publica`);
+  tpub.tv_nav_tienda_publica        = document.getElementById(`tv_nav_tienda_publica`);
+  tpub.div_backdrop_tienda_publica  = document.getElementById(`div_backdrop_tienda_publica`);
+  tpub.div_mensaje_tienda_publica   = document.getElementById(`div_mensaje_tienda_publica`);
+  tpub.div_hero_tienda_publica      = document.getElementById(`div_hero_tienda_publica`);
   tpub.div_beneficios_tienda_publica = document.getElementById(`div_beneficios_tienda_publica`);
+  tpub.div_colecciones_tienda_publica = document.getElementById(`div_colecciones_tienda_publica`);
+  tpub.div_lineas_tienda_publica    = document.getElementById(`div_lineas_tienda_publica`);
   tpub.div_categorias_tienda_publica = document.getElementById(`div_categorias_tienda_publica`);
   tpub.div_destacados_tienda_publica = document.getElementById(`div_destacados_tienda_publica`);
-  tpub.div_rutina_tienda_publica     = document.getElementById(`div_rutina_tienda_publica`);
-  tpub.div_ofertas_tienda_publica    = document.getElementById(`div_ofertas_tienda_publica`);
+  tpub.div_mas_vendidos_tienda_publica = document.getElementById(`div_mas_vendidos_tienda_publica`);
+  tpub.div_rutina_tienda_publica    = document.getElementById(`div_rutina_tienda_publica`);
+  tpub.div_ofertas_tienda_publica   = document.getElementById(`div_ofertas_tienda_publica`);
   tpub.div_testimonios_tienda_publica = document.getElementById(`div_testimonios_tienda_publica`);
-  tpub.div_contacto_tienda_publica   = document.getElementById(`div_contacto_tienda_publica`);
-  tpub.div_footer_tienda_publica     = document.getElementById(`div_footer_tienda_publica`);
-  tpub.div_buscador_tienda_publica   = document.getElementById(`div_buscador_tienda_publica`);
-  tpub.div_carrito_tienda_publica    = document.getElementById(`div_carrito_tienda_publica`);
-  tpub.tv_topbar_tienda_publica      = document.getElementById(`tv_topbar_tienda_publica`);
-  tpub.tv_header_tienda_publica      = document.getElementById(`tv_header_tienda_publica`);
-  tpub.tv_footer_tienda_publica      = document.getElementById(`tv_footer_tienda_publica`);
-  tpub.tv_logo_tienda_publica        = document.getElementById(`tv_logo_tienda_publica`);
+  tpub.div_faq_tienda_publica       = document.getElementById(`div_faq_tienda_publica`);
+  tpub.div_contacto_tienda_publica  = document.getElementById(`div_contacto_tienda_publica`);
+  tpub.div_newsletter_tienda_publica = document.getElementById(`div_newsletter_tienda_publica`);
+  tpub.div_footer_tienda_publica    = document.getElementById(`div_footer_tienda_publica`);
+  tpub.div_buscador_tienda_publica  = document.getElementById(`div_buscador_tienda_publica`);
+  tpub.div_carrito_tienda_publica   = document.getElementById(`div_carrito_tienda_publica`);
+  tpub.tv_topbar_tienda_publica     = document.getElementById(`tv_topbar_tienda_publica`);
+  tpub.tv_header_tienda_publica     = document.getElementById(`tv_header_tienda_publica`);
+  tpub.tv_footer_tienda_publica     = document.getElementById(`tv_footer_tienda_publica`);
+  tpub.tv_logo_tienda_publica       = document.getElementById(`tv_logo_tienda_publica`);
 
 document.addEventListener(`DOMContentLoaded`, async function() {
   await inicializar_tienda_publica();
@@ -87,21 +92,70 @@ async function listar_portada_tienda_publica() {
  * Función encargada de renderizar el contenido del frente público.
  */
 function renderizar_portada_tienda_publica() {
-  tpub.tv_logo_tienda_publica.textContent         = tpub.branding.nombre_comercial || tpub.parametros[`app.nombre`] || `Tienda`;
-  tpub.div_topbar_tienda_publica.innerHTML        = template_topbar_tienda_publica(tpub.modulo);
-  tpub.tv_nav_tienda_publica.innerHTML            = template_menu_tienda_publica(tpub.menus);
-  tpub.div_buscador_tienda_publica.innerHTML      = template_buscador_tienda_publica(tpub.modulo);
-  tpub.div_carrito_tienda_publica.innerHTML       = template_carrito_tienda_publica(tpub.modulo);
-  tpub.div_hero_tienda_publica.innerHTML          = template_hero_tienda_publica(tpub.branding, tpub.modulo, tpub.parametros);
-  tpub.div_beneficios_tienda_publica.innerHTML    = template_beneficios_tienda_publica(tpub.modulo);
-  tpub.div_categorias_tienda_publica.innerHTML    = template_categorias_tienda_publica(tpub.modulo);
-  tpub.div_destacados_tienda_publica.innerHTML    = template_destacados_tienda_publica(tpub.modulo);
-  tpub.div_rutina_tienda_publica.innerHTML        = template_rutina_tienda_publica(tpub.modulo);
-  tpub.div_ofertas_tienda_publica.innerHTML       = template_ofertas_tienda_publica(tpub.modulo);
-  tpub.div_testimonios_tienda_publica.innerHTML   = template_testimonios_tienda_publica(tpub.modulo);
-  tpub.div_contacto_tienda_publica.innerHTML      = template_contacto_tienda_publica(tpub.branding, tpub.modulo);
-  tpub.div_footer_tienda_publica.innerHTML        = template_footer_tienda_publica(tpub.branding, tpub.menus);
-
+  renderizar_header_tienda_publica();
+  renderizar_bloques_principales_tienda_publica();
+  renderizar_bloques_comerciales_tienda_publica();
+  renderizar_bloques_relacion_tienda_publica();
+  renderizar_footer_tienda_publica();
+  registrar_eventos_menu_tienda_publica();
+}
+/**
+ * Función encargada de renderizar header y elementos de navegación.
+ */
+function renderizar_header_tienda_publica() {
+  tpub.tv_logo_tienda_publica.textContent    = tpub.branding.nombre_comercial || tpub.parametros[`app.nombre`] || `Tienda`;
+  tpub.div_topbar_tienda_publica.innerHTML   = template_topbar_tienda_publica(tpub.modulo);
+  tpub.tv_nav_tienda_publica.innerHTML       = template_menu_tienda_publica(tpub.menus);
+  tpub.div_buscador_tienda_publica.innerHTML = template_buscador_tienda_publica(tpub.modulo);
+  tpub.div_carrito_tienda_publica.innerHTML  = template_carrito_tienda_publica(tpub.modulo);
+}
+/**
+ * Función encargada de renderizar los bloques principales del frente.
+ */
+function renderizar_bloques_principales_tienda_publica() {
+  imprimir_html_tienda_publica(tpub.div_hero_tienda_publica, template_hero_tienda_publica(tpub.branding, tpub.modulo, tpub.parametros));
+  imprimir_html_tienda_publica(tpub.div_beneficios_tienda_publica, template_beneficios_tienda_publica(tpub.modulo));
+  imprimir_html_tienda_publica(tpub.div_colecciones_tienda_publica, template_colecciones_tienda_publica(tpub.modulo));
+  imprimir_html_tienda_publica(tpub.div_lineas_tienda_publica, template_lineas_tienda_publica(tpub.modulo));
+  imprimir_html_tienda_publica(tpub.div_categorias_tienda_publica, template_categorias_tienda_publica(tpub.modulo));
+}
+/**
+ * Función encargada de renderizar los bloques comerciales del catálogo.
+ */
+function renderizar_bloques_comerciales_tienda_publica() {
+  imprimir_html_tienda_publica(tpub.div_destacados_tienda_publica, template_destacados_tienda_publica(tpub.modulo));
+  imprimir_html_tienda_publica(tpub.div_mas_vendidos_tienda_publica, template_mas_vendidos_tienda_publica(tpub.modulo));
+  imprimir_html_tienda_publica(tpub.div_rutina_tienda_publica, template_rutina_tienda_publica(tpub.modulo));
+  imprimir_html_tienda_publica(tpub.div_ofertas_tienda_publica, template_ofertas_tienda_publica(tpub.modulo));
+}
+/**
+ * Función encargada de renderizar los bloques de confianza y relación.
+ */
+function renderizar_bloques_relacion_tienda_publica() {
+  imprimir_html_tienda_publica(tpub.div_testimonios_tienda_publica, template_testimonios_tienda_publica(tpub.modulo));
+  imprimir_html_tienda_publica(tpub.div_faq_tienda_publica, template_faq_tienda_publica(tpub.modulo));
+  imprimir_html_tienda_publica(tpub.div_contacto_tienda_publica, template_contacto_tienda_publica(tpub.branding, tpub.modulo));
+  imprimir_html_tienda_publica(tpub.div_newsletter_tienda_publica, template_newsletter_tienda_publica(tpub.branding, tpub.modulo));
+}
+/**
+ * Función encargada de renderizar el pie de página público.
+ */
+function renderizar_footer_tienda_publica() {
+  tpub.div_footer_tienda_publica.innerHTML = template_footer_tienda_publica(tpub.branding, tpub.menus);
+}
+/**
+ * Función encargada de imprimir HTML en un contenedor del frente público.
+ *
+ * @param      object  contenedor  Elemento objetivo.
+ * @param      string  html        Contenido HTML a imprimir.
+ */
+function imprimir_html_tienda_publica(contenedor, html) {
+  contenedor.innerHTML = html;
+}
+/**
+ * Función encargada de registrar eventos sobre el menú móvil.
+ */
+function registrar_eventos_menu_tienda_publica() {
   document.querySelectorAll(`.tv_nav_link`).forEach(function(enlace) {
     enlace.addEventListener(`click`, function() {
       if (window.innerWidth <= 960) {
@@ -117,19 +171,24 @@ function renderizar_portada_tienda_publica() {
  * @param      object  componentes  Configuración visual por componente.
  */
 function aplicar_tema_tienda_publica(tema_tokens, componentes) {
-  const raiz = document.documentElement;
-  const banner_principal = componentes[`banner.principal`] || {};
-  const button_primary   = componentes[`button.primary`] || {};
-  const card_product     = componentes[`card.product`] || {};
-  const input_search     = componentes[`input.search`] || {};
-  const badge            = componentes[`badge`] || {};
-  const footer           = componentes[`footer`] || {};
-  const topbar           = componentes[`topbar`] || {};
-  const hero_panel       = componentes[`hero.panel`] || {};
-  const section_soft     = componentes[`section.soft`] || {};
-  const product_price    = componentes[`product.price`] || {};
-  const product_media    = componentes[`product.media`] || {};
-  const testimonial      = componentes[`testimonial`] || {};
+  const raiz              = document.documentElement;
+  const banner_principal  = componentes[`banner.principal`] || {};
+  const button_primary    = componentes[`button.primary`] || {};
+  const card_product      = componentes[`card.product`] || {};
+  const input_search      = componentes[`input.search`] || {};
+  const badge             = componentes[`badge`] || {};
+  const footer            = componentes[`footer`] || {};
+  const topbar            = componentes[`topbar`] || {};
+  const hero_panel        = componentes[`hero.panel`] || {};
+  const section_soft      = componentes[`section.soft`] || {};
+  const product_price     = componentes[`product.price`] || {};
+  const product_media     = componentes[`product.media`] || {};
+  const testimonial       = componentes[`testimonial`] || {};
+  const collection_card   = componentes[`collection.card`] || {};
+  const newsletter        = componentes[`newsletter`] || {};
+  const contact_highlight = componentes[`contact.highlight`] || {};
+  const line_card         = componentes[`line.card`] || {};
+  const faq_card          = componentes[`faq.card`] || {};
 
   raiz.style.setProperty(`--tv-color-primary`, tema_tokens[`color.primary`] || `#111111`);
   raiz.style.setProperty(`--tv-color-secondary`, tema_tokens[`color.secondary`] || `#f5f5f5`);
@@ -172,6 +231,16 @@ function aplicar_tema_tienda_publica(tema_tokens, componentes) {
   raiz.style.setProperty(`--tv-product-price`, product_price[`text_color`] || tema_tokens[`color.accent`] || `#b9677c`);
   raiz.style.setProperty(`--tv-product-media-background`, product_media[`background_color`] || `#f8edf0`);
   raiz.style.setProperty(`--tv-testimonial-background`, testimonial[`background_color`] || `#fff7f9`);
+  raiz.style.setProperty(`--tv-collection-background`, collection_card[`background_color`] || `#fff5f7`);
+  raiz.style.setProperty(`--tv-collection-border`, collection_card[`border_color`] || tema_tokens[`color.border`] || `#ecd1d8`);
+  raiz.style.setProperty(`--tv-newsletter-background`, newsletter[`background_color`] || `#fff4f6`);
+  raiz.style.setProperty(`--tv-newsletter-border`, newsletter[`border_color`] || tema_tokens[`color.border`] || `#ead1d8`);
+  raiz.style.setProperty(`--tv-contact-highlight-background`, contact_highlight[`background_color`] || `#fff2f5`);
+  raiz.style.setProperty(`--tv-contact-highlight-border`, contact_highlight[`border_color`] || tema_tokens[`color.border`] || `#ead1d8`);
+  raiz.style.setProperty(`--tv-line-card-background`, line_card[`background_color`] || `#fff7f8`);
+  raiz.style.setProperty(`--tv-line-card-border`, line_card[`border_color`] || tema_tokens[`color.border`] || `#ecd1d8`);
+  raiz.style.setProperty(`--tv-faq-card-background`, faq_card[`background_color`] || `#fff7f8`);
+  raiz.style.setProperty(`--tv-faq-card-border`, faq_card[`border_color`] || tema_tokens[`color.border`] || `#ecd1d8`);
 
   if (componentes[`header`]) {
     tpub.tv_header_tienda_publica.style.backgroundColor = componentes[`header`][`background_color`] || ``;

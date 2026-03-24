@@ -22,3 +22,21 @@ Se amplió la portada pública para manejar topbar, hero comercial, categorías 
 Se mantuvo el enfoque por cards como patrón principal del frente comercial.
 Se dejó la lectura del contenido principal desde `system.modulo_configuraciones`, manteniendo textos visibles y mensajes del frente dentro de la parametrización existente.
 Se adicionó `007_sql_avance_tienda_publica_beauty.sql` para sembrar el contenido base del frente beauty y nuevos componentes visuales del tema `PINK_NUDE`.
+
+
+## Avance comercial por cards sobre el tema `PINK_NUDE`
+Novedades y Modificaciones
+Se agregó un bloque de colecciones curadas para organizar campañas visuales sin salir del enfoque parametrizable actual.
+Se ajustaron las tarjetas de productos destacados para mostrar precio visible, precio comparativo y acción comercial base.
+Se agregó un bloque principal de contacto y un bloque final de cierre comercial, manteniendo el patrón visual por cards.
+Se adicionó `008_sql_avance_tienda_publica_cards.sql` para sembrar textos y componentes visuales nuevos sobre `TIENDA_PUBLICA` y `PINK_NUDE`.
+
+
+## Avance catálogo visual v5
+Se evidencia que, la portada pública ya incorpora bloques de líneas de producto, más vendidos y preguntas frecuentes, manteniendo el enfoque beauty para maquillaje, skincare y accesorios.
+
+### Novedades y Modificaciones
+- Se agregó un bloque de líneas principales con tres cards: maquillaje, skincare y accesorios.
+- Se agregó un bloque de más vendidos con seis cards y foco comercial.
+- Se agregó un bloque FAQ por cards para dudas frecuentes de compra.
+- Se mantuvo la estructura reusable por tema y por configuraciones del módulo TIENDA_PUBLICA.

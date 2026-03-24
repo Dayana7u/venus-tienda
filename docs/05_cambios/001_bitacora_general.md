@@ -58,3 +58,21 @@
 - Se ajustó `backend/public/assets/js/tienda_publica.js` para consumir nuevos componentes visuales del tema y nuevas configuraciones del módulo `TIENDA_PUBLICA`.
 - Se actualizó `backend/public/assets/js/tienda_publica_template.js` para renderizar bloques de maquillaje, skincare, accesorios, productos destacados, rutina y testimonios desde configuraciones parametrizables.
 - Se agregó `database/sql/007_sql_avance_tienda_publica_beauty.sql` para registrar nuevos textos configurables y nuevos componentes visuales del tema `PINK_NUDE` sin crear tablas nuevas.
+
+#### Avance comercial por cards sobre el tema `PINK_NUDE`
+- Se amplió `backend/app/Views/tienda_publica.php` con nuevos bloques reutilizables de colecciones y cierre comercial sin introducir modales.
+- Se ajustó `backend/public/assets/js/tienda_publica.js` para consumir nuevos bloques del frente público y nuevos componentes visuales del tema.
+- Se actualizó `backend/public/assets/js/tienda_publica_template.js` para renderizar colecciones curadas, productos con precio comparativo, contacto destacado y cierre comercial parametrizable.
+- Se fortaleció `backend/public/assets/css/tienda_publica.css` con estilos para nuevas cards, CTA de contacto, bloque final comercial y pie de página con columnas.
+- Se agregó `database/sql/008_sql_avance_tienda_publica_cards.sql` para registrar nuevas configuraciones del módulo `TIENDA_PUBLICA` y nuevos componentes del tema `PINK_NUDE`.
+
+
+## Avance 009 - tienda pública catálogo real
+Se evidencia que, el frente público continuó sobre PINK_NUDE con una organización más clara por bloques y con una salida más cercana a catálogo real.
+
+### Novedades y Modificaciones
+- Se agregó `database/sql/009_sql_avance_tienda_publica_catalogo_real.sql`.
+- Se ajustó `backend/app/Views/tienda_publica.php` para incorporar nuevas secciones del frente público.
+- Se reorganizó `backend/public/assets/js/tienda_publica.js` por bloques funcionales de renderización.
+- Se amplió `backend/public/assets/js/tienda_publica_template.js` con cards reutilizables de líneas, más vendidos y FAQ.
+- Se ajustó `backend/public/assets/css/tienda_publica.css` para los nuevos bloques del catálogo.

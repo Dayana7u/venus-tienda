@@ -24,7 +24,7 @@ function template_topbar_tienda_publica(modulo) {
   const mensaje = obtener_valor_configuracion_tienda_publica(
     modulo,
     `tienda_publica.topbar_texto`,
-    `Despachos de 1 a 8 días hábiles · Maquillaje, skincare y accesorios.`
+    `Despachos a todo Colombia · Maquillaje, skincare y accesorios con imagen profesional.`
   );
 
   return `<div class="tv_topbar_contenido">${mensaje}</div>`;
@@ -32,9 +32,9 @@ function template_topbar_tienda_publica(modulo) {
 /**
  * Función encargada de generar el hero del frente público.
  *
- * @param      object  branding   Datos de branding.
- * @param      object  modulo     Configuraciones del módulo.
- * @param      object  parametros Parámetros públicos.
+ * @param      object  branding    Datos de branding.
+ * @param      object  modulo      Configuraciones del módulo.
+ * @param      object  parametros  Parámetros públicos.
  *
  * @return     string  Estructura HTML.
  */
@@ -48,17 +48,17 @@ function template_hero_tienda_publica(branding, modulo, parametros) {
   const hero_etiqueta = obtener_valor_configuracion_tienda_publica(
     modulo,
     `tienda_publica.hero_etiqueta`,
-    `Glow diario`
+    `Beauty commerce`
   );
   const hero_titulo = obtener_valor_configuracion_tienda_publica(
     modulo,
     `tienda_publica.hero_titulo`,
-    `Belleza cotidiana con imagen limpia y profesional`
+    `Belleza cotidiana con vitrina limpia, femenina y comercial`
   );
   const hero_descripcion = obtener_valor_configuracion_tienda_publica(
     modulo,
     `tienda_publica.hero_descripcion`,
-    `Portada base enfocada en maquillaje, skincare, accesorios y venta digital con identidad femenina y elegante.`
+    `Portada base enfocada en maquillaje, skincare, accesorios y campañas visuales que luego podrán duplicarse a otros temas sin romper la lógica.`
   );
   const hero_boton_primario = obtener_valor_configuracion_tienda_publica(
     modulo,
@@ -78,7 +78,7 @@ function template_hero_tienda_publica(branding, modulo, parametros) {
   const hero_item_2 = obtener_valor_configuracion_tienda_publica(
     modulo,
     `tienda_publica.hero_item_2`,
-    `Pago seguro y atención cercana`
+    `Pago seguro y acompañamiento cercano`
   );
   const hero_item_3 = obtener_valor_configuracion_tienda_publica(
     modulo,
@@ -190,6 +190,102 @@ function template_beneficios_tienda_publica(modulo) {
     </div>`;
 }
 /**
+ * Función encargada de generar el bloque de colecciones curadas.
+ *
+ * @param      object  modulo  Datos del módulo público.
+ *
+ * @return     string  Estructura HTML.
+ */
+function template_colecciones_tienda_publica(modulo) {
+  const titulo = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.colecciones_titulo`,
+    `Colecciones curadas para una vitrina beauty más profesional`
+  );
+  const descripcion = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.colecciones_descripcion`,
+    `Este bloque organiza la portada en campañas visuales fáciles de reutilizar cuando cambie la temporada o el enfoque comercial.`
+  );
+  const colecciones = [1, 2, 3].map(function(indice) {
+    return {
+      etiqueta    : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.coleccion_${indice}_etiqueta`, `Colección ${indice}`),
+      titulo      : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.coleccion_${indice}_titulo`, `Colección ${indice}`),
+      descripcion : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.coleccion_${indice}_descripcion`, `Descripción base de la colección.`),
+      boton       : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.coleccion_${indice}_boton`, `Explorar`)
+    };
+  });
+
+  return `
+    <div class="tv_bloque_encabezado">
+      <span class="tv_etiqueta">Colecciones</span>
+      <h2>${titulo}</h2>
+      <p>${descripcion}</p>
+    </div>
+    <div class="tv_grid_colecciones">
+      ${colecciones.map(function(coleccion, indice) {
+        return `
+          <article class="tv_coleccion_card tv_coleccion_card_${indice + 1}">
+            <span class="tv_etiqueta">${coleccion.etiqueta}</span>
+            <h3>${coleccion.titulo}</h3>
+            <p>${coleccion.descripcion}</p>
+            <a href="#seccion_catalogo_publico" class="tv_btn tv_btn_secundario">${coleccion.boton}</a>
+          </article>`;
+      }).join(``)}
+    </div>`;
+}
+/**
+ * Función encargada de generar el bloque de líneas principales del catálogo.
+ *
+ * @param      object  modulo  Datos del módulo público.
+ *
+ * @return     string  Estructura HTML.
+ */
+function template_lineas_tienda_publica(modulo) {
+  const mostrar_lineas = validar_configuracion_tienda_publica(
+    modulo.configuraciones || {},
+    `tienda_publica.mostrar_lineas_producto`
+  );
+
+  if (mostrar_lineas !== true) {
+    return ``;
+  }
+
+  const titulo = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.lineas_titulo`,
+    `Compra por línea principal`
+  );
+  const descripcion = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.lineas_descripcion`,
+    `Sección pensada para que la tienda ya empiece a verse como un catálogo real por línea de producto.`
+  );
+  const lineas = [1, 2, 3].map(function(indice) {
+    return {
+      etiqueta    : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.linea_${indice}_etiqueta`, `Línea ${indice}`),
+      titulo      : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.linea_${indice}_titulo`, `Título línea ${indice}`),
+      descripcion : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.linea_${indice}_descripcion`, `Descripción base.`),
+      item_1      : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.linea_${indice}_item_1`, `Beneficio uno`),
+      item_2      : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.linea_${indice}_item_2`, `Beneficio dos`),
+      item_3      : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.linea_${indice}_item_3`, `Beneficio tres`),
+      boton       : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.linea_${indice}_boton`, `Explorar`)
+    };
+  });
+
+  return `
+    <div class="tv_bloque_encabezado">
+      <span class="tv_etiqueta">Líneas</span>
+      <h2>${titulo}</h2>
+      <p>${descripcion}</p>
+    </div>
+    <div class="tv_grid_lineas">
+      ${lineas.map(function(linea, indice) {
+        return template_linea_card_tienda_publica(linea, indice + 1);
+      }).join(``)}
+    </div>`;
+}
+/**
  * Función encargada de generar el bloque de categorías destacadas.
  *
  * @param      object  modulo  Datos del módulo público.
@@ -231,12 +327,20 @@ function template_categorias_tienda_publica(modulo) {
  * @return     string  Estructura HTML.
  */
 function template_destacados_tienda_publica(modulo) {
+  const boton = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.destacado_boton`,
+    `Ver detalle`
+  );
   const productos = [1, 2, 3, 4].map(function(indice) {
     return {
-      categoria   : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_categoria`, `Destacado`),
-      nombre      : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_nombre`, `Producto ${indice}`),
-      descripcion : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_descripcion`, `Descripción breve del producto.`),
-      precio      : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_precio`, `$0`)
+      categoria       : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_categoria`, `Destacado`),
+      nombre          : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_nombre`, `Producto ${indice}`),
+      descripcion     : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_descripcion`, `Descripción breve del producto.`),
+      precio          : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_precio`, `$0`),
+      precio_anterior : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_precio_anterior`, ``),
+      rating          : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_rating`, `4.9`),
+      envio           : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.destacado_${indice}_envio`, `Envío rápido`)
     };
   });
 
@@ -248,24 +352,68 @@ function template_destacados_tienda_publica(modulo) {
     </div>
     <div class="tv_grid_productos">
       ${productos.map(function(producto, indice) {
-        return `
-          <article class="tv_producto_card">
-            <div class="tv_producto_media tv_producto_media_${indice + 1}">
-              <span>${producto.categoria}</span>
-            </div>
-            <span class="tv_etiqueta">${producto.categoria}</span>
-            <h3>${producto.nombre}</h3>
-            <p>${producto.descripcion}</p>
-            <div class="tv_producto_pie">
-              <strong class="tv_producto_precio">${producto.precio}</strong>
-              <button type="button" class="tv_btn tv_btn_secundario" disabled>Explorar</button>
-            </div>
-          </article>`;
+        return template_producto_card_tienda_publica(producto, indice + 1, boton);
       }).join(``)}
     </div>`;
 }
 /**
- * Función encargada de generar el bloque de rutina sugerida.
+ * Función encargada de generar el bloque de más vendidos.
+ *
+ * @param      object  modulo  Datos del módulo público.
+ *
+ * @return     string  Estructura HTML.
+ */
+function template_mas_vendidos_tienda_publica(modulo) {
+  const mostrar_mas_vendidos = validar_configuracion_tienda_publica(
+    modulo.configuraciones || {},
+    `tienda_publica.mostrar_mas_vendidos`
+  );
+
+  if (mostrar_mas_vendidos !== true) {
+    return ``;
+  }
+
+  const titulo = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.mas_vendidos_titulo`,
+    `Más vendidos de la semana`
+  );
+  const descripcion = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.mas_vendidos_descripcion`,
+    `Este bloque ya acerca el frente a una tienda real con tarjetas de producto, rating, precio y foco comercial.`
+  );
+  const boton = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.mas_vendidos_boton`,
+    `Agregar pronto`
+  );
+  const productos = [1, 2, 3, 4, 5, 6].map(function(indice) {
+    return {
+      etiqueta       : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.mas_vendido_${indice}_etiqueta`, `Top venta`),
+      nombre         : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.mas_vendido_${indice}_nombre`, `Producto ${indice}`),
+      descripcion    : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.mas_vendido_${indice}_descripcion`, `Descripción base del producto.`),
+      precio         : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.mas_vendido_${indice}_precio`, `$0`),
+      precio_anterior: obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.mas_vendido_${indice}_precio_anterior`, ``),
+      rating         : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.mas_vendido_${indice}_rating`, `4.9`),
+      envio          : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.mas_vendido_${indice}_envio`, `Envío nacional`)
+    };
+  });
+
+  return `
+    <div class="tv_bloque_encabezado">
+      <span class="tv_etiqueta">Catálogo</span>
+      <h2>${titulo}</h2>
+      <p>${descripcion}</p>
+    </div>
+    <div class="tv_grid_mas_vendidos">
+      ${productos.map(function(producto, indice) {
+        return template_producto_comercial_tienda_publica(producto, indice + 1, boton);
+      }).join(``)}
+    </div>`;
+}
+/**
+ * Función encargada de generar el bloque de rutina visual.
  *
  * @param      object  modulo  Datos del módulo público.
  *
@@ -275,21 +423,21 @@ function template_rutina_tienda_publica(modulo) {
   const pasos = [1, 2, 3].map(function(indice) {
     return {
       titulo      : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.rutina_${indice}_titulo`, `Paso ${indice}`),
-      descripcion : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.rutina_${indice}_descripcion`, `Descripción del paso.`)
+      descripcion : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.rutina_${indice}_descripcion`, `Descripción base del paso.`)
     };
   });
 
   return `
     <div class="tv_bloque_encabezado">
       <span class="tv_etiqueta">Rutina</span>
-      <h2>Una estructura más cercana al mundo skincare y beauty</h2>
-      <p>Este bloque deja visible una narrativa comercial que se parece más a una tienda profesional de cuidado personal.</p>
+      <h2>Lectura rápida del recorrido de compra beauty</h2>
+      <p>Se mantiene una sección por cards para presentar combinación de skincare, maquillaje y cierre de compra sin usar modales.</p>
     </div>
     <div class="tv_grid_rutina">
       ${pasos.map(function(paso, indice) {
         return `
           <article class="tv_rutina_card">
-            <div class="tv_rutina_numero">0${indice + 1}</div>
+            <span class="tv_rutina_numero">0${indice + 1}</span>
             <h3>${paso.titulo}</h3>
             <p>${paso.descripcion}</p>
           </article>`;
@@ -297,23 +445,13 @@ function template_rutina_tienda_publica(modulo) {
     </div>`;
 }
 /**
- * Función encargada de generar el bloque de ofertas.
+ * Función encargada de generar el bloque de ofertas del frente público.
  *
  * @param      object  modulo  Datos del módulo público.
  *
  * @return     string  Estructura HTML.
  */
 function template_ofertas_tienda_publica(modulo) {
-  const mostrar_ofertas = validar_configuracion_tienda_publica(modulo.configuraciones || {}, `tienda_publica.mostrar_ofertas`);
-
-  if (mostrar_ofertas !== true) {
-    return `
-      <article class="tv_tarjeta_info">
-        <h3>Bloque de ofertas inactivo</h3>
-        <p>La configuración actual del módulo público tiene este bloque oculto.</p>
-      </article>`;
-  }
-
   const oferta_titulo = obtener_valor_configuracion_tienda_publica(
     modulo,
     `tienda_publica.oferta_titulo`,
@@ -338,8 +476,8 @@ function template_ofertas_tienda_publica(modulo) {
   return `
     <div class="tv_bloque_encabezado">
       <span class="tv_etiqueta">Campañas</span>
-      <h2>Promociones configurables</h2>
-      <p>Las campañas visuales del frente público siguen quedando soportadas por la parametrización del módulo.</p>
+      <h2>${oferta_titulo}</h2>
+      <p>La visibilidad del bloque responde a la configuración activa del módulo público.</p>
     </div>
     <div class="tv_grid_ofertas">
       <article class="tv_tarjeta_oferta">
@@ -355,7 +493,7 @@ function template_ofertas_tienda_publica(modulo) {
     </div>`;
 }
 /**
- * Función encargada de generar el bloque de testimonios.
+ * Función encargada de generar el bloque de testimonios del frente público.
  *
  * @param      object  modulo  Datos del módulo público.
  *
@@ -379,8 +517,59 @@ function template_testimonios_tienda_publica(modulo) {
       ${testimonios.map(function(testimonio) {
         return `
           <article class="tv_testimonio_card">
+            <div class="tv_testimonio_estrellas">★★★★★</div>
             <p>“${testimonio.texto}”</p>
             <strong>${testimonio.nombre}</strong>
+          </article>`;
+      }).join(``)}
+    </div>`;
+}
+/**
+ * Función encargada de generar el bloque de preguntas frecuentes.
+ *
+ * @param      object  modulo  Datos del módulo público.
+ *
+ * @return     string  Estructura HTML.
+ */
+function template_faq_tienda_publica(modulo) {
+  const mostrar_faq = validar_configuracion_tienda_publica(
+    modulo.configuraciones || {},
+    `tienda_publica.mostrar_faq`
+  );
+
+  if (mostrar_faq !== true) {
+    return ``;
+  }
+
+  const titulo = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.faq_titulo`,
+    `Preguntas que refuerzan confianza de compra`
+  );
+  const descripcion = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.faq_descripcion`,
+    `Queda un bloque listo para dudas frecuentes sobre envíos, pagos y tiempos de despacho.`
+  );
+  const preguntas = [1, 2, 3].map(function(indice) {
+    return {
+      pregunta  : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.faq_${indice}_pregunta`, `Pregunta ${indice}`),
+      respuesta : obtener_valor_configuracion_tienda_publica(modulo, `tienda_publica.faq_${indice}_respuesta`, `Respuesta base.`)
+    };
+  });
+
+  return `
+    <div class="tv_bloque_encabezado">
+      <span class="tv_etiqueta">FAQ</span>
+      <h2>${titulo}</h2>
+      <p>${descripcion}</p>
+    </div>
+    <div class="tv_grid_faq">
+      ${preguntas.map(function(item) {
+        return `
+          <article class="tv_faq_card">
+            <h3>${item.pregunta}</h3>
+            <p>${item.respuesta}</p>
           </article>`;
       }).join(``)}
     </div>`;
@@ -407,6 +596,21 @@ function template_contacto_tienda_publica(branding, modulo) {
     `tienda_publica.contacto_descripcion`,
     `Los datos visibles se leen desde branding activo para conservar el enfoque parametrizable.`
   );
+  const contacto_cta_titulo = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.contacto_cta_titulo`,
+    `Asesoría cercana para maquillaje, skincare y regalos`
+  );
+  const contacto_cta_descripcion = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.contacto_cta_descripcion`,
+    `Bloque principal para reforzar atención personalizada, seguimiento por WhatsApp y apoyo en la compra.`
+  );
+  const contacto_cta_boton = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.contacto_cta_boton`,
+    `Solicitar ayuda`
+  );
 
   return `
     <div class="tv_bloque_encabezado">
@@ -414,20 +618,81 @@ function template_contacto_tienda_publica(branding, modulo) {
       <h2>${contacto_titulo}</h2>
       <p>${contacto_descripcion}</p>
     </div>
-    <div class="tv_grid_contacto">
-      <article class="tv_tarjeta_info">
-        <h3>Correo</h3>
-        <p>${correo}</p>
+    <div class="tv_contacto_contenido">
+      <article class="tv_contacto_principal">
+        <span class="tv_etiqueta">Atención</span>
+        <h3>${contacto_cta_titulo}</h3>
+        <p>${contacto_cta_descripcion}</p>
+        <button type="button" class="tv_btn tv_btn_principal" disabled>${contacto_cta_boton}</button>
       </article>
-      <article class="tv_tarjeta_info">
-        <h3>Teléfono</h3>
-        <p>${telefono}</p>
-      </article>
-      <article class="tv_tarjeta_info">
-        <h3>Dirección</h3>
-        <p>${direccion}</p>
-      </article>
+      <div class="tv_contacto_grid_secundario">
+        <article class="tv_tarjeta_info">
+          <h3>Correo</h3>
+          <p>${correo}</p>
+        </article>
+        <article class="tv_tarjeta_info">
+          <h3>Teléfono</h3>
+          <p>${telefono}</p>
+        </article>
+        <article class="tv_tarjeta_info">
+          <h3>Dirección</h3>
+          <p>${direccion}</p>
+        </article>
+      </div>
     </div>`;
+}
+/**
+ * Función encargada de generar el bloque de cierre comercial.
+ *
+ * @param      object  branding  Datos de branding.
+ * @param      object  modulo    Datos del módulo público.
+ *
+ * @return     string  Estructura HTML.
+ */
+function template_newsletter_tienda_publica(branding, modulo) {
+  const etiqueta = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.newsletter_etiqueta`,
+    `Cierre comercial`
+  );
+  const titulo = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.newsletter_titulo`,
+    `Un frente listo para crecer por campañas, catálogos y temporadas`
+  );
+  const descripcion = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.newsletter_descripcion`,
+    `Este bloque final deja una salida visual más comercial para bases de datos reales, campañas mensuales y crecimiento a nuevos temas.`
+  );
+  const boton_primario = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.newsletter_boton_primario`,
+    `Conocer novedades`
+  );
+  const boton_secundario = obtener_valor_configuracion_tienda_publica(
+    modulo,
+    `tienda_publica.newsletter_boton_secundario`,
+    `Ver categorías`
+  );
+
+  return `
+    <article class="tv_newsletter_card">
+      <div class="tv_newsletter_texto">
+        <span class="tv_etiqueta">${etiqueta}</span>
+        <h2>${titulo}</h2>
+        <p>${descripcion}</p>
+        <div class="tv_newsletter_acciones">
+          <button type="button" class="tv_btn tv_btn_principal" disabled>${boton_primario}</button>
+          <a href="#seccion_catalogo_publico" class="tv_btn tv_btn_secundario">${boton_secundario}</a>
+        </div>
+      </div>
+      <div class="tv_newsletter_resumen">
+        <span class="tv_etiqueta">${branding.nombre_comercial || `Tienda`}</span>
+        <strong>Tema activo parametrizable</strong>
+        <p>La portada sigue consumiendo tema, menús, branding y configuraciones sin tocar la base administrativa.</p>
+      </div>
+    </article>`;
 }
 /**
  * Función encargada de generar el pie de página público.
@@ -438,16 +703,30 @@ function template_contacto_tienda_publica(branding, modulo) {
  * @return     string  Estructura HTML.
  */
 function template_footer_tienda_publica(branding, menus) {
+  const nombre = branding.nombre_comercial || `Tienda Virtual`;
   const texto_footer = branding.texto_footer || `Todos los derechos reservados.`;
+  const correo = branding.correo_contacto || `Pendiente por parametrizar`;
+  const telefono = branding.telefono_contacto || `Pendiente por parametrizar`;
   const menu_html = template_menu_tienda_publica(menus);
 
   return `
     <div class="tv_footer_contenido">
-      <div>
-        <h3>${branding.nombre_comercial || `Tienda Virtual`}</h3>
+      <div class="tv_footer_columna tv_footer_columna_principal">
+        <span class="tv_etiqueta">Beauty commerce</span>
+        <h3>${nombre}</h3>
         <p>${texto_footer}</p>
       </div>
-      <nav class="tv_footer_nav">${menu_html}</nav>
+      <div class="tv_footer_columna">
+        <strong>Navegación</strong>
+        <nav class="tv_footer_nav">${menu_html}</nav>
+      </div>
+      <div class="tv_footer_columna">
+        <strong>Contacto</strong>
+        <ul class="tv_footer_lista">
+          <li>${correo}</li>
+          <li>${telefono}</li>
+        </ul>
+      </div>
     </div>`;
 }
 /**
@@ -486,6 +765,95 @@ function template_carrito_tienda_publica(modulo) {
   return `<button type="button" class="tv_btn tv_btn_icono" disabled>Carrito</button>`;
 }
 /**
+ * Función encargada de generar una card de línea comercial.
+ *
+ * @param      object   linea   Datos visibles de la línea.
+ * @param      integer  orden   Orden visual de la card.
+ *
+ * @return     string  Estructura HTML.
+ */
+function template_linea_card_tienda_publica(linea, orden) {
+  return `
+    <article class="tv_linea_card tv_linea_card_${orden}">
+      <div class="tv_linea_visual">
+        <span>${linea.etiqueta}</span>
+      </div>
+      <div class="tv_linea_contenido">
+        <span class="tv_etiqueta">${linea.etiqueta}</span>
+        <h3>${linea.titulo}</h3>
+        <p>${linea.descripcion}</p>
+        <ul class="tv_linea_lista">
+          <li>${linea.item_1}</li>
+          <li>${linea.item_2}</li>
+          <li>${linea.item_3}</li>
+        </ul>
+        <a href="#seccion_catalogo_publico" class="tv_btn tv_btn_secundario">${linea.boton}</a>
+      </div>
+    </article>`;
+}
+/**
+ * Función encargada de generar una card de producto del bloque destacado.
+ *
+ * @param      object   producto  Datos del producto.
+ * @param      integer  orden     Orden visual de la card.
+ * @param      string   boton     Texto del botón.
+ *
+ * @return     string  Estructura HTML.
+ */
+function template_producto_card_tienda_publica(producto, orden, boton) {
+  return `
+    <article class="tv_producto_card">
+      <div class="tv_producto_media tv_producto_media_${orden}">
+        <span>${producto.categoria}</span>
+      </div>
+      <div class="tv_producto_badges">
+        <span class="tv_etiqueta">${producto.categoria}</span>
+        <span class="tv_producto_valoracion">★ ${producto.rating}</span>
+      </div>
+      <h3>${producto.nombre}</h3>
+      <p>${producto.descripcion}</p>
+      <div class="tv_producto_precios">
+        <strong class="tv_producto_precio">${producto.precio}</strong>
+        ${producto.precio_anterior !== `` ? `<span class="tv_producto_precio_anterior">${producto.precio_anterior}</span>` : ``}
+      </div>
+      <div class="tv_producto_pie">
+        <span class="tv_producto_envio">${producto.envio}</span>
+        <button type="button" class="tv_btn tv_btn_secundario" disabled>${boton}</button>
+      </div>
+    </article>`;
+}
+/**
+ * Función encargada de generar una card comercial del bloque más vendidos.
+ *
+ * @param      object   producto  Datos del producto.
+ * @param      integer  orden     Orden visual de la card.
+ * @param      string   boton     Texto del botón.
+ *
+ * @return     string  Estructura HTML.
+ */
+function template_producto_comercial_tienda_publica(producto, orden, boton) {
+  return `
+    <article class="tv_producto_card tv_producto_card_comercial">
+      <div class="tv_producto_media tv_producto_media_${((orden - 1) % 4) + 1}">
+        <span>${producto.etiqueta}</span>
+      </div>
+      <div class="tv_producto_badges">
+        <span class="tv_etiqueta">${producto.etiqueta}</span>
+        <span class="tv_producto_valoracion">★ ${producto.rating}</span>
+      </div>
+      <h3>${producto.nombre}</h3>
+      <p>${producto.descripcion}</p>
+      <div class="tv_producto_precios">
+        <strong class="tv_producto_precio">${producto.precio}</strong>
+        ${producto.precio_anterior !== `` ? `<span class="tv_producto_precio_anterior">${producto.precio_anterior}</span>` : ``}
+      </div>
+      <div class="tv_producto_pie tv_producto_pie_columna">
+        <span class="tv_producto_envio">${producto.envio}</span>
+        <button type="button" class="tv_btn tv_btn_secundario" disabled>${boton}</button>
+      </div>
+    </article>`;
+}
+/**
  * Función encargada de obtener el ancla visual de cada menú público.
  *
  * @param      string  codigo  Código del menú.
@@ -505,9 +873,9 @@ function obtener_ancla_menu_tienda_publica(codigo) {
 /**
  * Función encargada de obtener el valor visible de una configuración del módulo.
  *
- * @param      object  modulo          Datos del módulo público.
- * @param      string  codigo          Código de la configuración.
- * @param      string  valor_defecto   Valor por defecto.
+ * @param      object  modulo         Datos del módulo público.
+ * @param      string  codigo         Código de la configuración.
+ * @param      string  valor_defecto  Valor por defecto.
  *
  * @return     string  Valor visible.
  */

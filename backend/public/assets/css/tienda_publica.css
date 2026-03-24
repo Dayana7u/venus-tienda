@@ -41,6 +41,12 @@
   --tv-product-price: #b9677c;
   --tv-product-media-background: #f8edf0;
   --tv-testimonial-background: #fff7f9;
+  --tv-collection-background: #fff5f7;
+  --tv-collection-border: #ecd1d8;
+  --tv-newsletter-background: #fff4f6;
+  --tv-newsletter-border: #ead1d8;
+  --tv-contact-highlight-background: #fff2f5;
+  --tv-contact-highlight-border: #ead1d8;
 }
 
 * {
@@ -613,6 +619,181 @@ input {
   color: var(--tv-footer-text);
 }
 
+
+
+.tv_grid_colecciones {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.tv_coleccion_card {
+  position: relative;
+  overflow: hidden;
+  padding: 26px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), var(--tv-collection-background));
+  border: 1px solid var(--tv-collection-border);
+  border-radius: var(--tv-radius-lg);
+  box-shadow: var(--tv-card-product-shadow);
+}
+
+.tv_coleccion_card::before {
+  content: "";
+  position: absolute;
+  right: -24px;
+  top: -24px;
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  background: rgba(232, 180, 188, 0.2);
+}
+
+.tv_coleccion_card h3 {
+  position: relative;
+  margin: 0 0 14px;
+  font-family: var(--tv-font-heading);
+  font-size: 1.7rem;
+  color: #5c3d47;
+}
+
+.tv_coleccion_card p {
+  position: relative;
+  margin: 0 0 22px;
+  color: var(--tv-color-text-soft);
+  line-height: 1.7;
+}
+
+.tv_coleccion_card .tv_btn {
+  position: relative;
+}
+
+.tv_producto_precios {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.tv_producto_precio_anterior {
+  color: #b79ea5;
+  text-decoration: line-through;
+  font-size: 0.95rem;
+}
+
+.tv_testimonio_estrellas {
+  margin-bottom: 14px;
+  color: #d895a6;
+  letter-spacing: 0.12em;
+}
+
+.tv_contacto_contenido {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.tv_contacto_principal {
+  padding: 30px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), var(--tv-contact-highlight-background));
+  border: 1px solid var(--tv-contact-highlight-border);
+  border-radius: var(--tv-radius-lg);
+  box-shadow: var(--tv-card-product-shadow);
+}
+
+.tv_contacto_principal h3 {
+  margin: 0 0 14px;
+  font-family: var(--tv-font-heading);
+  font-size: 2rem;
+  color: #5c3d47;
+}
+
+.tv_contacto_principal p {
+  margin: 0 0 22px;
+  color: var(--tv-color-text-soft);
+  line-height: 1.7;
+}
+
+.tv_contacto_grid_secundario {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.tv_bloque_newsletter {
+  padding-top: 0;
+}
+
+.tv_newsletter_card {
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), var(--tv-newsletter-background));
+  border: 1px solid var(--tv-newsletter-border);
+  border-radius: var(--tv-radius-lg);
+  box-shadow: var(--tv-card-product-shadow);
+}
+
+.tv_newsletter_texto h2,
+.tv_newsletter_resumen strong {
+  margin: 0 0 14px;
+  display: block;
+  font-family: var(--tv-font-heading);
+  color: #5c3d47;
+}
+
+.tv_newsletter_texto h2 {
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+
+.tv_newsletter_texto p,
+.tv_newsletter_resumen p {
+  margin: 0;
+  color: var(--tv-color-text-soft);
+  line-height: 1.7;
+}
+
+.tv_newsletter_acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.tv_newsletter_resumen {
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(232, 198, 206, 0.58);
+  border-radius: var(--tv-radius-lg);
+}
+
+.tv_footer_contenido {
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 0.8fr);
+  align-items: start;
+}
+
+.tv_footer_columna {
+  display: grid;
+  gap: 14px;
+}
+
+.tv_footer_columna strong {
+  color: var(--tv-footer-text);
+}
+
+.tv_footer_lista {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--tv-footer-text);
+  line-height: 1.7;
+}
+
+.tv_footer_nav {
+  justify-content: flex-start;
+}
+
 @media (max-width: 1080px) {
   .tv_header_superior {
     grid-template-columns: auto auto;
@@ -634,12 +815,16 @@ input {
   .tv_grid_rutina,
   .tv_grid_beneficios,
   .tv_grid_contacto,
+  .tv_grid_colecciones,
   .tv_grid_ofertas,
   .tv_grid_testimonios {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .tv_hero_contenido {
+  .tv_hero_contenido,
+  .tv_contacto_contenido,
+  .tv_newsletter_card,
+  .tv_footer_contenido {
     grid-template-columns: 1fr;
   }
 }
@@ -692,7 +877,8 @@ input {
   .tv_mensajes,
   .tv_hero_contenido,
   .tv_bloque,
-  .tv_footer_contenido {
+  .tv_footer_contenido,
+  .tv_newsletter_card {
     width: min(100% - 24px, 1240px);
   }
 
@@ -708,7 +894,10 @@ input {
   .tv_producto_card,
   .tv_tarjeta_oferta,
   .tv_rutina_card,
-  .tv_testimonio_card {
+  .tv_testimonio_card,
+  .tv_coleccion_card,
+  .tv_contacto_principal,
+  .tv_newsletter_card {
     padding: 20px;
   }
 
@@ -722,6 +911,7 @@ input {
   .tv_grid_rutina,
   .tv_grid_beneficios,
   .tv_grid_contacto,
+  .tv_grid_colecciones,
   .tv_grid_ofertas,
   .tv_grid_testimonios,
   .tv_footer_contenido {
@@ -735,5 +925,165 @@ input {
   .tv_producto_pie {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+:root {
+  --tv-line-card-background: #fff7f8;
+  --tv-line-card-border: #ecd9de;
+  --tv-faq-card-background: #fff8fa;
+  --tv-faq-card-border: #edd6dc;
+}
+
+.tv_grid_lineas,
+.tv_grid_mas_vendidos,
+.tv_grid_faq {
+  display: grid;
+  gap: 18px;
+}
+
+.tv_grid_lineas {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tv_grid_mas_vendidos {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tv_grid_faq {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tv_linea_card,
+.tv_faq_card {
+  border-radius: var(--tv-radius-lg);
+  box-shadow: var(--tv-card-product-shadow);
+}
+
+.tv_linea_card {
+  overflow: hidden;
+  border: 1px solid var(--tv-line-card-border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), var(--tv-line-card-background));
+}
+
+.tv_linea_visual {
+  min-height: 190px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 22px;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.96), rgba(237, 210, 218, 0.9));
+  border-bottom: 1px solid rgba(232, 198, 206, 0.5);
+}
+
+.tv_linea_visual::before,
+.tv_linea_visual::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.tv_linea_visual::before {
+  width: 110px;
+  height: 110px;
+  top: 18px;
+  right: 18px;
+}
+
+.tv_linea_visual::after {
+  width: 78px;
+  height: 78px;
+  bottom: -12px;
+  left: -8px;
+}
+
+.tv_linea_visual span {
+  position: relative;
+  z-index: 1;
+  font-family: var(--tv-font-heading);
+  font-size: 1.7rem;
+  color: #6d4a54;
+}
+
+.tv_linea_contenido {
+  padding: 24px;
+}
+
+.tv_linea_contenido h3,
+.tv_faq_card h3 {
+  margin: 14px 0 12px;
+  font-family: var(--tv-font-heading);
+  color: #5c3d47;
+}
+
+.tv_linea_contenido p,
+.tv_faq_card p {
+  margin: 0;
+  color: var(--tv-color-text-soft);
+  line-height: 1.7;
+}
+
+.tv_linea_lista {
+  margin: 18px 0 22px;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: #7d646c;
+}
+
+.tv_producto_badges {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tv_producto_valoracion,
+.tv_producto_envio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #9d6e7c;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.tv_producto_card_comercial {
+  min-height: 100%;
+}
+
+.tv_producto_pie_columna {
+  align-items: flex-start;
+}
+
+.tv_faq_card {
+  padding: 24px;
+  border: 1px solid var(--tv-faq-card-border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), var(--tv-faq-card-background));
+}
+
+.tv_faq_card h3 {
+  font-size: 1.35rem;
+}
+
+@media (max-width: 1080px) {
+  .tv_grid_lineas,
+  .tv_grid_mas_vendidos,
+  .tv_grid_faq {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .tv_grid_lineas,
+  .tv_grid_mas_vendidos,
+  .tv_grid_faq {
+    grid-template-columns: 1fr;
+  }
+
+  .tv_linea_contenido,
+  .tv_faq_card {
+    padding: 20px;
   }
 }

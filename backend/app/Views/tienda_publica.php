@@ -55,6 +55,14 @@ if (empty($_SESSION['tienda_publica_token'])) {
       <div id="div_beneficios_tienda_publica"></div>
     </section>
 
+    <section class="tv_bloque tv_bloque_suave">
+      <div id="div_colecciones_tienda_publica"></div>
+    </section>
+
+    <section class="tv_bloque">
+      <div id="div_lineas_tienda_publica"></div>
+    </section>
+
     <section id="seccion_catalogo_publico" class="tv_bloque">
       <div id="div_categorias_tienda_publica"></div>
     </section>
@@ -64,6 +72,10 @@ if (empty($_SESSION['tienda_publica_token'])) {
     </section>
 
     <section class="tv_bloque">
+      <div id="div_mas_vendidos_tienda_publica"></div>
+    </section>
+
+    <section class="tv_bloque tv_bloque_suave">
       <div id="div_rutina_tienda_publica"></div>
     </section>
 
@@ -75,8 +87,16 @@ if (empty($_SESSION['tienda_publica_token'])) {
       <div id="div_testimonios_tienda_publica"></div>
     </section>
 
+    <section class="tv_bloque tv_bloque_suave">
+      <div id="div_faq_tienda_publica"></div>
+    </section>
+
     <section id="seccion_contacto_publico" class="tv_bloque tv_bloque_contacto">
       <div id="div_contacto_tienda_publica"></div>
+    </section>
+
+    <section class="tv_bloque tv_bloque_newsletter">
+      <div id="div_newsletter_tienda_publica"></div>
     </section>
 
     <footer class="tv_footer" id="tv_footer_tienda_publica">

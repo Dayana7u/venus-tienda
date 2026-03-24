@@ -48,3 +48,21 @@ Se evidencia que, el ajuste se soporta sobre CSS, JavaScript y un SQL incrementa
 Se evidencia que, el frente comercial del tema `PINK_NUDE` dejó la base inicial informativa y ahora avanza hacia una composición más cercana a una tienda beauty profesional.
 Se evidencia que, la portada pública ya queda organizada por topbar, hero, categorías, destacados, rutina, campañas, testimonios, contacto y footer, manteniendo el enfoque por cards y sin introducir modales.
 Se evidencia que, este ajuste continúa soportado por `system.modulo_configuraciones` y `system.tema_componentes`, de modo que la evolución visual se mantiene dentro de la parametrización ya existente.
+
+
+## Avance técnico tienda pública por cards
+- La vista `backend/app/Views/tienda_publica.php` ahora separa hero, beneficios, colecciones, categorías, destacados, rutina, campañas, testimonios, contacto, cierre comercial y footer.
+- El archivo `backend/public/assets/js/tienda_publica_template.js` conserva la lectura del contenido desde `system.modulo_configuraciones` y amplía el renderizado a nuevos bloques reutilizables.
+- El archivo `backend/public/assets/js/tienda_publica.js` aplica nuevos componentes visuales (`collection.card`, `newsletter`, `contact.highlight`) consumidos desde `system.tema_componentes`.
+
+
+14. Avance visual y funcional del frente público sobre PINK_NUDE
+Se evidencia que, el frente público continúa creciendo sobre el mismo tema PINK_NUDE y sobre la parametrización ya existente, sin crear tablas nuevas y manteniendo la separación total frente al acceso administrativo.
+Se evidencia que, en esta etapa se reorganizó la impresión del frente por bloques funcionales para mejorar la lectura del código y dejar el crecimiento del catálogo más ordenado por secciones reutilizables.
+Novedades y Modificaciones
+Se agregó un bloque de líneas principales del catálogo para maquillaje, skincare y accesorios.
+Se agregó un bloque de más vendidos con seis cards de producto con precio, precio anterior, rating y mensaje logístico.
+Se agregó un bloque de preguntas frecuentes para reforzar confianza de compra dentro del mismo frente público.
+Se ajustó tienda_publica.js para separar la renderización por header, bloques principales, bloques comerciales, bloques de relación y footer.
+Se ajustó tienda_publica_template.js para imprimir nuevas cards reutilizables del catálogo y mantener el enfoque sin modales.
+Se agregó el script database/sql/009_sql_avance_tienda_publica_catalogo_real.sql para sembrar configuraciones y componentes visuales requeridos por estos nuevos bloques.

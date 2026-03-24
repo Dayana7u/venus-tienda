@@ -79,3 +79,11 @@ Se evidencia que, el frente público continuó sobre PINK_NUDE con una organizac
 
 - Se separa la tienda pública en módulos y rutas limpias (`/`, `/catalogo/`, `/ofertas/`, `/producto/`, `/carrito/`, `/contacto/`) y se deja `/admin/` aparte del flujo comercial.
 - Se agrega carrito funcional en sesión para permitir agregar, actualizar y eliminar productos sin crear estructura nueva de base de datos.
+
+
+## 2026-03-24 - Avance tienda pública carrito y panel comercial
+- Se agregó el SQL 010 para categorías, productos e imágenes comerciales.
+- Se ajustó tienda_catalogo_base_model.class.php para consultar catálogo desde base de datos y conservar respaldo estático mientras se ejecuta el SQL incremental.
+- Se agregó el panel /admin/tienda/ con vista, controlador, modelo y estilos propios para categorías y productos.
+- Se ajustó el carrito para manejar AJAX, panel lateral y alerta visual al agregar productos.
+- Se amplió la vista /carrito/ con resumen de ahorro, envío y total.

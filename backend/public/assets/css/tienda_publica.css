@@ -1488,3 +1488,356 @@ input {
     flex-wrap: wrap;
   }
 }
+
+.tv_nav_link_activo {
+  background: rgba(239, 214, 220, 0.8);
+  color: #5c3d47;
+}
+
+.tv_producto_badge_descuento,
+.tv_descuento_chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #dd8eb4;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.tv_producto_badge_descuento {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+}
+
+.tv_producto_media {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.tv_overlay_carrito {
+  position: fixed;
+  inset: 0;
+  background: rgba(34, 24, 28, 0.38);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+  z-index: 98;
+}
+
+.tv_overlay_carrito_activo {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tv_drawer_carrito {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(440px, 100%);
+  height: 100vh;
+  background: #fff9fb;
+  border-left: 1px solid #f0d5dd;
+  box-shadow: -10px 0 40px rgba(61, 36, 44, 0.15);
+  transform: translateX(100%);
+  transition: transform 0.24s ease;
+  z-index: 99;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.tv_drawer_carrito_activo {
+  transform: translateX(0);
+}
+
+.tv_drawer_encabezado,
+.tv_drawer_resumen {
+  padding: 20px;
+}
+
+.tv_drawer_encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #f1d8df;
+}
+
+.tv_drawer_titulo {
+  margin: 0 0 6px;
+  font-family: var(--tv-font-heading);
+  font-size: 1.7rem;
+  color: #5c3d47;
+}
+
+.tv_btn_cerrar_drawer {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #ead1d8;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.tv_drawer_items {
+  overflow: auto;
+  padding: 20px;
+  display: grid;
+  gap: 14px;
+}
+
+.tv_drawer_item {
+  display: grid;
+  grid-template-columns: 84px 1fr auto;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid #efd7de;
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.tv_drawer_media {
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+  min-height: 98px;
+}
+
+.tv_drawer_nombre {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #4b3840;
+}
+
+.tv_drawer_precios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tv_drawer_precios strong,
+.tv_drawer_total_linea,
+.tv_carrito_totales_v2 strong {
+  color: #b85f76;
+  font-weight: 700;
+}
+
+.tv_drawer_precio_anterior,
+.tv_producto_meta span {
+  text-decoration: line-through;
+  color: #9e8790;
+}
+
+.tv_drawer_cantidad {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tv_drawer_cantidad button,
+.tv_btn_cantidad {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #eacfd6;
+  border-radius: 999px;
+  background: #fff4f7;
+  cursor: pointer;
+}
+
+.tv_btn_eliminar_linea,
+.js_btn_eliminar_drawer {
+  border: 0;
+  background: transparent;
+  color: #9c6a79;
+  cursor: pointer;
+  padding: 0;
+}
+
+.tv_drawer_total_linea {
+  align-self: center;
+}
+
+.tv_drawer_linea {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.tv_drawer_linea_total,
+.tv_resumen_total {
+  padding-top: 14px;
+  border-top: 1px solid #ecd2d9;
+}
+
+.tv_drawer_linea_ahorro,
+.tv_resumen_linea_ahorro {
+  color: #2e8b57;
+}
+
+.tv_drawer_botones,
+.tv_resumen_botones {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.tv_drawer_vacio {
+  text-align: center;
+  display: grid;
+  gap: 12px;
+  place-items: center;
+  min-height: 220px;
+}
+
+.tv_toast_wrap {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 120;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tv_toast_wrap_activo {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.tv_toast {
+  min-width: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  box-shadow: 0 16px 34px rgba(34, 24, 28, 0.18);
+}
+
+.tv_toast_ok {
+  background: #eef8ef;
+  color: #2c6940;
+  border: 1px solid #c8e4ce;
+}
+
+.tv_toast_error {
+  background: #fff1f1;
+  color: #8a2f3b;
+  border: 1px solid #f2c5cc;
+}
+
+.tv_toast button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.tv_carrito_layout_v2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
+  gap: 22px;
+}
+
+.tv_carrito_items_v2 {
+  display: grid;
+  gap: 16px;
+}
+
+.tv_carrito_item_v2 {
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid #ecd5dc;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 18px 32px rgba(34, 24, 28, 0.05);
+}
+
+.tv_carrito_media {
+  min-height: 160px;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+}
+
+.tv_carrito_info_superior,
+.tv_carrito_cantidad_row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tv_form_carrito_inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tv_cantidad_actual {
+  min-width: 22px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.tv_carrito_totales_v2 {
+  min-width: 130px;
+  text-align: right;
+  display: grid;
+  gap: 6px;
+  align-self: center;
+}
+
+.tv_carrito_totales_v2 small,
+.tv_resumen_ayuda {
+  color: #8f7881;
+}
+
+.tv_resumen_compra_v2 {
+  padding: 24px;
+  border: 1px solid #ecd5dc;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #fffafb, #fff3f6);
+  box-shadow: 0 18px 32px rgba(34, 24, 28, 0.05);
+  height: fit-content;
+  position: sticky;
+  top: 110px;
+}
+
+.tv_resumen_linea {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 980px) {
+  .tv_header_superior,
+  .tv_carrito_layout_v2,
+  .tv_carrito_item_v2,
+  .tv_drawer_item {
+    grid-template-columns: 1fr;
+  }
+
+  .tv_drawer_carrito {
+    width: 100%;
+  }
+}

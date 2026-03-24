@@ -44,3 +44,10 @@ Se evidencia que, la portada pública ya incorpora bloques de líneas de product
 ## Avance por módulos de tienda pública
 
 Se reemplazó la vista única de tienda por rutas y módulos separados: inicio, catálogo, ofertas, detalle, carrito y contacto. El carrito quedó funcional con manejo en sesión y el frente comercial sigue consumiendo branding, menús y tema activo desde la parametrización existente.
+
+
+Novedades y Modificaciones
+Se dejó el carrito lateral visible desde toda la tienda pública con apertura desde el encabezado, actualización de cantidades, eliminación de productos y alerta de confirmación sin recarga completa de la página.
+Se dejó la vista /carrito/ con resumen de ahorro, envío, total y controles más cercanos a una tienda virtual real.
+Se dejó la base del catálogo comercial lista para dejar de depender de arreglos estáticos una vez se ejecute el SQL 010 sobre categorías, productos e imágenes.
+Se agregó el panel /admin/tienda/ para administrar categorías y productos del frente comercial.

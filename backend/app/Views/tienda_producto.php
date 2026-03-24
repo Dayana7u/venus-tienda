@@ -28,6 +28,9 @@ tienda_render_head(empty($producto) ? 'Producto' : $producto['nombre'], $tema_to
             <h1><?php echo htmlspecialchars($producto['nombre'], ENT_QUOTES, 'UTF-8'); ?></h1>
             <p class="tv_producto_detalle_resumen"><?php echo htmlspecialchars($producto['descripcion'], ENT_QUOTES, 'UTF-8'); ?></p>
             <div class="tv_producto_meta tv_producto_meta_detalle">
+              <?php if ((int) ($producto['porcentaje_descuento'] ?? 0) > 0) { ?>
+                <span class="tv_descuento_chip">-<?php echo (int) $producto['porcentaje_descuento']; ?>%</span>
+              <?php } ?>
               <strong>$<?php echo number_format((int) $producto['precio'], 0, ',', '.'); ?></strong>
               <?php if ((int) $producto['precio_anterior'] > (int) $producto['precio']) { ?>
                 <span>$<?php echo number_format((int) $producto['precio_anterior'], 0, ',', '.'); ?></span>
@@ -38,7 +41,7 @@ tienda_render_head(empty($producto) ? 'Producto' : $producto['nombre'], $tema_to
                 <li><?php echo htmlspecialchars($beneficio, ENT_QUOTES, 'UTF-8'); ?></li>
               <?php } ?>
             </ul>
-            <form action="/carrito/" method="post" class="tv_form_detalle">
+            <form action="/carrito/" method="post" class="tv_form_detalle js_form_carrito">
               <input type="hidden" name="accion" value="agregar">
               <input type="hidden" name="slug" value="<?php echo htmlspecialchars($producto['slug'], ENT_QUOTES, 'UTF-8'); ?>">
               <input type="hidden" name="redireccion" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI'] ?? '/producto/', ENT_QUOTES, 'UTF-8'); ?>">

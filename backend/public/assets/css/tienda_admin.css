@@ -1,0 +1,143 @@
+.dx_mensajes_fijo {
+  margin-bottom: 20px;
+}
+
+.dx_alerta_exito {
+  padding: 16px 18px;
+  border: 1px solid #bcdac6;
+  border-radius: 18px;
+  background: #eff9f1;
+  color: #2d6640;
+}
+
+.dx_resumen_tienda {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.dx_resumen_card {
+  padding: 22px;
+  border: 1px solid #d5e3f7;
+  border-radius: 24px;
+  background: #ffffff;
+}
+
+.dx_resumen_card span {
+  display: block;
+  color: #6d7a90;
+  margin-bottom: 8px;
+}
+
+.dx_resumen_card strong {
+  font-size: 2rem;
+}
+
+.dx_tienda_admin_grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+}
+
+.dx_lista_cards {
+  display: grid;
+  gap: 14px;
+}
+
+.dx_card_item {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid #dce6f6;
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.dx_card_item p,
+.dx_card_item span {
+  color: #6d7a90;
+}
+
+.dx_card_meta,
+.dx_card_acciones,
+.dx_switches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dx_card_meta span {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: #eff5ff;
+}
+
+.dx_card_acciones form {
+  margin: 0;
+}
+
+.dx_formulario_card {
+  margin-top: 22px;
+  padding: 22px;
+  border: 1px solid #dce6f6;
+  border-radius: 22px;
+  background: #f9fbff;
+}
+
+.dx_formulario_card h4 {
+  margin: 0 0 16px;
+}
+
+.dx_campos_2,
+.dx_campos_3 {
+  display: grid;
+  gap: 14px;
+}
+
+.dx_campos_2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dx_campos_3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.dx_formulario_card label {
+  display: grid;
+  gap: 8px;
+  color: #1b2d4a;
+  font-weight: 600;
+}
+
+.dx_formulario_card input,
+.dx_formulario_card select,
+.dx_formulario_card textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cfe0fb;
+  border-radius: 14px;
+  background: #ffffff;
+  font: inherit;
+}
+
+.dx_card_producto {
+  grid-template-columns: 1.3fr auto auto;
+  align-items: center;
+}
+
+.dx_card_meta_producto {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media (max-width: 1180px) {
+  .dx_tienda_admin_grid,
+  .dx_campos_3,
+  .dx_resumen_tienda {
+    grid-template-columns: 1fr;
+  }
+
+  .dx_card_producto {
+    grid-template-columns: 1fr;
+  }
+}

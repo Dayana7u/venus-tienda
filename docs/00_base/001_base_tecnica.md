@@ -70,3 +70,9 @@ Se agregó el script database/sql/009_sql_avance_tienda_publica_catalogo_real.sq
 ## Avance tienda pública por módulos
 
 Se separó el frente comercial en rutas y vistas independientes: `/`, `/catalogo/`, `/ofertas/`, `/producto/`, `/carrito/` y `/contacto/`. El acceso `/admin/` se mantiene aparte. En esta etapa el carrito se maneja en sesión para avanzar el flujo comercial sin crear nuevas tablas.
+
+
+14. Avance de catálogo comercial y panel tienda
+Se evidencia que, el frente público deja de depender únicamente de datos quemados y empieza a consumir el catálogo comercial desde public.categorias, public.productos y public.producto_imagenes cuando dichas tablas existan y contengan información.
+Se evidencia que, el carrito público fue ajustado para responder por AJAX en agregar, actualizar, eliminar y consultar resumen, mostrando alerta visible y panel lateral de compra sin recargar la página.
+Se evidencia que, se creó un panel administrativo inicial en /admin/tienda/ para gestionar categorías, productos, descuentos, stock y recurso visual principal del catálogo comercial.

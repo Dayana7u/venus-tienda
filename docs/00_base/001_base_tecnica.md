@@ -66,3 +66,7 @@ Se agregó un bloque de preguntas frecuentes para reforzar confianza de compra d
 Se ajustó tienda_publica.js para separar la renderización por header, bloques principales, bloques comerciales, bloques de relación y footer.
 Se ajustó tienda_publica_template.js para imprimir nuevas cards reutilizables del catálogo y mantener el enfoque sin modales.
 Se agregó el script database/sql/009_sql_avance_tienda_publica_catalogo_real.sql para sembrar configuraciones y componentes visuales requeridos por estos nuevos bloques.
+
+## Avance tienda pública por módulos
+
+Se separó el frente comercial en rutas y vistas independientes: `/`, `/catalogo/`, `/ofertas/`, `/producto/`, `/carrito/` y `/contacto/`. El acceso `/admin/` se mantiene aparte. En esta etapa el carrito se maneja en sesión para avanzar el flujo comercial sin crear nuevas tablas.

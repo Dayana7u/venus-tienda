@@ -1087,3 +1087,404 @@ input {
     padding: 20px;
   }
 }
+
+.tv_nav_link_activo {
+  background: rgba(239, 214, 220, 0.6);
+  color: #5c3d47;
+}
+
+.tv_flash_wrap {
+  width: min(1240px, calc(100% - 32px));
+  margin: 18px auto 0;
+}
+
+.tv_flash_ok {
+  padding: 14px 18px;
+  border-radius: var(--tv-radius-md);
+  background: #f8eef1;
+  border: 1px solid var(--tv-color-border);
+  color: #7d5561;
+}
+
+.tv_contador_inline {
+  display: inline-flex;
+  min-width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  border-radius: 999px;
+  background: var(--tv-color-primary);
+  color: #fff;
+  font-size: 0.82rem;
+}
+
+.tv_pagina_modulo {
+  min-height: calc(100vh - 220px);
+  padding: 22px 0 64px;
+}
+
+.tv_pagina_publica {
+  padding-bottom: 64px;
+}
+
+.tv_breadcrumb {
+  color: var(--tv-color-text-soft);
+  font-size: 0.92rem;
+  margin-bottom: 18px;
+}
+
+.tv_bloque_encabezado_inline {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.tv_filtros_catalogo {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tv_filtros_catalogo input,
+.tv_filtros_catalogo select,
+.tv_form_detalle input,
+.tv_form_carrito_linea input {
+  border: 1px solid var(--tv-input-search-border);
+  background: var(--tv-input-search-background);
+  border-radius: 14px;
+  padding: 12px 14px;
+  min-width: 180px;
+}
+
+.tv_grid_productos_store,
+.tv_grid_lineas_store,
+.tv_contacto_cards_store {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.tv_grid_productos_store {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tv_producto_card_tienda {
+  overflow: hidden;
+}
+
+.tv_producto_media {
+  display: block;
+  height: 260px;
+  background: linear-gradient(145deg, #f7ebee, #fff6f8);
+  border-bottom: 1px solid var(--tv-card-product-border);
+}
+
+.tv_producto_media_serum_rose,
+.tv_producto_detalle_media.tv_producto_media_serum_rose {
+  background: linear-gradient(145deg, #f4dde3, #fff5f7);
+}
+
+.tv_producto_media_base_matte,
+.tv_producto_detalle_media.tv_producto_media_base_matte {
+  background: linear-gradient(145deg, #f6e6e5, #fffaf8);
+}
+
+.tv_producto_media_lip_oil,
+.tv_producto_detalle_media.tv_producto_media_lip_oil {
+  background: linear-gradient(145deg, #f4d5de, #fff2f7);
+}
+
+.tv_producto_media_brochas_set,
+.tv_producto_detalle_media.tv_producto_media_brochas_set {
+  background: linear-gradient(145deg, #efe1df, #fff7f4);
+}
+
+.tv_producto_media_crema_noche,
+.tv_producto_detalle_media.tv_producto_media_crema_noche {
+  background: linear-gradient(145deg, #f1e5ea, #fff7fb);
+}
+
+.tv_producto_media_organizador,
+.tv_producto_detalle_media.tv_producto_media_organizador {
+  background: linear-gradient(145deg, #f7ecee, #fffafc);
+}
+
+.tv_producto_media_mask_cloud,
+.tv_producto_detalle_media.tv_producto_media_mask_cloud {
+  background: linear-gradient(145deg, #efe4ec, #fff9fd);
+}
+
+.tv_producto_media_blush_peach,
+.tv_producto_detalle_media.tv_producto_media_blush_peach {
+  background: linear-gradient(145deg, #f5dddb, #fff7f3);
+}
+
+.tv_producto_media_gift_bloom,
+.tv_producto_detalle_media.tv_producto_media_gift_bloom {
+  background: linear-gradient(145deg, #f0dfe6, #fff7fb);
+}
+
+.tv_producto_contenido {
+  padding: 20px;
+}
+
+.tv_producto_meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 18px;
+}
+
+.tv_producto_meta strong,
+.tv_carrito_total_linea,
+.tv_resumen_total strong {
+  color: var(--tv-color-accent);
+  font-size: 1.08rem;
+}
+
+.tv_producto_meta span {
+  color: var(--tv-color-text-soft);
+  text-decoration: line-through;
+}
+
+.tv_producto_acciones {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tv_producto_acciones form {
+  margin: 0;
+}
+
+.tv_vacio {
+  padding: 28px;
+  background: #fff;
+  border: 1px dashed var(--tv-color-border);
+  border-radius: var(--tv-radius-lg);
+  color: var(--tv-color-text-soft);
+}
+
+.tv_producto_detalle_store {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(340px, 0.8fr);
+  gap: 28px;
+}
+
+.tv_producto_detalle_media {
+  min-height: 540px;
+  border-radius: var(--tv-radius-lg);
+  border: 1px solid var(--tv-card-product-border);
+  box-shadow: var(--tv-card-product-shadow);
+}
+
+.tv_producto_detalle_info {
+  padding: 28px;
+  border-radius: var(--tv-radius-lg);
+  border: 1px solid var(--tv-card-product-border);
+  background: var(--tv-card-product-background);
+  box-shadow: var(--tv-card-product-shadow);
+}
+
+.tv_producto_detalle_info h1 {
+  font-family: var(--tv-font-heading);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  margin: 12px 0;
+  color: #5c3d47;
+}
+
+.tv_producto_detalle_resumen {
+  color: var(--tv-color-text-soft);
+  line-height: 1.75;
+}
+
+.tv_producto_meta_detalle {
+  margin-top: 20px;
+}
+
+.tv_lista_beneficios {
+  margin: 22px 0;
+  padding-left: 20px;
+  color: var(--tv-color-text-soft);
+  line-height: 1.75;
+}
+
+.tv_form_detalle {
+  display: grid;
+  gap: 12px;
+  max-width: 240px;
+}
+
+.tv_carrito_layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+}
+
+.tv_carrito_items {
+  display: grid;
+  gap: 18px;
+}
+
+.tv_carrito_item {
+  display: grid;
+  grid-template-columns: 140px 1fr 260px;
+  gap: 18px;
+  padding: 18px;
+  border-radius: var(--tv-radius-lg);
+  border: 1px solid var(--tv-card-product-border);
+  background: var(--tv-card-product-background);
+  box-shadow: var(--tv-card-product-shadow);
+}
+
+.tv_carrito_media {
+  min-height: 140px;
+  border-radius: var(--tv-radius-md);
+}
+
+.tv_carrito_info h3 {
+  margin: 0 0 10px;
+  font-family: var(--tv-font-heading);
+  color: #5c3d47;
+}
+
+.tv_carrito_acciones {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.tv_form_carrito_linea {
+  display: grid;
+  gap: 10px;
+}
+
+.tv_resumen_compra {
+  padding: 22px;
+  border-radius: var(--tv-radius-lg);
+  border: 1px solid var(--tv-card-product-border);
+  background: var(--tv-card-product-background);
+  box-shadow: var(--tv-card-product-shadow);
+  height: fit-content;
+  position: sticky;
+  top: 120px;
+}
+
+.tv_resumen_compra h3 {
+  margin-top: 0;
+  font-family: var(--tv-font-heading);
+  color: #5c3d47;
+}
+
+.tv_resumen_compra div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: var(--tv-color-text-soft);
+}
+
+.tv_resumen_total {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--tv-color-border);
+}
+
+.tv_footer_columnas {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.tv_footer_bloque {
+  padding: 24px 0;
+}
+
+.tv_footer_lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.tv_footer_lista a:hover {
+  background: var(--tv-footer-link-hover-background);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+.tv_hero_store {
+  padding-top: 34px;
+}
+
+.tv_hero_panel_store,
+.tv_linea_store {
+  background: var(--tv-collection-background);
+  border-color: var(--tv-collection-border);
+}
+
+.tv_grid_resumen {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.tv_resumen_item {
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--tv-color-border);
+  display: grid;
+  gap: 6px;
+}
+
+@media (max-width: 1080px) {
+  .tv_header_superior,
+  .tv_hero_contenido,
+  .tv_producto_detalle_store,
+  .tv_carrito_layout,
+  .tv_footer_columnas {
+    grid-template-columns: 1fr;
+  }
+
+  .tv_grid_productos_store,
+  .tv_grid_lineas_store,
+  .tv_contacto_cards_store {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tv_carrito_item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .tv_nav {
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .tv_nav_link,
+  .tv_buscador_campo input {
+    width: 100%;
+  }
+
+  .tv_grid_productos_store,
+  .tv_grid_lineas_store,
+  .tv_contacto_cards_store,
+  .tv_grid_resumen {
+    grid-template-columns: 1fr;
+  }
+
+  .tv_bloque_encabezado_inline {
+    display: grid;
+  }
+
+  .tv_header_acciones {
+    flex-wrap: wrap;
+  }
+}

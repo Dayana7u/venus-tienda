@@ -76,3 +76,6 @@ Se evidencia que, el frente público continuó sobre PINK_NUDE con una organizac
 - Se reorganizó `backend/public/assets/js/tienda_publica.js` por bloques funcionales de renderización.
 - Se amplió `backend/public/assets/js/tienda_publica_template.js` con cards reutilizables de líneas, más vendidos y FAQ.
 - Se ajustó `backend/public/assets/css/tienda_publica.css` para los nuevos bloques del catálogo.
+
+- Se separa la tienda pública en módulos y rutas limpias (`/`, `/catalogo/`, `/ofertas/`, `/producto/`, `/carrito/`, `/contacto/`) y se deja `/admin/` aparte del flujo comercial.
+- Se agrega carrito funcional en sesión para permitir agregar, actualizar y eliminar productos sin crear estructura nueva de base de datos.

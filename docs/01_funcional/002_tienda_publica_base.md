@@ -40,3 +40,7 @@ Se evidencia que, la portada pública ya incorpora bloques de líneas de product
 - Se agregó un bloque de más vendidos con seis cards y foco comercial.
 - Se agregó un bloque FAQ por cards para dudas frecuentes de compra.
 - Se mantuvo la estructura reusable por tema y por configuraciones del módulo TIENDA_PUBLICA.
+
+## Avance por módulos de tienda pública
+
+Se reemplazó la vista única de tienda por rutas y módulos separados: inicio, catálogo, ofertas, detalle, carrito y contacto. El carrito quedó funcional con manejo en sesión y el frente comercial sigue consumiendo branding, menús y tema activo desde la parametrización existente.

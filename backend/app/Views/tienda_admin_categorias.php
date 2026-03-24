@@ -2,35 +2,37 @@
 require_once __DIR__ . '/tienda_admin/tienda_admin_helper.php';
 
 tienda_admin_render_head('Admin tienda - Categorías');
-tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo exclusivo para crear, visualizar y organizar categorías del catálogo.');
+tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo para crear, editar, inactivar y organizar categorías visibles del catálogo comercial.');
 ?>
       <section id="seccion_categorias_tienda_admin" class="tda_admin_bloque">
         <div class="tda_admin_bloque_encabezado">
           <div>
             <span class="tda_admin_etiqueta">Catálogo</span>
             <h3>Categorías</h3>
-            <p>Registra líneas visuales y comerciales para maquillaje, skincare, accesorios y demás segmentos de la tienda.</p>
+            <p>Define las categorías visibles de la tienda con imagen, orden, línea comercial y descripción corta.</p>
           </div>
         </div>
-
-        <div id="div_resumen_tienda_admin" class="tda_admin_mt_20"></div>
       </section>
 
       <section class="tda_admin_bloque">
         <div class="tda_admin_dos_columnas">
           <article class="tda_admin_card_formulario">
-            <h4>Crear categoría</h4>
+            <div class="tda_admin_card_titulo_inline">
+              <h4 id="titulo_formulario_tienda_admin_categoria">Crear categoría</h4>
+              <button type="button" id="btn_cancelar_edicion_tienda_admin_categoria" class="tda_btn tda_btn_secundario tda_admin_btn_oculto">Cancelar</button>
+            </div>
             <form id="formulario_tienda_admin_categoria" class="tda_admin_formulario" enctype="multipart/form-data">
+              <input type="hidden" id="tienda_admin_categoria_id">
               <div class="tda_admin_grupo">
-                <label for="tienda_admin_categoria_codigo">Código</label>
+                <label for="tienda_admin_categoria_codigo" class="tda_admin_label_obligatorio">Código</label>
                 <input type="text" id="tienda_admin_categoria_codigo" maxlength="60" required>
               </div>
               <div class="tda_admin_grupo">
-                <label for="tienda_admin_categoria_nombre">Nombre</label>
+                <label for="tienda_admin_categoria_nombre" class="tda_admin_label_obligatorio">Nombre</label>
                 <input type="text" id="tienda_admin_categoria_nombre" maxlength="150" required>
               </div>
               <div class="tda_admin_grupo">
-                <label for="tienda_admin_categoria_linea">Línea</label>
+                <label for="tienda_admin_categoria_linea" class="tda_admin_label_obligatorio">Línea</label>
                 <select id="tienda_admin_categoria_linea" required>
                   <option value="">Seleccione</option>
                   <option value="maquillaje">Maquillaje</option>
@@ -40,16 +42,16 @@ tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo e
                 </select>
               </div>
               <div class="tda_admin_grupo">
-                <label for="tienda_admin_categoria_descripcion">Descripción</label>
-                <textarea id="tienda_admin_categoria_descripcion" maxlength="400"></textarea>
+                <label for="tienda_admin_categoria_descripcion" class="tda_admin_label_obligatorio">Descripción</label>
+                <textarea id="tienda_admin_categoria_descripcion" maxlength="400" required></textarea>
               </div>
               <div class="tda_admin_grupo">
-                <label for="tienda_admin_categoria_imagen">Imagen categoría</label>
+                <label for="tienda_admin_categoria_imagen" class="tda_admin_label_obligatorio">Imagen categoría</label>
                 <input type="file" id="tienda_admin_categoria_imagen" accept="image/*">
               </div>
               <div class="tda_admin_grupo">
-                <label for="tienda_admin_categoria_texto_alternativo">Texto alternativo imagen</label>
-                <input type="text" id="tienda_admin_categoria_texto_alternativo" maxlength="180">
+                <label for="tienda_admin_categoria_texto_alternativo" class="tda_admin_label_obligatorio">Texto alternativo imagen</label>
+                <input type="text" id="tienda_admin_categoria_texto_alternativo" maxlength="180" required>
               </div>
               <button type="submit" id="btn_guardar_tienda_admin_categoria" class="tda_btn tda_btn_principal">Guardar categoría</button>
             </form>

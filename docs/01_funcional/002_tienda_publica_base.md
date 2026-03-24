@@ -61,3 +61,7 @@ La base funcional queda lista para evolucionar luego a autenticacion de clientes
 
 ## 2026-03-24 - Ajuste de estabilidad V15
 Se corrigieron errores del frente público y del panel de tienda asociados al uso de funciones multibyte no disponibles en el entorno PHP (`mb_substr`, `mb_strtoupper`, `mb_strlen`, `mb_strpos`, `mb_strtolower`). También se corrigió la redirección del login de administración de tienda para enviar a `/admin/tienda/dashboard/` cuando la sesión ya está activa, evitando bucles de redirección.
+
+## 2026-03-24 - Ajuste funcional V16
+Se corrige la presentación del catálogo para alinear mejor el bloque de filtros y mejorar el ancho útil del footer.
+Se agrega respaldo visual con imágenes de prueba locales para categorías y productos cuando el material cargado desde la administración comercial aún no exista.

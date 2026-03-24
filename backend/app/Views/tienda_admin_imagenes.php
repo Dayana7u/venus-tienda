@@ -2,40 +2,38 @@
 require_once __DIR__ . '/tienda_admin/tienda_admin_helper.php';
 
 tienda_admin_render_head('Admin tienda - Imágenes');
-tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo exclusivo para registrar galerías y material visual de producto.');
+tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo exclusivo para registrar, actualizar e inactivar galerías de producto.');
 ?>
       <section id="seccion_imagenes_tienda_admin" class="tda_admin_bloque">
         <div class="tda_admin_bloque_encabezado">
           <div>
             <span class="tda_admin_etiqueta">Visual</span>
             <h3>Imágenes</h3>
-            <p>Registra imágenes adicionales por producto sin mezclar este flujo con categorías o productos.</p>
+            <p>Gestiona únicamente el material visual del producto: archivo principal, galería y texto alternativo.</p>
           </div>
         </div>
-
-        <div id="div_resumen_tienda_admin" class="tda_admin_mt_20"></div>
       </section>
 
       <section class="tda_admin_bloque">
         <div class="tda_admin_dos_columnas">
           <article class="tda_admin_card_formulario">
-            <h4>Registrar imagen</h4>
+            <div class="tda_admin_card_titulo_inline">
+              <h4 id="titulo_formulario_tienda_admin_imagen">Registrar imagen</h4>
+              <button type="button" id="btn_cancelar_edicion_tienda_admin_imagen" class="tda_btn tda_btn_secundario tda_admin_btn_oculto">Cancelar</button>
+            </div>
             <form id="formulario_tienda_admin_imagen" class="tda_admin_formulario" enctype="multipart/form-data">
+              <input type="hidden" id="tienda_admin_imagen_id">
               <div class="tda_admin_grupo">
-                <label for="tienda_admin_imagen_producto_id">Producto</label>
+                <label for="tienda_admin_imagen_producto_id" class="tda_admin_label_obligatorio">Producto</label>
                 <select id="tienda_admin_imagen_producto_id" required></select>
               </div>
               <div class="tda_admin_grupo">
-                <label for="tienda_admin_imagen_url">URL imagen</label>
-                <input type="text" id="tienda_admin_imagen_url" maxlength="500">
-              </div>
-              <div class="tda_admin_grupo">
-                <label for="tienda_admin_imagen_archivo">Archivo imagen</label>
+                <label for="tienda_admin_imagen_archivo" class="tda_admin_label_obligatorio">Archivo imagen</label>
                 <input type="file" id="tienda_admin_imagen_archivo" accept="image/*">
               </div>
               <div class="tda_admin_grupo">
-                <label for="tienda_admin_imagen_texto_alternativo">Texto alternativo</label>
-                <input type="text" id="tienda_admin_imagen_texto_alternativo" maxlength="180">
+                <label for="tienda_admin_imagen_texto_alternativo" class="tda_admin_label_obligatorio">Texto alternativo</label>
+                <input type="text" id="tienda_admin_imagen_texto_alternativo" maxlength="180" required>
               </div>
               <button type="submit" id="btn_guardar_tienda_admin_imagen" class="tda_btn tda_btn_principal">Guardar imagen</button>
             </form>

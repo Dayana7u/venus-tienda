@@ -68,6 +68,20 @@ function tienda_admin_obtener_iniciales_usuario($nombre) {
   return $iniciales !== '' ? $iniciales : 'TA';
 }
 
+function tienda_admin_obtener_resumen_sidebar($pagina_activa) {
+  $resumenes = [
+    'DASHBOARD'  => 'Vista central para monitorear el comportamiento comercial de la tienda.',
+    'PEDIDOS'    => 'Gestiona estados, pagos, seguimiento y acciones rápidas por pedido.',
+    'CLIENTES'   => 'Consulta clientes, direcciones, contacto y actividad comercial.',
+    'VENTAS'     => 'Revisa ingresos, descuentos, ticket promedio y comportamiento de venta.',
+    'CATEGORIAS' => 'Crea y organiza categorías del catálogo con imagen y orden visual.',
+    'PRODUCTOS'  => 'Administra referencias, precios, stock, descuentos e imagen principal.',
+    'IMAGENES'   => 'Carga galerías visuales por producto y define material para detalle.',
+  ];
+
+  return $resumenes[strtoupper((string) $pagina_activa)] ?? 'Panel comercial de administración de tienda.';
+}
+
 function tienda_admin_render_head($titulo = 'Admin tienda') {
 ?>
 <!DOCTYPE html>
@@ -85,6 +99,7 @@ function tienda_admin_render_head($titulo = 'Admin tienda') {
 function tienda_admin_render_layout_inicio($pagina_activa, $titulo, $subtitulo) {
   $usuario_nombre = $_SESSION['tienda_admin_usuario_nombre_completo'] ?? 'Administrador tienda';
   $usuario_iniciales = tienda_admin_obtener_iniciales_usuario($usuario_nombre);
+  $resumen_sidebar = tienda_admin_obtener_resumen_sidebar($pagina_activa);
 ?>
 <body class="tda_admin_body" data-pagina-activa="<?php echo htmlspecialchars($pagina_activa, ENT_QUOTES, 'UTF-8'); ?>">
   <input type="hidden" id="token" value="<?php echo htmlspecialchars($_SESSION['tienda_admin_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
@@ -92,54 +107,56 @@ function tienda_admin_render_layout_inicio($pagina_activa, $titulo, $subtitulo) 
 
   <main class="tda_admin_layout">
     <aside class="tda_admin_sidebar">
-      <div class="tda_admin_brand">
-        <div class="tda_admin_brand_logo">B</div>
-        <div>
-          <span class="tda_admin_badge">Tienda</span>
-          <h1><?php echo htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8'); ?></h1>
+      <div class="tda_admin_sidebar_superior">
+        <div class="tda_admin_brand tda_admin_brand_stack">
+          <div class="tda_admin_brand_logo">B</div>
+          <div>
+            <span class="tda_admin_badge">Tienda</span>
+            <h1><?php echo htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8'); ?></h1>
+          </div>
         </div>
+
+        <p class="tda_admin_sidebar_texto"><?php echo htmlspecialchars($resumen_sidebar, ENT_QUOTES, 'UTF-8'); ?></p>
+
+        <nav class="tda_admin_nav">
+          <span class="tda_admin_nav_titulo">Comercial</span>
+          <a href="/admin/tienda/dashboard/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'DASHBOARD'); ?>">
+            <span class="tda_admin_nav_icono">▣</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="/admin/tienda/pedidos/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'PEDIDOS'); ?>">
+            <span class="tda_admin_nav_icono">↺</span>
+            <span>Pedidos</span>
+          </a>
+          <a href="/admin/tienda/clientes/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'CLIENTES'); ?>">
+            <span class="tda_admin_nav_icono">☺</span>
+            <span>Clientes</span>
+          </a>
+          <a href="/admin/tienda/ventas/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'VENTAS'); ?>">
+            <span class="tda_admin_nav_icono">◔</span>
+            <span>Ventas</span>
+          </a>
+
+          <span class="tda_admin_nav_titulo tda_admin_nav_titulo_mt">Catálogo</span>
+          <a href="/admin/tienda/categorias/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'CATEGORIAS'); ?>">
+            <span class="tda_admin_nav_icono">◫</span>
+            <span>Categorías</span>
+          </a>
+          <a href="/admin/tienda/productos/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'PRODUCTOS'); ?>">
+            <span class="tda_admin_nav_icono">◎</span>
+            <span>Productos</span>
+          </a>
+          <a href="/admin/tienda/imagenes/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'IMAGENES'); ?>">
+            <span class="tda_admin_nav_icono">▤</span>
+            <span>Imágenes</span>
+          </a>
+        </nav>
       </div>
-
-      <p class="tda_admin_sidebar_texto"><?php echo htmlspecialchars($subtitulo, ENT_QUOTES, 'UTF-8'); ?></p>
-
-      <nav class="tda_admin_nav">
-        <span class="tda_admin_nav_titulo">Comercial</span>
-        <a href="/admin/tienda/dashboard/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'DASHBOARD'); ?>">
-          <span class="tda_admin_nav_icono">▣</span>
-          <span>Dashboard</span>
-        </a>
-        <a href="/admin/tienda/pedidos/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'PEDIDOS'); ?>">
-          <span class="tda_admin_nav_icono">↺</span>
-          <span>Pedidos</span>
-        </a>
-        <a href="/admin/tienda/clientes/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'CLIENTES'); ?>">
-          <span class="tda_admin_nav_icono">☺</span>
-          <span>Clientes</span>
-        </a>
-        <a href="/admin/tienda/ventas/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'VENTAS'); ?>">
-          <span class="tda_admin_nav_icono">◔</span>
-          <span>Ventas</span>
-        </a>
-
-        <span class="tda_admin_nav_titulo tda_admin_nav_titulo_mt">Catálogo</span>
-        <a href="/admin/tienda/categorias/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'CATEGORIAS'); ?>">
-          <span class="tda_admin_nav_icono">◫</span>
-          <span>Categorías</span>
-        </a>
-        <a href="/admin/tienda/productos/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'PRODUCTOS'); ?>">
-          <span class="tda_admin_nav_icono">◎</span>
-          <span>Productos</span>
-        </a>
-        <a href="/admin/tienda/imagenes/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'IMAGENES'); ?>">
-          <span class="tda_admin_nav_icono">▤</span>
-          <span>Imágenes</span>
-        </a>
-      </nav>
 
       <div class="tda_admin_sidebar_footer">
         <span class="tda_admin_etiqueta">Tema</span>
         <strong>PINK_NUDE</strong>
-        <p>Panel comercial inspirado en ecommerce beauty, ajustado a la identidad parametrizable actual.</p>
+        <p>Identidad beauty activa aplicada al frente comercial y al panel de operación.</p>
       </div>
     </aside>
 

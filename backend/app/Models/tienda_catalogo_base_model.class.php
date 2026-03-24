@@ -35,7 +35,7 @@ class tienda_catalogo_base_model extends tienda_publica_model {
         'destacado'              => true,
         'oferta'                 => true,
         'stock'                  => 8,
-        'imagen_url'             => '',
+        'imagen_url'             => $this->obtener_imagen_demo_producto_tienda('serum-glow-rose', ''),
         'texto_alternativo'      => 'Serum Glow Rose',
         'imagenes'               => [],
         'descuento_porcentaje'   => 18,
@@ -59,7 +59,7 @@ class tienda_catalogo_base_model extends tienda_publica_model {
         'destacado'              => true,
         'oferta'                 => true,
         'stock'                  => 10,
-        'imagen_url'             => '',
+        'imagen_url'             => $this->obtener_imagen_demo_producto_tienda('base-soft-matte', ''),
         'texto_alternativo'      => 'Base Soft Matte',
         'imagenes'               => [],
         'descuento_porcentaje'   => 17,
@@ -83,7 +83,7 @@ class tienda_catalogo_base_model extends tienda_publica_model {
         'destacado'              => true,
         'oferta'                 => false,
         'stock'                  => 15,
-        'imagen_url'             => '',
+        'imagen_url'             => $this->obtener_imagen_demo_producto_tienda('lip-oil-peony', ''),
         'texto_alternativo'      => 'Lip Oil Peony',
         'imagenes'               => [],
         'descuento_porcentaje'   => 0,
@@ -107,7 +107,7 @@ class tienda_catalogo_base_model extends tienda_publica_model {
         'destacado'              => true,
         'oferta'                 => true,
         'stock'                  => 6,
-        'imagen_url'             => '',
+        'imagen_url'             => $this->obtener_imagen_demo_producto_tienda('brochas-essential-set', ''),
         'texto_alternativo'      => 'Brochas Essential Set',
         'imagenes'               => [],
         'descuento_porcentaje'   => 18,
@@ -131,7 +131,7 @@ class tienda_catalogo_base_model extends tienda_publica_model {
         'destacado'              => false,
         'oferta'                 => false,
         'stock'                  => 9,
-        'imagen_url'             => '',
+        'imagen_url'             => $this->obtener_imagen_demo_producto_tienda('crema-barrier-night', ''),
         'texto_alternativo'      => 'Crema Barrier Night',
         'imagenes'               => [],
         'descuento_porcentaje'   => 0,
@@ -155,7 +155,7 @@ class tienda_catalogo_base_model extends tienda_publica_model {
         'destacado'              => false,
         'oferta'                 => true,
         'stock'                  => 7,
-        'imagen_url'             => '',
+        'imagen_url'             => $this->obtener_imagen_demo_producto_tienda('organizador-vanity-mini', ''),
         'texto_alternativo'      => 'Organizador Vanity Mini',
         'imagenes'               => [],
         'descuento_porcentaje'   => 16,
@@ -179,7 +179,7 @@ class tienda_catalogo_base_model extends tienda_publica_model {
         'destacado'              => false,
         'oferta'                 => true,
         'stock'                  => 5,
-        'imagen_url'             => '',
+        'imagen_url'             => $this->obtener_imagen_demo_producto_tienda('mask-hydra-cloud', ''),
         'texto_alternativo'      => 'Mask Hydra Cloud',
         'imagenes'               => [],
         'descuento_porcentaje'   => 16,
@@ -203,7 +203,7 @@ class tienda_catalogo_base_model extends tienda_publica_model {
         'destacado'              => true,
         'oferta'                 => false,
         'stock'                  => 12,
-        'imagen_url'             => '',
+        'imagen_url'             => $this->obtener_imagen_demo_producto_tienda('blush-soft-peach', ''),
         'texto_alternativo'      => 'Blush Soft Peach',
         'imagenes'               => [],
         'descuento_porcentaje'   => 0,
@@ -227,7 +227,7 @@ class tienda_catalogo_base_model extends tienda_publica_model {
         'destacado'              => true,
         'oferta'                 => true,
         'stock'                  => 4,
-        'imagen_url'             => '',
+        'imagen_url'             => $this->obtener_imagen_demo_producto_tienda('kit-gift-bloom', ''),
         'texto_alternativo'      => 'Kit Gift Bloom',
         'imagenes'               => [],
         'descuento_porcentaje'   => 20,
@@ -235,6 +235,33 @@ class tienda_catalogo_base_model extends tienda_publica_model {
     ];
   }
 
+
+  private function resolver_imagen_producto_tienda($imagen_url, $slug, $linea = 'general') {
+    $imagen_url = trim((string) $imagen_url);
+
+    if ($imagen_url !== '') {
+      return $imagen_url;
+    }
+
+    return $this->obtener_imagen_demo_producto_tienda($slug, $linea);
+  }
+
+  private function obtener_imagen_demo_producto_tienda($slug, $linea = 'general') {
+    $slug = trim((string) $slug);
+
+    if ($slug === '') {
+      $slug = strtolower(str_replace(' ', '-', (string) $linea));
+    }
+
+    $ruta = '/public/uploads/tienda/demo/productos/' . $slug . '.jpg';
+    $ruta_absoluta = dirname(__DIR__, 2) . '/public/uploads/tienda/demo/productos/' . $slug . '.jpg';
+
+    if (is_file($ruta_absoluta)) {
+      return $ruta;
+    }
+
+    return '/public/uploads/tienda/demo/categorias/general.jpg';
+  }
 
   private function texto_minuscula_tienda($texto) {
     $texto = (string) $texto;
@@ -296,7 +323,7 @@ class tienda_catalogo_base_model extends tienda_publica_model {
     return $beneficios;
   }
 
-  private function consultar_imagenes_producto_tienda_bd($producto_id) {
+  private function consultar_imagenes_producto_tienda_bd($producto_id, $slug = '', $linea = 'general') {
     $stmt = null;
     $datos = [];
 
@@ -483,9 +510,9 @@ class tienda_catalogo_base_model extends tienda_publica_model {
           'destacado'              => ((string) ($registro['sw_destacado'] ?? '0') === '1'),
           'oferta'                 => ((string) ($registro['sw_oferta'] ?? '0') === '1') || ($precio_anterior > $precio && $precio > 0),
           'stock'                  => (int) ($registro['stock'] ?? 0),
-          'imagen_url'             => (string) ($registro['imagen_url'] ?? ''),
+          'imagen_url'             => $this->resolver_imagen_producto_tienda((string) ($registro['imagen_url'] ?? ''), (string) ($registro['slug'] ?? ''), (string) ($registro['linea'] ?? 'general')),
           'texto_alternativo'      => (string) ($registro['texto_alternativo'] ?? $registro['nombre'] ?? ''),
-          'imagenes'               => $this->consultar_imagenes_producto_tienda_bd($producto_id),
+          'imagenes'               => $this->consultar_imagenes_producto_tienda_bd($producto_id, (string) ($registro['slug'] ?? ''), (string) ($registro['linea'] ?? 'general')),
           'descuento_porcentaje'   => $this->calcular_descuento_producto_tienda($precio_anterior, $precio),
         ];
       }

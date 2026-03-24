@@ -2,20 +2,16 @@
 require_once __DIR__ . '/tienda_admin/tienda_admin_helper.php';
 
 tienda_admin_render_head('Admin tienda - Pedidos');
-tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo comercial para revisar pedidos, estados, pagos y líneas de venta.');
+tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo comercial para revisar pedidos, estados de pago, despacho y seguimiento por cliente.');
 ?>
       <section class="tda_admin_bloque">
         <div class="tda_admin_bloque_encabezado">
           <div>
             <span class="tda_admin_etiqueta">Pedidos</span>
             <h3>Operación de pedidos</h3>
-            <p>Revisa los pedidos creados, el estado del pago, la entrega y el total de cada compra.</p>
+            <p>Consulta cada pedido y ejecuta acciones rápidas de operación sin salir del módulo.</p>
           </div>
         </div>
-
-        <div id="div_metricas_tienda_admin" class="tda_admin_mt_20"></div>
-        <div id="div_resumen_tienda_admin" class="tda_admin_mt_20"></div>
-        <div id="div_resumen_ventas_tienda_admin" class="tda_admin_mt_16"></div>
       </section>
 
       <section class="tda_admin_bloque">

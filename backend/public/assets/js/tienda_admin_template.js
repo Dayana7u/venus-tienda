@@ -155,7 +155,7 @@ function template_tienda_admin_categorias(categorias) {
   return `<div class="tda_admin_listado_grid">${categorias.map(function(categoria) {
     return `
       <article class="tda_admin_card_categoria">
-        ${categoria.imagen_url ? `<div class="tda_admin_media"><img src="${categoria.imagen_url}" alt="${categoria.texto_alternativo || categoria.nombre}"></div>` : `<div class="tda_admin_media"></div>`}
+        ${template_tienda_admin_media(categoria.imagen_url, categoria.texto_alternativo || categoria.nombre)}
         <span class="tda_admin_etiqueta">${categoria.linea}</span>
         <h5>${categoria.nombre}</h5>
         <div class="tda_admin_card_lista_datos">
@@ -164,6 +164,10 @@ function template_tienda_admin_categorias(categorias) {
           <span><strong>Orden:</strong> ${categoria.orden}</span>
         </div>
         <p>${categoria.descripcion || `Sin descripción.`}</p>
+        <div class="tda_admin_card_acciones">
+          <button type="button" class="tda_btn tda_btn_secundario" data-accion="editar-categoria" data-id="${categoria.categoria_id}">Editar</button>
+          <button type="button" class="tda_btn tda_btn_terciario" data-accion="inactivar-categoria" data-id="${categoria.categoria_id}">Inactivar</button>
+        </div>
       </article>`;
   }).join(``)}</div>`;
 }
@@ -176,18 +180,21 @@ function template_tienda_admin_productos(productos) {
   return `<div class="tda_admin_listado_grid">${productos.map(function(producto) {
     return `
       <article class="tda_admin_card_producto">
-        ${producto.imagen_url ? `<div class="tda_admin_media"><img src="${producto.imagen_url}" alt="${producto.texto_alternativo || producto.nombre}"></div>` : `<div class="tda_admin_media"></div>`}
+        ${template_tienda_admin_media(producto.imagen_url, producto.texto_alternativo || producto.nombre)}
         <span class="tda_admin_etiqueta">${producto.categoria_nombre}</span>
         <h5>${producto.nombre}</h5>
         <div class="tda_admin_card_lista_datos">
           <span><strong>Código:</strong> ${producto.codigo}</span>
-          <span><strong>Etiqueta:</strong> ${producto.etiqueta || `Sin etiqueta`}</span>
           <span><strong>Base:</strong> ${formatear_moneda_tienda_admin(producto.precio_base)}</span>
           <span><strong>Oferta:</strong> ${formatear_moneda_tienda_admin(producto.precio_oferta)}</span>
           <span><strong>Stock:</strong> ${producto.stock}</span>
-          <span><strong>Rating:</strong> ${producto.rating_promedio}</span>
         </div>
         <p>${producto.resumen || `Sin resumen.`}</p>
+        <div class="tda_admin_card_acciones">
+          <button type="button" class="tda_btn tda_btn_secundario" data-accion="editar-producto" data-id="${producto.producto_id}">Editar</button>
+          <a href="/admin/tienda/imagenes/" class="tda_btn tda_btn_secundario">Galería</a>
+          <button type="button" class="tda_btn tda_btn_terciario" data-accion="inactivar-producto" data-id="${producto.producto_id}">Inactivar</button>
+        </div>
       </article>`;
   }).join(``)}</div>`;
 }
@@ -200,14 +207,17 @@ function template_tienda_admin_imagenes(imagenes) {
   return `<div class="tda_admin_listado_grid">${imagenes.map(function(imagen) {
     return `
       <article class="tda_admin_card_imagen">
-        ${imagen.imagen_url ? `<div class="tda_admin_media"><img src="${imagen.imagen_url}" alt="${imagen.texto_alternativo || imagen.producto_nombre}"></div>` : `<div class="tda_admin_media"></div>`}
+        ${template_tienda_admin_media(imagen.imagen_url, imagen.texto_alternativo || imagen.producto_nombre)}
         <span class="tda_admin_etiqueta">Imagen</span>
         <h5>${imagen.producto_nombre}</h5>
         <div class="tda_admin_card_lista_datos">
-          <span><strong>ID producto:</strong> ${imagen.producto_id}</span>
-          <span class="tda_admin_card_imagen_url"><strong>URL:</strong> ${imagen.imagen_url}</span>
+          <span><strong>Producto:</strong> ${imagen.producto_id}</span>
+          <span><strong>Alt:</strong> ${imagen.texto_alternativo || `Sin definir`}</span>
         </div>
-        <p>${imagen.texto_alternativo || `Sin texto alternativo.`}</p>
+        <div class="tda_admin_card_acciones">
+          <button type="button" class="tda_btn tda_btn_secundario" data-accion="editar-imagen" data-id="${imagen.producto_imagen_id}">Editar</button>
+          <button type="button" class="tda_btn tda_btn_terciario" data-accion="inactivar-imagen" data-id="${imagen.producto_imagen_id}">Quitar</button>
+        </div>
       </article>`;
   }).join(``)}</div>`;
 }
@@ -241,6 +251,9 @@ function template_tienda_admin_pedidos(pedidos) {
   }
 
   return `<div class="tda_admin_listado_stack">${pedidos.map(function(pedido) {
+    const puedePagar = String(pedido.estado_pago || ``).toLowerCase() !== `pagado`;
+    const puedeEnviar = String(pedido.estado_pedido || ``).toLowerCase() !== `enviado`;
+
     return `
       <article class="tda_admin_card_fila">
         <div>
@@ -253,6 +266,11 @@ function template_tienda_admin_pedidos(pedidos) {
           <span><strong>Items:</strong> ${pedido.cantidad_items}</span>
           <span><strong>Método:</strong> ${pedido.metodo_pago || `Sin definir`}</span>
           <span><strong>Total:</strong> ${formatear_moneda_tienda_admin(pedido.total || 0)}</span>
+        </div>
+        <div class="tda_admin_card_acciones tda_admin_card_acciones_inline">
+          <button type="button" class="tda_btn tda_btn_secundario" data-accion="detalle-pedido" data-id="${pedido.pedido_tienda_id}">Ver detalle</button>
+          ${puedePagar ? `<button type="button" class="tda_btn tda_btn_secundario" data-accion="pagar-pedido" data-id="${pedido.pedido_tienda_id}">Marcar pagado</button>` : ``}
+          ${puedeEnviar ? `<button type="button" class="tda_btn tda_btn_terciario" data-accion="enviar-pedido" data-id="${pedido.pedido_tienda_id}">Marcar enviado</button>` : ``}
         </div>
       </article>`;
   }).join(``)}</div>`;
@@ -294,6 +312,12 @@ function template_tienda_admin_select_productos(productos) {
   }).join(``);
 
   return `<option value="">Seleccione</option>${opciones}`;
+}
+
+function template_tienda_admin_media(imagen_url, alt) {
+  return imagen_url
+    ? `<div class="tda_admin_media"><img src="${imagen_url}" alt="${alt || ``}"></div>`
+    : `<div class="tda_admin_media"></div>`;
 }
 
 function formatear_moneda_tienda_admin(valor) {

@@ -136,3 +136,12 @@ Novedades y Modificaciones
 
 ## 2026-03-24 - Ajuste de estabilidad V15
 Se corrigieron errores del frente público y del panel de tienda asociados al uso de funciones multibyte no disponibles en el entorno PHP (`mb_substr`, `mb_strtoupper`, `mb_strlen`, `mb_strpos`, `mb_strtolower`). También se corrigió la redirección del login de administración de tienda para enviar a `/admin/tienda/dashboard/` cuando la sesión ya está activa, evitando bucles de redirección.
+
+## 2026-03-24 - Ajuste funcional V16
+Novedades y Modificaciones
+- Se ajusta `backend/app/Views/tienda_admin/tienda_admin_helper.php` para compactar la cabecera lateral del panel tienda y evitar desbordes visuales en la columna izquierda.
+- Se ajustan `backend/app/Views/tienda_admin_categorias.php`, `backend/app/Views/tienda_admin_productos.php`, `backend/app/Views/tienda_admin_imagenes.php` y `backend/app/Views/tienda_admin_pedidos.php` para dejar formularios con obligatoriedad visible, edición en la misma vista y listados sin bloques repetidos.
+- Se ajusta `backend/public/assets/js/tienda_admin.js` y `backend/public/assets/js/tienda_admin_template.js` para soportar edición, inactivación y acciones rápidas de pedidos desde cards.
+- Se ajusta `backend/app/Models/tienda_admin_model.class.php` y `backend/app/Controllers/tienda_admin_controller.php` para permitir actualización de categorías, productos, imágenes y pedidos sin SQL nuevo.
+- Se ajusta `backend/app/Models/tienda_catalogo_base_model.class.php` y `backend/public/assets/css/tienda_publica.css` para usar imágenes de prueba, mejorar el catálogo y ampliar visualmente el footer.
+- Se agregan imágenes de prueba en `backend/public/uploads/tienda/demo/` para apoyar pruebas del catálogo y del panel tienda mientras se carga material definitivo.

@@ -46,6 +46,22 @@ switch ($accion) {
     echo json_encode($model->tienda_admin_guardar_imagen());
     break;
 
+  case 'tienda_admin_inactivar_categoria':
+    echo json_encode($model->tienda_admin_inactivar_categoria());
+    break;
+
+  case 'tienda_admin_inactivar_producto':
+    echo json_encode($model->tienda_admin_inactivar_producto());
+    break;
+
+  case 'tienda_admin_inactivar_imagen':
+    echo json_encode($model->tienda_admin_inactivar_imagen());
+    break;
+
+  case 'tienda_admin_actualizar_pedido':
+    echo json_encode($model->tienda_admin_actualizar_pedido());
+    break;
+
   default:
     echo json_encode([
       'estado'  => false,

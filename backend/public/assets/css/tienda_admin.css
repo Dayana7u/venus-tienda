@@ -837,3 +837,142 @@ body.tda_admin_body a {
     min-width: 100%;
   }
 }
+
+/* Ajustes v16 */
+.tda_admin_sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.tda_admin_sidebar_superior {
+  display: grid;
+  gap: 18px;
+}
+
+.tda_admin_brand_stack {
+  align-items: flex-start;
+}
+
+.tda_admin_brand_stack h1 {
+  font-size: 1.25rem;
+  line-height: 1.05;
+}
+
+.tda_admin_sidebar_texto {
+  margin: 0;
+  font-size: 0.96rem;
+}
+
+.tda_admin_sidebar_footer {
+  margin-top: auto;
+  padding: 16px;
+}
+
+.tda_admin_sidebar_footer strong {
+  margin-top: 8px;
+}
+
+.tda_admin_card_formulario,
+.tda_admin_card_listado,
+.tda_admin_bloque,
+.tda_admin_panel,
+.tda_admin_metric_card,
+.tda_admin_resumen_card,
+.tda_admin_modulo_card,
+.tda_admin_card_categoria,
+.tda_admin_card_producto,
+.tda_admin_card_imagen,
+.tda_admin_card_fila {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.tda_admin_label_obligatorio::after {
+  content: ' *';
+  color: #b94f6d;
+}
+
+.tda_admin_btn_oculto {
+  display: none;
+}
+
+.tda_admin_card_acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.tda_admin_card_acciones_inline {
+  margin-top: 0;
+  justify-content: flex-end;
+}
+
+.tda_btn_terciario {
+  background: #fff5f7;
+  border-color: #e7c1cd;
+  color: #a15f75;
+}
+
+.tda_admin_media {
+  overflow: hidden;
+}
+
+.tda_admin_media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tda_admin_card_listado > .tda_admin_resumen_grid,
+.tda_admin_card_listado > .tda_admin_resumen_grid_ventas {
+  margin-top: 0;
+}
+
+.tda_admin_card_lista_datos {
+  gap: 8px;
+}
+
+.tda_admin_card_categoria h5,
+.tda_admin_card_producto h5,
+.tda_admin_card_imagen h5 {
+  font-size: 1.3rem;
+  line-height: 1.15;
+}
+
+.tda_admin_card_imagen .tda_admin_card_lista_datos span,
+.tda_admin_card_producto .tda_admin_card_lista_datos span,
+.tda_admin_card_categoria .tda_admin_card_lista_datos span {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.tda_admin_card_fila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+}
+
+.tda_admin_formulario input[type="file"] {
+  padding: 10px 12px;
+  background: #fff;
+}
+
+@media (max-width: 1260px) {
+  .tda_admin_layout {
+    grid-template-columns: 250px 1fr;
+  }
+}
+
+@media (max-width: 1080px) {
+  .tda_admin_card_fila {
+    grid-template-columns: 1fr;
+  }
+
+  .tda_admin_card_acciones_inline {
+    justify-content: flex-start;
+  }
+}

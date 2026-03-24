@@ -60,15 +60,63 @@ class tienda_admin_model {
   }
 
   public function tienda_admin_guardar_categoria() {
-    $stmt        = null;
-    $datos       = $this->asignar_variables_tienda_admin_guardar_categoria();
-    $validacion  = $this->validar_datos_tienda_admin_guardar_categoria($datos);
+    $stmt       = null;
+    $datos      = $this->asignar_variables_tienda_admin_guardar_categoria();
+    $validacion = $this->validar_datos_tienda_admin_guardar_categoria($datos);
 
     if ($validacion['estado'] !== true) {
       return $validacion;
     }
 
     try {
+      if ($datos['categoria_id'] > 0) {
+        $sql = "UPDATE public.categorias
+"
+             . "SET
+"
+             . "  codigo               = :codigo,
+"
+             . "  nombre               = :nombre,
+"
+             . "  slug                 = :slug,
+"
+             . "  linea                = :linea,
+"
+             . "  descripcion          = :descripcion,
+"
+             . "  imagen_url           = CASE WHEN :imagen_url = '' THEN imagen_url ELSE :imagen_url END,
+"
+             . "  texto_alternativo    = :texto_alternativo,
+"
+             . "  usuario_modificacion = :usuario_modificacion,
+"
+             . "  fecha_modificacion   = NOW()
+"
+             . "WHERE
+"
+             . "  categoria_id = :categoria_id
+"
+             . "  AND borrado = B'0';";
+
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->bindValue(':categoria_id', $datos['categoria_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':codigo', $datos['codigo'], PDO::PARAM_STR);
+        $stmt->bindValue(':nombre', $datos['nombre'], PDO::PARAM_STR);
+        $stmt->bindValue(':slug', $datos['slug'], PDO::PARAM_STR);
+        $stmt->bindValue(':linea', $datos['linea'], PDO::PARAM_STR);
+        $stmt->bindValue(':descripcion', $datos['descripcion'], PDO::PARAM_STR);
+        $stmt->bindValue(':imagen_url', $datos['imagen_url'], PDO::PARAM_STR);
+        $stmt->bindValue(':texto_alternativo', $datos['texto_alternativo'], PDO::PARAM_STR);
+        $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return [
+          'estado'  => true,
+          'mensaje' => 'Categoría actualizada correctamente.',
+          'datos'   => ['categoria_id' => $datos['categoria_id']],
+        ];
+      }
+
       $sql = "INSERT INTO public.categorias
 "
            . "(
@@ -144,9 +192,7 @@ class tienda_admin_model {
       return [
         'estado'  => true,
         'mensaje' => 'Categoría registrada correctamente.',
-        'datos'   => [
-          'categoria_id' => (int) ($stmt->fetch()['categoria_id'] ?? 0),
-        ],
+        'datos'   => ['categoria_id' => (int) ($stmt->fetch()['categoria_id'] ?? 0)],
       ];
     }
     catch (PDOException $e) {
@@ -166,15 +212,88 @@ class tienda_admin_model {
   }
 
   public function tienda_admin_guardar_producto() {
-    $stmt        = null;
-    $datos       = $this->asignar_variables_tienda_admin_guardar_producto();
-    $validacion  = $this->validar_datos_tienda_admin_guardar_producto($datos);
+    $stmt       = null;
+    $datos      = $this->asignar_variables_tienda_admin_guardar_producto();
+    $validacion = $this->validar_datos_tienda_admin_guardar_producto($datos);
 
     if ($validacion['estado'] !== true) {
       return $validacion;
     }
 
     try {
+      if ($datos['producto_id'] > 0) {
+        $sql = "UPDATE public.productos
+"
+             . "SET
+"
+             . "  categoria_id         = :categoria_id,
+"
+             . "  codigo               = :codigo,
+"
+             . "  nombre               = :nombre,
+"
+             . "  slug                 = :slug,
+"
+             . "  resumen              = :resumen,
+"
+             . "  descripcion          = :descripcion,
+"
+             . "  etiqueta             = :etiqueta,
+"
+             . "  precio_base          = :precio_base,
+"
+             . "  precio_oferta        = :precio_oferta,
+"
+             . "  rating_promedio      = :rating_promedio,
+"
+             . "  stock                = :stock,
+"
+             . "  sw_destacado         = :sw_destacado,
+"
+             . "  sw_oferta            = :sw_oferta,
+"
+             . "  usuario_modificacion = :usuario_modificacion,
+"
+             . "  fecha_modificacion   = NOW()
+"
+             . "WHERE
+"
+             . "  producto_id = :producto_id
+"
+             . "  AND borrado = B'0';";
+
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->bindValue(':producto_id', $datos['producto_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':categoria_id', $datos['categoria_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':codigo', $datos['codigo'], PDO::PARAM_STR);
+        $stmt->bindValue(':nombre', $datos['nombre'], PDO::PARAM_STR);
+        $stmt->bindValue(':slug', $datos['slug'], PDO::PARAM_STR);
+        $stmt->bindValue(':resumen', $datos['resumen'], PDO::PARAM_STR);
+        $stmt->bindValue(':descripcion', $datos['descripcion'], PDO::PARAM_STR);
+        $stmt->bindValue(':etiqueta', $datos['etiqueta'], PDO::PARAM_STR);
+        $stmt->bindValue(':precio_base', $datos['precio_base']);
+        $stmt->bindValue(':precio_oferta', $datos['precio_oferta']);
+        $stmt->bindValue(':rating_promedio', $datos['rating_promedio']);
+        $stmt->bindValue(':stock', $datos['stock'], PDO::PARAM_INT);
+        $stmt->bindValue(':sw_destacado', $datos['sw_destacado'], PDO::PARAM_STR);
+        $stmt->bindValue(':sw_oferta', $datos['sw_oferta'], PDO::PARAM_STR);
+        $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        if ($datos['imagen_principal_url'] !== '') {
+          $this->registrar_imagen_producto_principal_tienda_admin($datos['producto_id'], $datos['imagen_principal_url'], $datos['texto_alternativo']);
+        }
+        else {
+          $this->actualizar_texto_alternativo_principal_tienda_admin($datos['producto_id'], $datos['texto_alternativo']);
+        }
+
+        return [
+          'estado'  => true,
+          'mensaje' => 'Producto actualizado correctamente.',
+          'datos'   => ['producto_id' => $datos['producto_id']],
+        ];
+      }
+
       $sql = "INSERT INTO public.productos
 "
            . "(
@@ -286,9 +405,7 @@ class tienda_admin_model {
       return [
         'estado'  => true,
         'mensaje' => 'Producto registrado correctamente.',
-        'datos'   => [
-          'producto_id' => $producto_id,
-        ],
+        'datos'   => ['producto_id' => $producto_id],
       ];
     }
     catch (PDOException $e) {
@@ -308,15 +425,51 @@ class tienda_admin_model {
   }
 
   public function tienda_admin_guardar_imagen() {
-    $stmt        = null;
-    $datos       = $this->asignar_variables_tienda_admin_guardar_imagen();
-    $validacion  = $this->validar_datos_tienda_admin_guardar_imagen($datos);
+    $stmt       = null;
+    $datos      = $this->asignar_variables_tienda_admin_guardar_imagen();
+    $validacion = $this->validar_datos_tienda_admin_guardar_imagen($datos);
 
     if ($validacion['estado'] !== true) {
       return $validacion;
     }
 
     try {
+      if ($datos['producto_imagen_id'] > 0) {
+        $sql = "UPDATE public.producto_imagenes
+"
+             . "SET
+"
+             . "  producto_id           = :producto_id,
+"
+             . "  imagen_url            = CASE WHEN :imagen_url = '' THEN imagen_url ELSE :imagen_url END,
+"
+             . "  texto_alternativo     = :texto_alternativo,
+"
+             . "  usuario_modificacion  = :usuario_modificacion,
+"
+             . "  fecha_modificacion    = NOW()
+"
+             . "WHERE
+"
+             . "  producto_imagen_id = :producto_imagen_id
+"
+             . "  AND borrado = B'0';";
+
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->bindValue(':producto_imagen_id', $datos['producto_imagen_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':producto_id', $datos['producto_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':imagen_url', $datos['imagen_url'], PDO::PARAM_STR);
+        $stmt->bindValue(':texto_alternativo', $datos['texto_alternativo'], PDO::PARAM_STR);
+        $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return [
+          'estado'  => true,
+          'mensaje' => 'Imagen actualizada correctamente.',
+          'datos'   => ['producto_imagen_id' => $datos['producto_imagen_id']],
+        ];
+      }
+
       $sql = "INSERT INTO public.producto_imagenes
 "
            . "(
@@ -382,9 +535,7 @@ class tienda_admin_model {
       return [
         'estado'  => true,
         'mensaje' => 'Imagen registrada correctamente.',
-        'datos'   => [
-          'producto_imagen_id' => (int) ($stmt->fetch()['producto_imagen_id'] ?? 0),
-        ],
+        'datos'   => ['producto_imagen_id' => (int) ($stmt->fetch()['producto_imagen_id'] ?? 0)],
       ];
     }
     catch (PDOException $e) {
@@ -395,6 +546,67 @@ class tienda_admin_model {
         'mensaje' => 'No fue posible guardar la imagen.',
         'datos'   => [],
       ];
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
+  public function tienda_admin_inactivar_categoria() {
+    return $this->inactivar_registro_tienda_admin('public.categorias', 'categoria_id', (int) ($_POST['categoria_id'] ?? 0), 'Categoría inactivada correctamente.');
+  }
+
+  public function tienda_admin_inactivar_producto() {
+    return $this->inactivar_registro_tienda_admin('public.productos', 'producto_id', (int) ($_POST['producto_id'] ?? 0), 'Producto inactivado correctamente.');
+  }
+
+  public function tienda_admin_inactivar_imagen() {
+    return $this->inactivar_registro_tienda_admin('public.producto_imagenes', 'producto_imagen_id', (int) ($_POST['producto_imagen_id'] ?? 0), 'Imagen inactivada correctamente.');
+  }
+
+  public function tienda_admin_actualizar_pedido() {
+    $pedido_id      = (int) ($_POST['pedido_tienda_id'] ?? 0);
+    $estado_pedido  = trim((string) ($_POST['estado_pedido'] ?? ''));
+    $estado_pago    = trim((string) ($_POST['estado_pago'] ?? ''));
+    $stmt = null;
+
+    if ($pedido_id <= 0) {
+      return ['estado' => false, 'mensaje' => 'Pedido inválido.', 'datos' => []];
+    }
+
+    try {
+      $sql = "UPDATE public.pedidos_tienda
+"
+           . "SET
+"
+           . "  estado_pedido         = CASE WHEN :estado_pedido = '' THEN estado_pedido ELSE :estado_pedido END,
+"
+           . "  estado_pago           = CASE WHEN :estado_pago = '' THEN estado_pago ELSE :estado_pago END,
+"
+           . "  usuario_modificacion  = :usuario_modificacion,
+"
+           . "  fecha_modificacion    = NOW()
+"
+           . "WHERE
+"
+           . "  pedido_tienda_id = :pedido_tienda_id
+"
+           . "  AND borrado = B'0';";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':pedido_tienda_id', $pedido_id, PDO::PARAM_INT);
+      $stmt->bindValue(':estado_pedido', $estado_pedido, PDO::PARAM_STR);
+      $stmt->bindValue(':estado_pago', $estado_pago, PDO::PARAM_STR);
+      $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      return ['estado' => true, 'mensaje' => 'Pedido actualizado correctamente.', 'datos' => []];
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), (string) $pedido_id);
+      return ['estado' => false, 'mensaje' => 'No fue posible actualizar el pedido.', 'datos' => []];
     }
     finally {
       if ($stmt) {
@@ -564,6 +776,7 @@ class tienda_admin_model {
       $stmt->execute();
 
       while ($registro = $stmt->fetch()) {
+        $registro['imagen_url'] = $this->resolver_imagen_categoria_tienda_admin((string) ($registro['imagen_url'] ?? ''), (string) ($registro['slug'] ?? ''), (string) ($registro['linea'] ?? 'general'));
         $datos[] = $registro;
       }
     }
@@ -588,6 +801,8 @@ class tienda_admin_model {
 "
            . "  pro.producto_id,
 "
+           . "  pro.categoria_id,
+"
            . "  pro.codigo,
 "
            . "  pro.nombre,
@@ -597,6 +812,8 @@ class tienda_admin_model {
            . "  pro.etiqueta,
 "
            . "  pro.resumen,
+"
+           . "  pro.descripcion,
 "
            . "  pro.precio_base,
 "
@@ -668,6 +885,7 @@ class tienda_admin_model {
       $stmt->execute();
 
       while ($registro = $stmt->fetch()) {
+        $registro['imagen_url'] = $this->resolver_imagen_producto_tienda_admin((string) ($registro['imagen_url'] ?? ''), (string) ($registro['slug'] ?? ''), (string) ($registro['categoria_nombre'] ?? 'general'));
         $datos[] = $registro;
       }
     }
@@ -726,6 +944,7 @@ class tienda_admin_model {
       $stmt->execute();
 
       while ($registro = $stmt->fetch()) {
+        $registro['imagen_url'] = $this->resolver_imagen_producto_tienda_admin((string) ($registro['imagen_url'] ?? ''), $this->generar_slug_tienda_admin((string) ($registro['producto_nombre'] ?? 'producto')), 'general');
         $datos[] = $registro;
       }
     }
@@ -825,6 +1044,7 @@ class tienda_admin_model {
       $stmt->execute();
 
       while ($registro = $stmt->fetch()) {
+        $registro['imagen_url'] = $this->resolver_imagen_producto_tienda_admin((string) ($registro['imagen_url'] ?? ''), $this->generar_slug_tienda_admin((string) ($registro['producto_nombre'] ?? 'producto')), 'general');
         $datos[] = $registro;
       }
     }
@@ -895,6 +1115,7 @@ class tienda_admin_model {
       $stmt->execute();
 
       while ($registro = $stmt->fetch()) {
+        $registro['imagen_url'] = $this->resolver_imagen_producto_tienda_admin((string) ($registro['imagen_url'] ?? ''), $this->generar_slug_tienda_admin((string) ($registro['producto_nombre'] ?? 'producto')), 'general');
         $datos[] = $registro;
       }
     }
@@ -1024,6 +1245,7 @@ class tienda_admin_model {
   }
 
   private function asignar_variables_tienda_admin_guardar_categoria() {
+    $categoria_id      = (int) ($_POST['tienda_admin_categoria_id'] ?? 0);
     $codigo            = trim($_POST['tienda_admin_categoria_codigo'] ?? '');
     $nombre            = trim($_POST['tienda_admin_categoria_nombre'] ?? '');
     $linea             = trim($_POST['tienda_admin_categoria_linea'] ?? '');
@@ -1032,6 +1254,7 @@ class tienda_admin_model {
     $imagen_url        = $this->subir_archivo_tienda_admin('tienda_admin_categoria_imagen', 'categorias');
 
     return [
+      'categoria_id'      => $categoria_id,
       'codigo'            => strtoupper($codigo),
       'nombre'            => $nombre,
       'slug'              => $this->generar_slug_tienda_admin($nombre),
@@ -1043,10 +1266,10 @@ class tienda_admin_model {
   }
 
   private function validar_datos_tienda_admin_guardar_categoria($datos) {
-    if ($datos['codigo'] === '' || $datos['nombre'] === '' || $datos['linea'] === '') {
+    if ($datos['codigo'] === '' || $datos['nombre'] === '' || $datos['linea'] === '' || $datos['descripcion'] === '' || $datos['texto_alternativo'] === '') {
       return [
         'estado'  => false,
-        'mensaje' => 'Debe completar código, nombre y línea de la categoría.',
+        'mensaje' => 'Debe completar código, nombre, línea, descripción y texto alternativo de la categoría.',
         'datos'   => [],
       ];
     }
@@ -1059,6 +1282,7 @@ class tienda_admin_model {
   }
 
   private function asignar_variables_tienda_admin_guardar_producto() {
+    $producto_id       = (int) ($_POST['tienda_admin_producto_id'] ?? 0);
     $categoria_id      = (int) ($_POST['tienda_admin_producto_categoria_id'] ?? 0);
     $codigo            = trim($_POST['tienda_admin_producto_codigo'] ?? '');
     $nombre            = trim($_POST['tienda_admin_producto_nombre'] ?? '');
@@ -1075,6 +1299,7 @@ class tienda_admin_model {
     $sw_destacado      = $stock > 0 ? "1" : "0";
 
     return [
+      'producto_id'        => $producto_id,
       'categoria_id'       => $categoria_id,
       'codigo'             => strtoupper($codigo),
       'nombre'             => $nombre,
@@ -1094,10 +1319,10 @@ class tienda_admin_model {
   }
 
   private function validar_datos_tienda_admin_guardar_producto($datos) {
-    if ($datos['categoria_id'] <= 0 || $datos['codigo'] === '' || $datos['nombre'] === '') {
+    if ($datos['categoria_id'] <= 0 || $datos['codigo'] === '' || $datos['nombre'] === '' || $datos['resumen'] === '' || $datos['descripcion'] === '' || $datos['texto_alternativo'] === '') {
       return [
         'estado'  => false,
-        'mensaje' => 'Debe completar categoría, código y nombre del producto.',
+        'mensaje' => 'Debe completar categoría, código, nombre, resumen, descripción y texto alternativo del producto.',
         'datos'   => [],
       ];
     }
@@ -1118,13 +1343,13 @@ class tienda_admin_model {
   }
 
   private function asignar_variables_tienda_admin_guardar_imagen() {
+    $producto_imagen_id = (int) ($_POST['tienda_admin_imagen_id'] ?? 0);
     $producto_id        = (int) ($_POST['tienda_admin_imagen_producto_id'] ?? 0);
-    $imagen_url_manual  = trim($_POST['tienda_admin_imagen_url'] ?? '');
     $texto_alternativo  = trim($_POST['tienda_admin_imagen_texto_alternativo'] ?? '');
-    $imagen_url_archivo = $this->subir_archivo_tienda_admin('tienda_admin_imagen_archivo', 'productos');
-    $imagen_url         = $imagen_url_archivo !== '' ? $imagen_url_archivo : $imagen_url_manual;
+    $imagen_url         = $this->subir_archivo_tienda_admin('tienda_admin_imagen_archivo', 'productos');
 
     return [
+      'producto_imagen_id'=> $producto_imagen_id,
       'producto_id'       => $producto_id,
       'imagen_url'        => $imagen_url,
       'texto_alternativo' => $texto_alternativo,
@@ -1134,10 +1359,10 @@ class tienda_admin_model {
   }
 
   private function validar_datos_tienda_admin_guardar_imagen($datos) {
-    if ($datos['producto_id'] <= 0 || $datos['imagen_url'] === '') {
+    if ($datos['producto_id'] <= 0 || ($datos['producto_imagen_id'] <= 0 && $datos['imagen_url'] === '') || $datos['texto_alternativo'] === '') {
       return [
         'estado'  => false,
-        'mensaje' => 'Debe seleccionar producto y cargar archivo o URL de la imagen.',
+        'mensaje' => 'Debe seleccionar producto, cargar archivo de imagen y completar el texto alternativo.',
         'datos'   => [],
       ];
     }
@@ -1147,6 +1372,119 @@ class tienda_admin_model {
       'mensaje' => '',
       'datos'   => [],
     ];
+  }
+
+  private function resolver_imagen_categoria_tienda_admin($imagen_url, $slug, $linea = 'general') {
+    $imagen_url = trim((string) $imagen_url);
+
+    if ($imagen_url !== '') {
+      return $imagen_url;
+    }
+
+    $slug = trim((string) $slug);
+    $linea = trim((string) $linea);
+    $clave = $slug !== '' ? $slug : $linea;
+    $ruta = '/public/uploads/tienda/demo/categorias/' . $clave . '.jpg';
+    $ruta_absoluta = dirname(__DIR__, 2) . '/public/uploads/tienda/demo/categorias/' . $clave . '.jpg';
+
+    if (is_file($ruta_absoluta)) {
+      return $ruta;
+    }
+
+    return '/public/uploads/tienda/demo/categorias/general.jpg';
+  }
+
+  private function resolver_imagen_producto_tienda_admin($imagen_url, $slug, $linea = 'general') {
+    $imagen_url = trim((string) $imagen_url);
+
+    if ($imagen_url !== '') {
+      return $imagen_url;
+    }
+
+    $slug = trim((string) $slug);
+
+    if ($slug === '') {
+      $slug = $this->generar_slug_tienda_admin((string) $linea);
+    }
+
+    $ruta = '/public/uploads/tienda/demo/productos/' . $slug . '.jpg';
+    $ruta_absoluta = dirname(__DIR__, 2) . '/public/uploads/tienda/demo/productos/' . $slug . '.jpg';
+
+    if (is_file($ruta_absoluta)) {
+      return $ruta;
+    }
+
+    return '/public/uploads/tienda/demo/categorias/general.jpg';
+  }
+
+  private function actualizar_texto_alternativo_principal_tienda_admin($producto_id, $texto_alternativo) {
+    $stmt = null;
+
+    try {
+      if ($producto_id <= 0 || trim((string) $texto_alternativo) === '') {
+        return;
+      }
+
+      $sql = "UPDATE public.producto_imagenes\n"
+           . "SET\n"
+           . "  texto_alternativo     = :texto_alternativo,\n"
+           . "  usuario_modificacion  = :usuario_modificacion,\n"
+           . "  fecha_modificacion    = NOW()\n"
+           . "WHERE\n"
+           . "  producto_id = :producto_id\n"
+           . "  AND sw_principal = B'1'\n"
+           . "  AND borrado = B'0';";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':producto_id', $producto_id, PDO::PARAM_INT);
+      $stmt->bindValue(':texto_alternativo', $texto_alternativo, PDO::PARAM_STR);
+      $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), (string) $producto_id);
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
+  private function inactivar_registro_tienda_admin($tabla, $campo_id, $registro_id, $mensaje_ok) {
+    $stmt = null;
+
+    if ($registro_id <= 0) {
+      return ['estado' => false, 'mensaje' => 'Registro inválido.', 'datos' => []];
+    }
+
+    try {
+      $sql = "UPDATE " . $tabla . "\n"
+           . "SET\n"
+           . "  estado               = B'0',\n"
+           . "  borrado              = B'1',\n"
+           . "  usuario_borrado      = :usuario_borrado,\n"
+           . "  fecha_borrado        = NOW()\n"
+           . "WHERE\n"
+           . "  " . $campo_id . " = :registro_id\n"
+           . "  AND borrado = B'0';";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':registro_id', $registro_id, PDO::PARAM_INT);
+      $stmt->bindValue(':usuario_borrado', $this->usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      return ['estado' => true, 'mensaje' => $mensaje_ok, 'datos' => []];
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), $tabla . '.' . $registro_id);
+      return ['estado' => false, 'mensaje' => 'No fue posible actualizar el registro.', 'datos' => []];
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
   }
 
   private function consultar_siguiente_orden_categoria_tienda_admin() {

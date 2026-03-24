@@ -102,3 +102,8 @@ Se evidencia que, este ajuste se soporta en `tienda_admin_helper.php`, `tienda_a
 
 ## 2026-03-24 - Ajuste de estabilidad V15
 Se corrigieron errores del frente público y del panel de tienda asociados al uso de funciones multibyte no disponibles en el entorno PHP (`mb_substr`, `mb_strtoupper`, `mb_strlen`, `mb_strpos`, `mb_strtolower`). También se corrigió la redirección del login de administración de tienda para enviar a `/admin/tienda/dashboard/` cuando la sesión ya está activa, evitando bucles de redirección.
+
+## 2026-03-24 - Ajuste funcional V16
+Se evidencia que, el panel tienda continúa sobre la base modular ya existente y se corrige la distribución de elementos para no repetir bloques de resumen en categorías, productos, imágenes ni pedidos.
+Se evidencia que, se fortalecen los formularios del panel tienda con edición sobre los mismos registros de categorías, productos e imágenes, manteniendo el flujo por cards y sin regresar a modales.
+Se evidencia que, se incorporan rutas locales de imágenes de prueba para categorías y productos, con respaldo visual automático cuando la base de datos aún no tenga material cargado.

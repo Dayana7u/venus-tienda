@@ -37,3 +37,24 @@
 - Se agregó cambio de claves de usuarios desde seguridad, con cierre de sesiones relacionadas.
 - Se ajustó el guardado de usuarios para almacenar la clave con hash bcrypt.
 - Se dejó compatibilidad temporal para claves legadas sin hash y se agregó SQL de migración `004_sql_seguridad_hash_claves.sql`.
+
+
+#### Vista pública base de la tienda
+- Se agregó `index.php` como punto de entrada del frente comercial separado del panel administrativo.
+- Se agregó `backend/app/Views/tienda_publica.php` como vista pública inicial de la tienda.
+- Se agregaron `backend/app/Controllers/tienda_publica_controller.php` y `backend/app/Models/tienda_publica_model.class.php` para consultar branding, tema, componentes, parámetros, módulo y menús públicos desde la parametrización ya registrada.
+- Se agregaron `backend/public/assets/js/tienda_publica.js`, `tienda_publica_peticiones.js` y `tienda_publica_template.js` respetando separación entre archivo principal, peticiones y templates.
+- Se agregó `backend/public/assets/css/tienda_publica.css` para el frente comercial con paleta clara y consumo de variables visuales del tema activo.
+- Se dejó la navegación pública leyendo el módulo `TIENDA_PUBLICA`, sus configuraciones activas y el tema `PINK_NUDE` cargado por SQL incremental.
+
+#### Ajuste visual del tema público `PINK_NUDE`
+- Se ajustó `backend/public/assets/css/tienda_publica.css` para mejorar el contraste visual de las etiquetas tipo badge y del pie de página del frente comercial.
+- Se ajustó `backend/public/assets/js/tienda_publica.js` para consumir nuevas propiedades visuales del tema en `badge` y `footer`, conservando el enfoque parametrizable desde `system.tema_componentes`.
+- Se agregó el SQL incremental `database/sql/006_sql_ajuste_visual_tienda_publica.sql` para actualizar colores del footer y registrar configuración visual específica de badges dentro del tema `PINK_NUDE`.
+
+#### Avance visual comercial del tema `PINK_NUDE`
+- Se fortaleció `backend/app/Views/tienda_publica.php` con una estructura comercial más completa basada en cards y secciones separadas.
+- Se ajustó `backend/public/assets/css/tienda_publica.css` para acercar el frente a una tienda beauty más profesional, con topbar, hero comercial, categorías, destacados, rutina, campañas y testimonios.
+- Se ajustó `backend/public/assets/js/tienda_publica.js` para consumir nuevos componentes visuales del tema y nuevas configuraciones del módulo `TIENDA_PUBLICA`.
+- Se actualizó `backend/public/assets/js/tienda_publica_template.js` para renderizar bloques de maquillaje, skincare, accesorios, productos destacados, rutina y testimonios desde configuraciones parametrizables.
+- Se agregó `database/sql/007_sql_avance_tienda_publica_beauty.sql` para registrar nuevos textos configurables y nuevos componentes visuales del tema `PINK_NUDE` sin crear tablas nuevas.

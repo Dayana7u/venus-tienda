@@ -68,15 +68,32 @@ function tienda_admin_obtener_iniciales_usuario($nombre) {
   return $iniciales !== '' ? $iniciales : 'TA';
 }
 
+function tienda_admin_obtener_permisos_usuario() {
+  $permisos = $_SESSION['tienda_admin_permisos'] ?? [];
+
+  return is_array($permisos) ? $permisos : [];
+}
+
+function tienda_admin_usuario_tiene_permiso($codigo) {
+  if (($_SESSION['tienda_admin_sw_superusuario'] ?? '0') === '1') {
+    return true;
+  }
+
+  $permisos = tienda_admin_obtener_permisos_usuario();
+  return in_array((string) $codigo, $permisos, true);
+}
+
 function tienda_admin_obtener_resumen_sidebar($pagina_activa) {
   $resumenes = [
     'DASHBOARD'  => 'Vista central para monitorear el comportamiento comercial de la tienda.',
     'PEDIDOS'    => 'Gestiona estados, pagos, seguimiento y acciones rápidas por pedido.',
     'CLIENTES'   => 'Consulta clientes, direcciones, contacto y actividad comercial.',
     'VENTAS'     => 'Revisa ingresos, descuentos, ticket promedio y comportamiento de venta.',
+    'PAGOS'      => 'Consulta transacciones, referencias y estados generados por la pasarela base.',
     'CATEGORIAS' => 'Crea y organiza categorías del catálogo con imagen y orden visual.',
     'PRODUCTOS'  => 'Administra referencias, precios, stock, descuentos e imagen principal.',
     'IMAGENES'   => 'Carga galerías visuales por producto y define material para detalle.',
+    'AUDITORIA'  => 'Consulta trazabilidad de acciones ejecutadas dentro del panel comercial.',
   ];
 
   return $resumenes[strtoupper((string) $pagina_activa)] ?? 'Panel comercial de administración de tienda.';
@@ -104,6 +121,8 @@ function tienda_admin_render_layout_inicio($pagina_activa, $titulo, $subtitulo) 
 <body class="tda_admin_body" data-pagina-activa="<?php echo htmlspecialchars($pagina_activa, ENT_QUOTES, 'UTF-8'); ?>">
   <input type="hidden" id="token" value="<?php echo htmlspecialchars($_SESSION['tienda_admin_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
   <input type="hidden" id="controlador_tienda_admin" value="/app/Controllers/tienda_admin_controller.php">
+  <input type="hidden" id="tienda_admin_permisos_json" value='<?php echo htmlspecialchars(json_encode(tienda_admin_obtener_permisos_usuario()), ENT_QUOTES, 'UTF-8'); ?>'>
+  <input type="hidden" id="tienda_admin_superusuario" value="<?php echo htmlspecialchars((string) ($_SESSION['tienda_admin_sw_superusuario'] ?? '0'), ENT_QUOTES, 'UTF-8'); ?>">
 
   <main class="tda_admin_layout">
     <aside class="tda_admin_sidebar">
@@ -120,43 +139,69 @@ function tienda_admin_render_layout_inicio($pagina_activa, $titulo, $subtitulo) 
 
         <nav class="tda_admin_nav">
           <span class="tda_admin_nav_titulo">Comercial</span>
+          <?php if (tienda_admin_usuario_tiene_permiso('TIENDA_DASHBOARD_VER')) { ?>
           <a href="/admin/tienda/dashboard/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'DASHBOARD'); ?>">
             <span class="tda_admin_nav_icono">▣</span>
             <span>Dashboard</span>
           </a>
+          <?php } ?>
+          <?php if (tienda_admin_usuario_tiene_permiso('TIENDA_PEDIDOS_VER')) { ?>
           <a href="/admin/tienda/pedidos/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'PEDIDOS'); ?>">
             <span class="tda_admin_nav_icono">↺</span>
             <span>Pedidos</span>
           </a>
+          <?php } ?>
+          <?php if (tienda_admin_usuario_tiene_permiso('TIENDA_CLIENTES_VER')) { ?>
           <a href="/admin/tienda/clientes/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'CLIENTES'); ?>">
             <span class="tda_admin_nav_icono">☺</span>
             <span>Clientes</span>
           </a>
+          <?php } ?>
+          <?php if (tienda_admin_usuario_tiene_permiso('TIENDA_VENTAS_VER')) { ?>
           <a href="/admin/tienda/ventas/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'VENTAS'); ?>">
             <span class="tda_admin_nav_icono">◔</span>
             <span>Ventas</span>
           </a>
+          <?php } ?>
+          <?php if (tienda_admin_usuario_tiene_permiso('TIENDA_PAGOS_VER')) { ?>
+          <a href="/admin/tienda/pagos/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'PAGOS'); ?>">
+            <span class="tda_admin_nav_icono">◌</span>
+            <span>Pagos</span>
+          </a>
+          <?php } ?>
 
           <span class="tda_admin_nav_titulo tda_admin_nav_titulo_mt">Catálogo</span>
+          <?php if (tienda_admin_usuario_tiene_permiso('TIENDA_CATEGORIAS_VER')) { ?>
           <a href="/admin/tienda/categorias/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'CATEGORIAS'); ?>">
             <span class="tda_admin_nav_icono">◫</span>
             <span>Categorías</span>
           </a>
+          <?php } ?>
+          <?php if (tienda_admin_usuario_tiene_permiso('TIENDA_PRODUCTOS_VER')) { ?>
           <a href="/admin/tienda/productos/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'PRODUCTOS'); ?>">
             <span class="tda_admin_nav_icono">◎</span>
             <span>Productos</span>
           </a>
+          <?php } ?>
+          <?php if (tienda_admin_usuario_tiene_permiso('TIENDA_IMAGENES_VER')) { ?>
           <a href="/admin/tienda/imagenes/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'IMAGENES'); ?>">
             <span class="tda_admin_nav_icono">▤</span>
             <span>Imágenes</span>
           </a>
+          <?php } ?>
+          <?php if (tienda_admin_usuario_tiene_permiso('TIENDA_AUDITORIA_VER')) { ?>
+          <a href="/admin/tienda/auditoria/" class="tda_admin_nav_link<?php echo tienda_admin_clase_nav($pagina_activa, 'AUDITORIA'); ?>">
+            <span class="tda_admin_nav_icono">◷</span>
+            <span>Auditoría</span>
+          </a>
+          <?php } ?>
         </nav>
       </div>
 
       <div class="tda_admin_sidebar_footer">
         <span class="tda_admin_etiqueta">Tema</span>
         <strong>PINK_NUDE</strong>
-        <p>Identidad beauty activa aplicada al frente comercial y al panel de operación.</p>
+        <p>Identidad activa para el catálogo y la operación de la tienda.</p>
       </div>
     </aside>
 
@@ -189,6 +234,37 @@ function tienda_admin_render_layout_inicio($pagina_activa, $titulo, $subtitulo) 
       </section>
 
       <section id="div_mensaje_tienda_admin" class="tda_admin_mensajes" aria-live="polite"></section>
+
+      <div id="tda_admin_modal_confirmacion" class="tda_admin_modal tda_admin_modal_oculto" aria-hidden="true">
+        <div class="tda_admin_modal_backdrop" data-modal-cerrar="true"></div>
+        <div class="tda_admin_modal_dialogo">
+          <div class="tda_admin_modal_encabezado">
+            <h3 id="tda_admin_modal_confirmacion_titulo">Confirmar acción</h3>
+            <button type="button" class="tda_btn_icono tda_btn_icono_modal" data-modal-cerrar="true">×</button>
+          </div>
+          <div class="tda_admin_modal_contenido">
+            <p id="tda_admin_modal_confirmacion_mensaje">¿Desea continuar?</p>
+          </div>
+          <div class="tda_admin_modal_acciones">
+            <button type="button" id="tda_admin_modal_confirmacion_cancelar" class="tda_btn tda_btn_secundario">Cancelar</button>
+            <button type="button" id="tda_admin_modal_confirmacion_aceptar" class="tda_btn tda_btn_principal">Aceptar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="tda_admin_modal_detalle_pedido" class="tda_admin_modal tda_admin_modal_oculto" aria-hidden="true">
+        <div class="tda_admin_modal_backdrop" data-modal-detalle-cerrar="true"></div>
+        <div class="tda_admin_modal_dialogo tda_admin_modal_dialogo_lg">
+          <div class="tda_admin_modal_encabezado">
+            <h3>Detalle de pedido</h3>
+            <button type="button" class="tda_btn_icono tda_btn_icono_modal" data-modal-detalle-cerrar="true">×</button>
+          </div>
+          <div id="tda_admin_modal_detalle_pedido_contenido" class="tda_admin_modal_contenido"></div>
+          <div class="tda_admin_modal_acciones">
+            <button type="button" class="tda_btn tda_btn_secundario" data-modal-detalle-cerrar="true">Cerrar</button>
+          </div>
+        </div>
+      </div>
 <?php
 }
 

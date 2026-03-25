@@ -54,6 +54,9 @@ function tienda_obtener_ruta_publica($codigo_menu = '', $ruta_defecto = '/') {
     case 'CARRITO':
       return '/carrito/';
 
+    case 'CHECKOUT':
+      return '/checkout/';
+
     default:
       return $ruta_defecto !== '' ? $ruta_defecto : '/';
   }
@@ -209,11 +212,14 @@ function tienda_render_flash() {
 function tienda_render_footer($branding = [], $menus = []) {
   $nombre = $branding['nombre_comercial'] ?? 'Tienda Pública Base';
   $texto = $branding['texto_footer'] ?? 'Compra fácil, rápida y segura.';
+  $correo = trim((string) ($branding['correo_contacto'] ?? 'contacto@tiendapublica.com'));
+  $telefono = trim((string) ($branding['telefono_contacto'] ?? 'Pendiente por parametrizar'));
+  $direccion = trim((string) ($branding['direccion'] ?? 'Pendiente por parametrizar'));
 
   echo '<footer class="tv_footer">';
   echo '  <div class="tv_footer_contenido">';
   echo '    <div class="tv_footer_columnas">';
-  echo '      <article class="tv_footer_bloque">';
+  echo '      <article class="tv_footer_bloque tv_footer_bloque_marca">';
   echo '        <h3>' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . '</h3>';
   echo '        <p>' . htmlspecialchars($texto, ENT_QUOTES, 'UTF-8') . '</p>';
   echo '      </article>';
@@ -236,12 +242,12 @@ function tienda_render_footer($branding = [], $menus = []) {
 
   echo '        </ul>';
   echo '      </article>';
-  echo '      <article class="tv_footer_bloque">';
+  echo '      <article class="tv_footer_bloque tv_footer_bloque_contacto">';
   echo '        <h3>Atención</h3>';
-  echo '        <ul class="tv_footer_lista">';
-  echo '          <li>' . htmlspecialchars($branding['correo_contacto'] ?? 'contacto@tiendapublica.com', ENT_QUOTES, 'UTF-8') . '</li>';
-  echo '          <li>' . htmlspecialchars($branding['telefono_contacto'] ?? 'Pendiente por parametrizar', ENT_QUOTES, 'UTF-8') . '</li>';
-  echo '          <li>' . htmlspecialchars($branding['direccion'] ?? 'Pendiente por parametrizar', ENT_QUOTES, 'UTF-8') . '</li>';
+  echo '        <ul class="tv_footer_lista tv_footer_lista_contacto">';
+  echo '          <li><a href="mailto:' . htmlspecialchars($correo, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($correo, ENT_QUOTES, 'UTF-8') . '</a></li>';
+  echo '          <li>' . htmlspecialchars($telefono, ENT_QUOTES, 'UTF-8') . '</li>';
+  echo '          <li>' . htmlspecialchars($direccion, ENT_QUOTES, 'UTF-8') . '</li>';
   echo '        </ul>';
   echo '      </article>';
   echo '    </div>';

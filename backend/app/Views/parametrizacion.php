@@ -48,6 +48,7 @@ if (empty($_SESSION['admin_token'])) {
         <a href="#seccion_menus" data-menu-link="true">Menús</a>
         <a href="#seccion_roles" data-menu-link="true">Roles</a>
         <a href="#seccion_usuarios" data-menu-link="true">Usuarios</a>
+        <a href="#seccion_roles_permisos" data-menu-link="true">Asignación permisos</a>
       </nav>
     </aside>
 
@@ -81,6 +82,7 @@ if (empty($_SESSION['admin_token'])) {
         <div id="seccion_menus"></div>
         <div id="seccion_roles"></div>
         <div id="seccion_usuarios"></div>
+        <div id="seccion_roles_permisos"></div>
       </section>
     </section>
   </main>

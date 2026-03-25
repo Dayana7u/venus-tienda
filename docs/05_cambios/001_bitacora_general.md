@@ -145,3 +145,37 @@ Novedades y Modificaciones
 - Se ajusta `backend/app/Models/tienda_admin_model.class.php` y `backend/app/Controllers/tienda_admin_controller.php` para permitir actualización de categorías, productos, imágenes y pedidos sin SQL nuevo.
 - Se ajusta `backend/app/Models/tienda_catalogo_base_model.class.php` y `backend/public/assets/css/tienda_publica.css` para usar imágenes de prueba, mejorar el catálogo y ampliar visualmente el footer.
 - Se agregan imágenes de prueba en `backend/public/uploads/tienda/demo/` para apoyar pruebas del catálogo y del panel tienda mientras se carga material definitivo.
+
+## 2026-03-24 - Ajuste funcional V17
+Se evidencia que, se corrige el panel comercial de tienda para conservar registros inactivos visibles en categorías, productos e imágenes, reemplazar confirmaciones del navegador por confirmación controlada en pantalla y mejorar la distribución visual de filtros, footer y cards operativas.
+
+Novedades y Modificaciones
+- Se ajusta `backend/app/Models/tienda_admin_model.class.php` para consultar categorías, productos e imágenes sin excluir registros inactivos, conservando su visualización en el panel y permitiendo reactivación desde la misma vista.
+- Se ajusta `backend/app/Controllers/tienda_admin_controller.php` y `backend/public/assets/js/tienda_admin_peticiones.js` para soportar acciones de activar e inactivar en categorías, productos e imágenes.
+- Se ajusta `backend/public/assets/js/tienda_admin.js` y `backend/public/assets/js/tienda_admin_template.js` para usar confirmación controlada en pantalla, mostrar detalle de pedido y reorganizar mejor acciones, estados y cards del panel tienda.
+- Se ajusta `backend/app/Views/tienda_admin/tienda_admin_helper.php` para incorporar contenedores de confirmación y detalle dentro de la plantilla general del panel tienda.
+- Se ajusta `backend/app/Views/tienda_admin_clientes.php` para eliminar bloques de resumen repetidos dentro del módulo de clientes.
+- Se ajusta `backend/public/assets/css/tienda_admin.css` y `backend/public/assets/css/tienda_publica.css` para mejorar la ubicación de filtros del catálogo, el ancho útil del footer y la jerarquía visual de pedidos, categorías, productos e imágenes.
+
+## 2026-03-24 - Ajuste funcional V18
+Se evidencia que, se corrige la presentación de productos top dentro del panel tienda y se incorpora control de permisos para la operación comercial, manteniendo el panel separado por módulos y sin alterar la base multivista ya validada.
+
+Novedades y Modificaciones
+- Se ajusta `backend/public/assets/js/tienda_admin_template.js` y `backend/public/assets/css/tienda_admin.css` para reorganizar el bloque de productos top con cards compactas, imagen, posición comercial y métricas visibles sin espacios vacíos excesivos.
+- Se ajustan `backend/app/Models/tienda_admin_login_model.class.php`, `backend/app/Views/tienda_admin/tienda_admin_helper.php`, `backend/app/Controllers/tienda_admin_bootstrap_controller.php` y `backend/app/Controllers/tienda_admin_controller.php` para cargar permisos del usuario, controlar acceso por módulo y validar acciones del panel tienda según permisos funcionales.
+- Se ajustan `backend/app/Models/parametrizacion_model.class.php`, `backend/app/Views/parametrizacion.php` y `backend/public/assets/js/parametrizacion.js` para agregar la sección de asignación de permisos basada en `public.roles_permisos` dentro de la parametrización administrativa.
+- Se ajustan `backend/app/Views/tienda_admin_clientes.php`, `backend/public/assets/js/tienda_admin.js` y `backend/app/Models/tienda_admin_model.class.php` para permitir edición de clientes desde el panel tienda sin mezclar este flujo con categorías, productos o imágenes.
+- Se agrega `database/sql/014_sql_tienda_permisos_operacion.sql` para sembrar permisos adicionales del panel tienda y asignarlos al rol `TIENDA_ADMIN`.
+
+- Se ajusta el panel tienda para corregir la ubicación de tarjetas en ventas, pedidos y clientes; además se agrega auditoría operativa y validaciones de integridad para categorías y productos.
+
+## 2026-03-24 - Checkout y pasarela base
+Se evidencia que, se agrega el bloque funcional de checkout sobre la tienda multivista ya aprobada, manteniendo `/checkout/` como vista separada y sin devolver el frente a una landing única.
+
+Novedades y Modificaciones
+Se crea `tienda_checkout_model.class.php`, `tienda_checkout_controller.php`, `tienda_checkout.php` y la ruta `backend/checkout/index.php`.
+Se agregan los archivos `tienda_checkout.js`, `tienda_checkout_peticiones.js` y `tienda_checkout_template.js` para gestionar el formulario, los métodos de pago y el guardado por petición asíncrona.
+Se incorpora el script `016_sql_pasarela_pago_base.sql` para registrar pagos en `public.pagos_tienda`.
+Se ajusta el carrito para redirigir a `/checkout/` desde la vista completa y desde el drawer lateral.
+
+- Se ajusta checkout para validar por método de pago, registrar referencia interna y dejar módulo de pagos para seguimiento administrativo.

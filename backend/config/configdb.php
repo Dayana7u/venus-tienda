@@ -284,6 +284,8 @@ function configdb_limpiar_sesion_tienda_admin() {
     $_SESSION['tienda_admin_usuario_nombre_completo'],
     $_SESSION['tienda_admin_usuario_correo'],
     $_SESSION['tienda_admin_roles'],
+    $_SESSION['tienda_admin_permisos'],
+    $_SESSION['tienda_admin_sw_superusuario'],
     $_SESSION['tienda_admin_token_sesion'],
     $_SESSION['tienda_admin_usuario_sesion_id']
   );

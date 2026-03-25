@@ -110,6 +110,8 @@ class tienda_admin_login_model {
       $_SESSION['tienda_admin_usuario_correo']          = $usuario['correo'];
       $_SESSION['tienda_admin_usuario_nombre_completo'] = trim($usuario['nombres'] . ' ' . $usuario['apellidos']);
       $_SESSION['tienda_admin_roles']                   = $this->consultar_roles_usuario($usuario['usuario_id']);
+      $_SESSION['tienda_admin_permisos']                = $this->consultar_permisos_usuario((int) $usuario['usuario_id']);
+      $_SESSION['tienda_admin_sw_superusuario']         = (string) $usuario['sw_superusuario'];
       $_SESSION['tienda_admin_token_sesion']            = bin2hex(random_bytes(32));
 
       $this->actualizar_ultimo_ingreso($usuario['usuario_id']);
@@ -162,6 +164,10 @@ class tienda_admin_login_model {
       ];
     }
 
+    if (!isset($_SESSION['tienda_admin_permisos'])) {
+      $_SESSION['tienda_admin_permisos'] = $this->consultar_permisos_usuario((int) $_SESSION['tienda_admin_usuario_id']);
+    }
+
     return [
       'estado'  => true,
       'mensaje' => 'Sesión activa.',
@@ -170,6 +176,7 @@ class tienda_admin_login_model {
         'usuario_login'           => $_SESSION['tienda_admin_usuario_login'] ?? '',
         'usuario_nombre_completo' => $_SESSION['tienda_admin_usuario_nombre_completo'] ?? '',
         'roles'                   => $_SESSION['tienda_admin_roles'] ?? [],
+        'permisos'                => $_SESSION['tienda_admin_permisos'] ?? [],
       ],
     ];
   }
@@ -292,6 +299,51 @@ class tienda_admin_login_model {
 
       while ($registro = $stmt->fetch()) {
         $datos[] = $registro;
+      }
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), (string) $usuario_id);
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+
+    return $datos;
+  }
+
+  private function consultar_permisos_usuario($usuario_id) {
+    $stmt  = null;
+    $datos = [];
+
+    try {
+      $sql = "SELECT DISTINCT\n"
+           . "  per.codigo\n"
+           . "FROM\n"
+           . "  public.usuarios_roles uro\n"
+           . "INNER JOIN public.roles_permisos rpe\n"
+           . "  ON rpe.rol_id = uro.rol_id\n"
+           . "  AND rpe.estado = B'1'\n"
+           . "  AND rpe.borrado = B'0'\n"
+           . "INNER JOIN public.permisos per\n"
+           . "  ON per.permiso_id = rpe.permiso_id\n"
+           . "  AND per.estado = B'1'\n"
+           . "  AND per.borrado = B'0'\n"
+           . "WHERE\n"
+           . "  uro.usuario_id = :usuario_id\n"
+           . "  AND uro.estado = B'1'\n"
+           . "  AND uro.borrado = B'0'\n"
+           . "ORDER BY\n"
+           . "  per.orden ASC,\n"
+           . "  per.permiso_id ASC;";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':usuario_id', $usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      while ($registro = $stmt->fetch()) {
+        $datos[] = (string) ($registro['codigo'] ?? '');
       }
     }
     catch (PDOException $e) {

@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/tienda_admin/tienda_admin_helper.php';
 
+$tda_permiso_formulario = tienda_admin_usuario_tiene_permiso('TIENDA_PRODUCTOS_GUARDAR') || tienda_admin_usuario_tiene_permiso('TIENDA_PRODUCTOS_EDITAR');
+
 tienda_admin_render_head('Admin tienda - Productos');
 tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo para crear, editar e inactivar productos del catálogo sin romper el frente comercial.');
 ?>
@@ -16,6 +18,7 @@ tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo p
 
       <section class="tda_admin_bloque">
         <div class="tda_admin_dos_columnas">
+          <?php if ($tda_permiso_formulario) { ?>
           <article class="tda_admin_card_formulario">
             <div class="tda_admin_card_titulo_inline">
               <h4 id="titulo_formulario_tienda_admin_producto">Crear producto</h4>
@@ -78,6 +81,7 @@ tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo p
               <button type="submit" id="btn_guardar_tienda_admin_producto" class="tda_btn tda_btn_principal">Guardar producto</button>
             </form>
           </article>
+          <?php } ?>
 
           <article class="tda_admin_card_listado">
             <div class="tda_admin_card_titulo_inline">

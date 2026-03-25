@@ -67,7 +67,7 @@ function template_resumen_carrito_tienda_store(carrito) {
     <p class="tv_drawer_nota">Puedes seguir comprando o entrar al carrito completo para revisar cantidades, descuentos y resumen final.</p>
     <div class="tv_drawer_botones">
       <a href="/carrito/" class="tv_btn tv_btn_secundario">Ver carrito</a>
-      <button type="button" class="tv_btn tv_btn_principal">Finalizar compra</button>
+      <a href="/checkout/" class="tv_btn tv_btn_principal">Finalizar compra</a>
     </div>`;
 }
 

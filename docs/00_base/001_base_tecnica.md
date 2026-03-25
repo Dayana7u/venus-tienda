@@ -107,3 +107,8 @@ Se corrigieron errores del frente público y del panel de tienda asociados al us
 Se evidencia que, el panel tienda continúa sobre la base modular ya existente y se corrige la distribución de elementos para no repetir bloques de resumen en categorías, productos, imágenes ni pedidos.
 Se evidencia que, se fortalecen los formularios del panel tienda con edición sobre los mismos registros de categorías, productos e imágenes, manteniendo el flujo por cards y sin regresar a modales.
 Se evidencia que, se incorporan rutas locales de imágenes de prueba para categorías y productos, con respaldo visual automático cuando la base de datos aún no tenga material cargado.
+
+- Se añade la tabla `public.tienda_admin_auditoria` como soporte de trazabilidad del panel tienda y se agregan permisos de auditoría y borrado lógico de categorías.
+
+Checkout y pago base
+Se evidencia que, el proyecto incorpora una etapa de checkout separada del carrito, con persistencia de cliente, dirección, pedido y pago para soportar la operación comercial del ecommerce y dejar lista la integración posterior con pasarela real.

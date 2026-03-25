@@ -65,3 +65,26 @@ Se corrigieron errores del frente público y del panel de tienda asociados al us
 ## 2026-03-24 - Ajuste funcional V16
 Se corrige la presentación del catálogo para alinear mejor el bloque de filtros y mejorar el ancho útil del footer.
 Se agrega respaldo visual con imágenes de prueba locales para categorías y productos cuando el material cargado desde la administración comercial aún no exista.
+
+## 2026-03-24 - Ajuste funcional V17
+Se corrige la ubicación del bloque de filtros en la vista de catálogo para mantenerlo alineado hacia el extremo derecho del encabezado del módulo.
+Se amplía el footer para distribuir mejor navegación, categorías y datos de atención sin concentrar el contenido únicamente en el extremo izquierdo.
+Se mantiene el comportamiento multivista del frente comercial y se preserva el consumo de categorías y productos activos desde la base de datos.
+
+## 2026-03-24 - Panel tienda con permisos operativos
+Se agrega una capa de permisos funcionales para el panel `/admin/tienda/`, de forma que dashboard, pedidos, clientes, ventas, categorías, productos e imágenes puedan controlarse por rol desde la parametrización administrativa.
+
+Se agrega también edición de clientes desde el panel tienda, permitiendo actualizar nombres, apellidos, correo, celular y ciudad principal sin abrir otro módulo adicional.
+
+- El panel tienda incorpora módulo de auditoría y validaciones para impedir inactivar o eliminar categorías y productos cuando comprometen la operación comercial o la trazabilidad histórica.
+
+## Bloque checkout y pasarela base
+Se evidencia que, el frente público incorpora la vista `/checkout/` para registrar los datos del comprador, la dirección de entrega y el método de pago seleccionado desde el carrito.
+
+Novedades y Modificaciones
+Se agregó el formulario de checkout con datos de comprador, dirección, observación de entrega y selección de método de pago.
+Se habilitaron los métodos base PSE, Tarjeta y Contra entrega dentro del mismo flujo de checkout.
+Se dejó la persistencia del pedido y del pago sobre las tablas operativas del ecommerce para que la operación quede visible en el panel administrativo de tienda.
+Se ajustó el carrito para redirigir al checkout desde la vista dedicada y desde el drawer lateral.
+
+- Checkout: se agregan validaciones por PSE, tarjeta y contra entrega, con referencia de pago y seguimiento administrativo de pagos.

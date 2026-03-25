@@ -36,6 +36,7 @@ class parametrizacion_model {
         'menus'             => $this->parametrizacion_listar_menus(),
         'roles'             => $this->parametrizacion_listar_roles(),
         'usuarios'          => $this->parametrizacion_listar_usuarios(),
+        'roles_permisos'    => $this->parametrizacion_listar_roles_permisos(),
         'parametro_grupos'  => $this->parametrizacion_listar_parametro_grupos(),
         'catalogos'         => $this->parametrizacion_obtener_catalogos(),
       ],
@@ -255,7 +256,52 @@ ORDER BY
       'modulos'          => $this->parametrizacion_listar_modulos(),
       'menus'            => $this->parametrizacion_listar_menus(),
       'roles'            => $this->parametrizacion_listar_roles(),
+      'permisos'         => $this->parametrizacion_listar_permisos(),
     ];
+  }
+
+  public function parametrizacion_listar_permisos() {
+    $sql = "SELECT
+  permiso_id,
+  codigo,
+  nombre,
+  modulo,
+  tipo_permiso,
+  estado
+FROM
+  public.permisos
+WHERE
+  borrado = B'0'
+ORDER BY
+  orden ASC,
+  permiso_id ASC;";
+
+    return $this->ejecutar_consulta_listado($sql);
+  }
+
+  public function parametrizacion_listar_roles_permisos() {
+    $sql = "SELECT
+  rp.rol_permiso_id,
+  rp.rol_id,
+  r.nombre AS rol,
+  rp.permiso_id,
+  p.codigo AS permiso_codigo,
+  p.nombre AS permiso,
+  p.modulo,
+  p.tipo_permiso,
+  rp.estado
+FROM
+  public.roles_permisos rp
+INNER JOIN public.roles r
+  ON r.rol_id = rp.rol_id
+LEFT JOIN public.permisos p
+  ON p.permiso_id = rp.permiso_id
+WHERE
+  rp.borrado = B'0'
+ORDER BY
+  rp.rol_permiso_id ASC;";
+
+    return $this->ejecutar_consulta_listado($sql);
   }
 
   public function parametrizacion_consultar_registro($seccion, $registro_id) {
@@ -1086,6 +1132,20 @@ WHERE
         ],
         'campos_bits'   => ['sw_predeterminado', 'estado', 'borrado'],
       ],
+      'roles_permisos' => [
+        'seccion'       => 'roles_permisos',
+        'tabla'         => 'public.roles_permisos',
+        'pk'            => 'rol_permiso_id',
+        'pk_post'       => 'registro_id',
+        'campos_unicos' => [],
+        'campos'        => [
+          'rol_id',
+          'permiso_id',
+          'estado',
+          'borrado',
+        ],
+        'campos_bits'   => ['estado', 'borrado'],
+      ],
       'usuarios' => [
         'seccion'       => 'usuarios',
         'tabla'         => 'public.usuarios',
@@ -1134,6 +1194,15 @@ LEFT JOIN public.usuarios_roles ur
 WHERE
   u.usuario_id = :registro_id
   AND u.borrado = B'0'
+LIMIT 1;";
+
+    $metadata['roles_permisos']['consulta_registro'] = "SELECT
+  rp.*
+FROM
+  public.roles_permisos rp
+WHERE
+  rp.rol_permiso_id = :registro_id
+  AND rp.borrado = B'0'
 LIMIT 1;";
 
     return $metadata[$seccion] ?? [];

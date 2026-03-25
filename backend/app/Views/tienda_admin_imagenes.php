@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/tienda_admin/tienda_admin_helper.php';
 
+$tda_permiso_formulario = tienda_admin_usuario_tiene_permiso('TIENDA_IMAGENES_GUARDAR') || tienda_admin_usuario_tiene_permiso('TIENDA_IMAGENES_EDITAR');
+
 tienda_admin_render_head('Admin tienda - Imágenes');
 tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo exclusivo para registrar, actualizar e inactivar galerías de producto.');
 ?>
@@ -16,6 +18,7 @@ tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo e
 
       <section class="tda_admin_bloque">
         <div class="tda_admin_dos_columnas">
+          <?php if ($tda_permiso_formulario) { ?>
           <article class="tda_admin_card_formulario">
             <div class="tda_admin_card_titulo_inline">
               <h4 id="titulo_formulario_tienda_admin_imagen">Registrar imagen</h4>
@@ -38,6 +41,7 @@ tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo e
               <button type="submit" id="btn_guardar_tienda_admin_imagen" class="tda_btn tda_btn_principal">Guardar imagen</button>
             </form>
           </article>
+          <?php } ?>
 
           <article class="tda_admin_card_listado">
             <div class="tda_admin_card_titulo_inline">

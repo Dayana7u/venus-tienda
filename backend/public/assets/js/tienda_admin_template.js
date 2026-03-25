@@ -147,16 +147,55 @@ function template_tienda_admin_resumen_ventas(ventas) {
     </div>`;
 }
 
+function template_tienda_admin_estado_chip(estado_numero, estado_texto) {
+  const clase = Number(estado_numero || 0) === 1 ? `tda_admin_estado_activo` : `tda_admin_estado_inactivo`;
+  return `<span class="tda_admin_estado_chip ${clase}">${estado_texto || `Activo`}</span>`;
+}
+
+function template_tienda_admin_detalle_pedido(pedido) {
+  return `
+    <div class="tda_admin_detalle_pedido">
+      <div class="tda_admin_detalle_grid">
+        <div>
+          <span class="tda_admin_etiqueta">Pedido</span>
+          <h4>${pedido.codigo}</h4>
+          <p>${pedido.cliente_nombre_completo || `Cliente no disponible`}</p>
+        </div>
+        <div class="tda_admin_detalle_chip_group">
+          <span><strong>Fecha:</strong> ${pedido.fecha_pedido_texto || `Sin fecha`}</span>
+          <span><strong>Estado:</strong> ${pedido.estado_pedido || `Pendiente`}</span>
+          <span><strong>Pago:</strong> ${pedido.estado_pago || `Pendiente`}</span>
+          <span><strong>Método:</strong> ${pedido.metodo_pago || `Sin definir`}</span>
+          <span><strong>Items:</strong> ${pedido.cantidad_items || 0}</span>
+          <span><strong>Total:</strong> ${formatear_moneda_tienda_admin(pedido.total || 0)}</span>
+        </div>
+      </div>
+      <div class="tda_admin_detalle_alerta">
+        Este detalle resume la operación del pedido dentro del panel tienda. Las acciones rápidas siguen disponibles desde el listado.
+      </div>
+    </div>`;
+}
+
 function template_tienda_admin_categorias(categorias) {
   if (!categorias.length) {
     return `<p>No hay categorías registradas.</p>`;
   }
 
-  return `<div class="tda_admin_listado_grid">${categorias.map(function(categoria) {
+  return `<div class="tda_admin_listado_grid tda_admin_listado_grid_catalogo">${categorias.map(function(categoria) {
+    const activa = Number(categoria.estado_numero || 0) === 1;
+    const accion_estado = activa ? `inactivar-categoria` : `activar-categoria`;
+    const texto_estado = activa ? `Inactivar` : `Activar`;
+    const puedeEditar = typeof usuario_tiene_permiso_tienda_admin === `function` && usuario_tiene_permiso_tienda_admin(`TIENDA_CATEGORIAS_EDITAR`);
+    const puedeCambiarEstado = typeof usuario_tiene_permiso_tienda_admin === `function` && usuario_tiene_permiso_tienda_admin(activa ? `TIENDA_CATEGORIAS_INACTIVAR` : `TIENDA_CATEGORIAS_ACTIVAR`);
+    const puedeEliminar = typeof usuario_tiene_permiso_tienda_admin === `function` && usuario_tiene_permiso_tienda_admin(`TIENDA_CATEGORIAS_ELIMINAR`);
+
     return `
       <article class="tda_admin_card_categoria">
         ${template_tienda_admin_media(categoria.imagen_url, categoria.texto_alternativo || categoria.nombre)}
-        <span class="tda_admin_etiqueta">${categoria.linea}</span>
+        <div class="tda_admin_card_encabezado_estado">
+          <span class="tda_admin_etiqueta">${categoria.linea}</span>
+          ${template_tienda_admin_estado_chip(categoria.estado_numero, categoria.estado_texto)}
+        </div>
         <h5>${categoria.nombre}</h5>
         <div class="tda_admin_card_lista_datos">
           <span><strong>Código:</strong> ${categoria.codigo}</span>
@@ -165,8 +204,9 @@ function template_tienda_admin_categorias(categorias) {
         </div>
         <p>${categoria.descripcion || `Sin descripción.`}</p>
         <div class="tda_admin_card_acciones">
-          <button type="button" class="tda_btn tda_btn_secundario" data-accion="editar-categoria" data-id="${categoria.categoria_id}">Editar</button>
-          <button type="button" class="tda_btn tda_btn_terciario" data-accion="inactivar-categoria" data-id="${categoria.categoria_id}">Inactivar</button>
+          ${puedeEditar ? `<button type="button" class="tda_btn tda_btn_secundario" data-accion="editar-categoria" data-id="${categoria.categoria_id}">Editar</button>` : ``}
+          ${puedeCambiarEstado ? `<button type="button" class="tda_btn tda_btn_terciario" data-accion="${accion_estado}" data-id="${categoria.categoria_id}">${texto_estado}</button>` : ``}
+          ${puedeEliminar ? `<button type="button" class="tda_btn tda_btn_peligro" data-accion="borrar-categoria" data-id="${categoria.categoria_id}">Eliminar</button>` : ``}
         </div>
       </article>`;
   }).join(``)}</div>`;
@@ -177,11 +217,21 @@ function template_tienda_admin_productos(productos) {
     return `<p>No hay productos registrados.</p>`;
   }
 
-  return `<div class="tda_admin_listado_grid">${productos.map(function(producto) {
+  return `<div class="tda_admin_listado_grid tda_admin_listado_grid_catalogo">${productos.map(function(producto) {
+    const activo = Number(producto.estado_numero || 0) === 1;
+    const accion_estado = activo ? `inactivar-producto` : `activar-producto`;
+    const texto_estado = activo ? `Inactivar` : `Activar`;
+    const puedeEditar = typeof usuario_tiene_permiso_tienda_admin === `function` && usuario_tiene_permiso_tienda_admin(`TIENDA_PRODUCTOS_EDITAR`);
+    const puedeCambiarEstado = typeof usuario_tiene_permiso_tienda_admin === `function` && usuario_tiene_permiso_tienda_admin(activo ? `TIENDA_PRODUCTOS_INACTIVAR` : `TIENDA_PRODUCTOS_ACTIVAR`);
+    const puedeEliminar = typeof usuario_tiene_permiso_tienda_admin === `function` && usuario_tiene_permiso_tienda_admin(`TIENDA_PRODUCTOS_ELIMINAR`);
+
     return `
       <article class="tda_admin_card_producto">
         ${template_tienda_admin_media(producto.imagen_url, producto.texto_alternativo || producto.nombre)}
-        <span class="tda_admin_etiqueta">${producto.categoria_nombre}</span>
+        <div class="tda_admin_card_encabezado_estado">
+          <span class="tda_admin_etiqueta">${producto.categoria_nombre}</span>
+          ${template_tienda_admin_estado_chip(producto.estado_numero, producto.estado_texto)}
+        </div>
         <h5>${producto.nombre}</h5>
         <div class="tda_admin_card_lista_datos">
           <span><strong>Código:</strong> ${producto.codigo}</span>
@@ -191,9 +241,10 @@ function template_tienda_admin_productos(productos) {
         </div>
         <p>${producto.resumen || `Sin resumen.`}</p>
         <div class="tda_admin_card_acciones">
-          <button type="button" class="tda_btn tda_btn_secundario" data-accion="editar-producto" data-id="${producto.producto_id}">Editar</button>
-          <a href="/admin/tienda/imagenes/" class="tda_btn tda_btn_secundario">Galería</a>
-          <button type="button" class="tda_btn tda_btn_terciario" data-accion="inactivar-producto" data-id="${producto.producto_id}">Inactivar</button>
+          ${puedeEditar ? `<button type="button" class="tda_btn tda_btn_secundario" data-accion="editar-producto" data-id="${producto.producto_id}">Editar</button>` : ``}
+          ${usuario_tiene_permiso_tienda_admin(`TIENDA_IMAGENES_VER`) ? `<a href="/admin/tienda/imagenes/" class="tda_btn tda_btn_secundario">Galería</a>` : ``}
+          ${puedeCambiarEstado ? `<button type="button" class="tda_btn tda_btn_terciario" data-accion="${accion_estado}" data-id="${producto.producto_id}">${texto_estado}</button>` : ``}
+          ${puedeEliminar ? `<button type="button" class="tda_btn tda_btn_peligro" data-accion="borrar-producto" data-id="${producto.producto_id}">Eliminar</button>` : ``}
         </div>
       </article>`;
   }).join(``)}</div>`;
@@ -204,19 +255,28 @@ function template_tienda_admin_imagenes(imagenes) {
     return `<p>No hay imágenes registradas.</p>`;
   }
 
-  return `<div class="tda_admin_listado_grid">${imagenes.map(function(imagen) {
+  return `<div class="tda_admin_listado_grid tda_admin_listado_grid_catalogo">${imagenes.map(function(imagen) {
+    const activa = Number(imagen.estado_numero || 0) === 1;
+    const accion_estado = activa ? `inactivar-imagen` : `activar-imagen`;
+    const texto_estado = activa ? `Quitar` : `Activar`;
+    const puedeEditar = typeof usuario_tiene_permiso_tienda_admin === `function` && usuario_tiene_permiso_tienda_admin(`TIENDA_IMAGENES_EDITAR`);
+    const puedeCambiarEstado = typeof usuario_tiene_permiso_tienda_admin === `function` && usuario_tiene_permiso_tienda_admin(activa ? `TIENDA_IMAGENES_INACTIVAR` : `TIENDA_IMAGENES_ACTIVAR`);
+
     return `
       <article class="tda_admin_card_imagen">
         ${template_tienda_admin_media(imagen.imagen_url, imagen.texto_alternativo || imagen.producto_nombre)}
-        <span class="tda_admin_etiqueta">Imagen</span>
+        <div class="tda_admin_card_encabezado_estado">
+          <span class="tda_admin_etiqueta">Imagen</span>
+          ${template_tienda_admin_estado_chip(imagen.estado_numero, imagen.estado_texto)}
+        </div>
         <h5>${imagen.producto_nombre}</h5>
         <div class="tda_admin_card_lista_datos">
           <span><strong>Producto:</strong> ${imagen.producto_id}</span>
           <span><strong>Alt:</strong> ${imagen.texto_alternativo || `Sin definir`}</span>
         </div>
         <div class="tda_admin_card_acciones">
-          <button type="button" class="tda_btn tda_btn_secundario" data-accion="editar-imagen" data-id="${imagen.producto_imagen_id}">Editar</button>
-          <button type="button" class="tda_btn tda_btn_terciario" data-accion="inactivar-imagen" data-id="${imagen.producto_imagen_id}">Quitar</button>
+          ${puedeEditar ? `<button type="button" class="tda_btn tda_btn_secundario" data-accion="editar-imagen" data-id="${imagen.producto_imagen_id}">Editar</button>` : ``}
+          ${puedeCambiarEstado ? `<button type="button" class="tda_btn tda_btn_terciario" data-accion="${accion_estado}" data-id="${imagen.producto_imagen_id}">${texto_estado}</button>` : ``}
         </div>
       </article>`;
   }).join(``)}</div>`;
@@ -227,20 +287,28 @@ function template_tienda_admin_clientes(clientes) {
     return `<p>No hay clientes registrados.</p>`;
   }
 
+  const puedeEditar = typeof usuario_tiene_permiso_tienda_admin === `function` && usuario_tiene_permiso_tienda_admin(`TIENDA_CLIENTES_EDITAR`);
+  const paginaActiva = String(tadm?.pagina_activa || ``);
+
   return `<div class="tda_admin_listado_stack">${clientes.map(function(cliente) {
+    const accionEditar = paginaActiva === `DASHBOARD`
+      ? `<div class="tda_admin_card_acciones tda_admin_card_acciones_inline"><a href="/admin/tienda/clientes/?editar=${cliente.cliente_tienda_id}" class="tda_btn tda_btn_secundario">Editar</a></div>`
+      : `<div class="tda_admin_card_acciones tda_admin_card_acciones_inline"><button type="button" class="tda_btn tda_btn_secundario" data-accion="editar-cliente" data-id="${cliente.cliente_tienda_id}">Editar</button></div>`;
+
     return `
-      <article class="tda_admin_card_fila">
-        <div>
+      <article class="tda_admin_card_fila tda_admin_card_fila_cliente">
+        <div class="tda_admin_cliente_principal">
           <span class="tda_admin_etiqueta">Cliente</span>
           <h5>${cliente.nombre_completo}</h5>
           <p>${cliente.correo}</p>
         </div>
-        <div class="tda_admin_card_lista_datos tda_admin_card_lista_datos_inline">
+        <div class="tda_admin_card_lista_datos tda_admin_card_lista_datos_inline tda_admin_cliente_resumen">
           <span><strong>Teléfono:</strong> ${cliente.celular || `Sin dato`}</span>
           <span><strong>Ciudad:</strong> ${cliente.ciudad || `Sin ciudad`}</span>
           <span><strong>Pedidos:</strong> ${cliente.total_pedidos || 0}</span>
           <span><strong>Total:</strong> ${formatear_moneda_tienda_admin(cliente.total_compras || 0)}</span>
         </div>
+        ${puedeEditar ? accionEditar : ``}
       </article>`;
   }).join(``)}</div>`;
 }
@@ -251,24 +319,27 @@ function template_tienda_admin_pedidos(pedidos) {
   }
 
   return `<div class="tda_admin_listado_stack">${pedidos.map(function(pedido) {
-    const puedePagar = String(pedido.estado_pago || ``).toLowerCase() !== `pagado`;
-    const puedeEnviar = String(pedido.estado_pedido || ``).toLowerCase() !== `enviado`;
+    const puedePagar = usuario_tiene_permiso_tienda_admin(`TIENDA_PEDIDOS_MARCAR_PAGADO`) && String(pedido.estado_pago || ``).toLowerCase() !== `pagado`;
+    const puedeEnviar = usuario_tiene_permiso_tienda_admin(`TIENDA_PEDIDOS_MARCAR_ENVIADO`) && String(pedido.estado_pedido || ``).toLowerCase() !== `enviado`;
+    const puedeDetalle = usuario_tiene_permiso_tienda_admin(`TIENDA_PEDIDOS_DETALLE`) || usuario_tiene_permiso_tienda_admin(`TIENDA_PEDIDOS_VER`);
 
     return `
-      <article class="tda_admin_card_fila">
-        <div>
-          <span class="tda_admin_etiqueta">${pedido.estado_pedido}</span>
-          <h5>${pedido.codigo}</h5>
-          <p>${pedido.cliente_nombre_completo || `Cliente no disponible`} · ${pedido.fecha_pedido_texto || ``}</p>
+      <article class="tda_admin_card_fila tda_admin_card_fila_pedido">
+        <div class="tda_admin_pedido_header">
+          <div class="tda_admin_pedido_principal">
+            <span class="tda_admin_etiqueta">${pedido.estado_pedido}</span>
+            <h5>${pedido.codigo}</h5>
+            <p>${pedido.cliente_nombre_completo || `Cliente no disponible`} · ${pedido.fecha_pedido_texto || ``}</p>
+          </div>
+          <div class="tda_admin_card_lista_datos tda_admin_card_lista_datos_inline tda_admin_pedido_resumen">
+            <span><strong>Pago:</strong> ${pedido.estado_pago}</span>
+            <span><strong>Items:</strong> ${pedido.cantidad_items}</span>
+            <span><strong>Método:</strong> ${pedido.metodo_pago || `Sin definir`}</span>
+            <span><strong>Total:</strong> ${formatear_moneda_tienda_admin(pedido.total || 0)}</span>
+          </div>
         </div>
-        <div class="tda_admin_card_lista_datos tda_admin_card_lista_datos_inline">
-          <span><strong>Pago:</strong> ${pedido.estado_pago}</span>
-          <span><strong>Items:</strong> ${pedido.cantidad_items}</span>
-          <span><strong>Método:</strong> ${pedido.metodo_pago || `Sin definir`}</span>
-          <span><strong>Total:</strong> ${formatear_moneda_tienda_admin(pedido.total || 0)}</span>
-        </div>
-        <div class="tda_admin_card_acciones tda_admin_card_acciones_inline">
-          <button type="button" class="tda_btn tda_btn_secundario" data-accion="detalle-pedido" data-id="${pedido.pedido_tienda_id}">Ver detalle</button>
+        <div class="tda_admin_card_acciones tda_admin_pedido_acciones tda_admin_pedido_acciones_bloque">
+          ${puedeDetalle ? `<button type="button" class="tda_btn tda_btn_secundario" data-accion="detalle-pedido" data-id="${pedido.pedido_tienda_id}">Ver detalle</button>` : ``}
           ${puedePagar ? `<button type="button" class="tda_btn tda_btn_secundario" data-accion="pagar-pedido" data-id="${pedido.pedido_tienda_id}">Marcar pagado</button>` : ``}
           ${puedeEnviar ? `<button type="button" class="tda_btn tda_btn_terciario" data-accion="enviar-pedido" data-id="${pedido.pedido_tienda_id}">Marcar enviado</button>` : ``}
         </div>
@@ -281,18 +352,51 @@ function template_tienda_admin_productos_top(productos_top) {
     return `<p>No hay ventas suficientes para calcular productos top.</p>`;
   }
 
-  return `<div class="tda_admin_listado_stack">${productos_top.map(function(producto, indice) {
+  return `<div class="tda_admin_top_grid">${productos_top.map(function(producto, indice) {
+    const producto_catalogo = Array.isArray(tadm?.productos)
+      ? tadm.productos.find(function(item) {
+          return Number(item.producto_id || 0) === Number(producto.producto_id || 0);
+        })
+      : null;
+    const imagen = (producto_catalogo && producto_catalogo.imagen_url) || producto.imagen_url || ``;
+
     return `
-      <article class="tda_admin_card_fila tda_admin_card_fila_top">
+      <article class="tda_admin_top_card">
         <div class="tda_admin_top_posicion">${indice + 1}</div>
-        <div>
+        <div class="tda_admin_top_media_wrap">
+          ${template_tienda_admin_media(imagen, producto.producto_nombre)}
+        </div>
+        <div class="tda_admin_top_info">
           <span class="tda_admin_etiqueta">Top ventas</span>
           <h5>${producto.producto_nombre}</h5>
           <p>${producto.producto_codigo || `Sin código`} · ${producto.producto_slug || `Sin slug`}</p>
+          <div class="tda_admin_card_lista_datos tda_admin_card_lista_datos_inline tda_admin_top_meta">
+            <span><strong>Unidades:</strong> ${producto.unidades_vendidas || 0}</span>
+            <span><strong>Ingresos:</strong> ${formatear_moneda_tienda_admin(producto.total_vendido || 0)}</span>
+          </div>
+        </div>
+      </article>`;
+  }).join(``)}</div>`;
+}
+
+
+function template_tienda_admin_auditoria(auditoria) {
+  if (!auditoria.length) {
+    return `<p>No hay eventos de auditoría registrados.</p>`;
+  }
+
+  return `<div class="tda_admin_listado_stack">${auditoria.map(function(evento) {
+    return `
+      <article class="tda_admin_card_fila tda_admin_card_fila_auditoria">
+        <div>
+          <span class="tda_admin_etiqueta">${evento.modulo || `Operación`}</span>
+          <h5>${evento.descripcion || `Evento de auditoría`}</h5>
+          <p>${evento.entidad || `Registro`} · ID ${evento.registro_id || 0}</p>
         </div>
         <div class="tda_admin_card_lista_datos tda_admin_card_lista_datos_inline">
-          <span><strong>Unidades:</strong> ${producto.unidades_vendidas || 0}</span>
-          <span><strong>Ingresos:</strong> ${formatear_moneda_tienda_admin(producto.total_vendido || 0)}</span>
+          <span><strong>Acción:</strong> ${evento.accion || `Sin acción`}</span>
+          <span><strong>Usuario:</strong> ${evento.usuario_nombre || `Sin usuario`}</span>
+          <span><strong>Fecha:</strong> ${evento.fecha_evento_texto || `Sin fecha`}</span>
         </div>
       </article>`;
   }).join(``)}</div>`;
@@ -328,4 +432,27 @@ function formatear_moneda_tienda_admin(valor) {
     minimumFractionDigits : 0,
     maximumFractionDigits : 0
   }).format(numero);
+}
+
+function template_tienda_admin_pagos(pagos) {
+  if (!pagos.length) {
+    return `<p>No hay pagos registrados.</p>`;
+  }
+
+  return `<div class="tda_admin_listado_cards">${pagos.map(function(pago) {
+    return `
+      <article class="tda_admin_card_pedido">
+        <div class="tda_admin_card_pedido_columna_principal">
+          <span class="tda_admin_etiqueta">${String(pago.estado_pago || `pendiente`).toUpperCase()}</span>
+          <h5>${pago.codigo}</h5>
+          <p>${pago.cliente_nombre_completo || `Cliente no disponible`} · ${pago.fecha_pago_texto || `Sin fecha`}</p>
+        </div>
+        <div class="tda_admin_card_pedido_chip_group">
+          <span>Pedido: ${pago.pedido_codigo || `Sin pedido`}</span>
+          <span>Método: ${pago.metodo_pago || `No definido`}</span>
+          <span>Referencia: ${pago.referencia_pasarela || `Pendiente`}</span>
+          <span>Total: ${formatear_moneda_tienda_admin(pago.monto || 0)}</span>
+        </div>
+      </article>`;
+  }).join(``)}</div>`;
 }

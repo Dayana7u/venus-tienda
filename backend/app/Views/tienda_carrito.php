@@ -72,7 +72,7 @@ tienda_render_head('Carrito', $tema_tokens, $componentes);
             <div><span>Envío</span><strong>$<?php echo number_format((int) ($carrito['envio'] ?? 0), 0, ',', '.'); ?></strong></div>
             <div class="tv_resumen_total"><span>Total</span><strong>$<?php echo number_format((int) ($carrito['total'] ?? 0), 0, ',', '.'); ?></strong></div>
             <a href="/contacto/" class="tv_btn tv_btn_secundario">Continuar por asesoría</a>
-            <button type="button" class="tv_btn tv_btn_principal">Finalizar compra</button>
+            <a href="/checkout/" class="tv_btn tv_btn_principal">Finalizar compra</a>
           </aside>
         </div>
       <?php } ?>

@@ -12,6 +12,7 @@ let par = {};
   par.listado_menus              = [];
   par.listado_roles              = [];
   par.listado_usuarios           = [];
+  par.listado_roles_permisos     = [];
   par.listado_parametro_grupos   = [];
   par.catalogos                  = {};
   par.seccion_actual             = ``;
@@ -52,6 +53,7 @@ let par = {};
   par.seccion_menus                      = document.getElementById(`seccion_menus`);
   par.seccion_roles                      = document.getElementById(`seccion_roles`);
   par.seccion_usuarios                   = document.getElementById(`seccion_usuarios`);
+  par.seccion_roles_permisos             = document.getElementById(`seccion_roles_permisos`);
 
 document.addEventListener(`DOMContentLoaded`, async function() {
   await inicializar_parametrizacion();
@@ -189,6 +191,7 @@ async function listar_parametrizacion() {
   par.listado_menus            = peticion.datos.menus ?? [];
   par.listado_roles            = peticion.datos.roles ?? [];
   par.listado_usuarios         = peticion.datos.usuarios ?? [];
+  par.listado_roles_permisos   = peticion.datos.roles_permisos ?? [];
   par.listado_parametro_grupos = peticion.datos.parametro_grupos ?? [];
   par.catalogos               = peticion.datos.catalogos ?? {};
   par.catalogos.estados_binarios = [
@@ -197,6 +200,9 @@ async function listar_parametrizacion() {
   ];
   par.catalogos.roles = (par.catalogos.roles ?? []).filter(function(rol) {
     return rol.estado === `1` || rol.estado === `` || rol.estado === 1;
+  });
+  par.catalogos.permisos = (par.catalogos.permisos ?? []).filter(function(permiso) {
+    return permiso.estado === `1` || permiso.estado === `` || permiso.estado === 1;
   });
   par.catalogos.menus_padre = [{menu_id : ``, nombre : `Sin padre`}].concat(par.listado_menus);
 
@@ -241,6 +247,10 @@ async function renderizar_parametrizacion() {
   par.seccion_usuarios.innerHTML = template_seccion_parametrizacion(
     obtener_configuracion_seccion_parametrizacion(`usuarios`),
     filtrar_parametrizacion_listado(par.listado_usuarios, texto_busqueda)
+  );
+  par.seccion_roles_permisos.innerHTML = template_seccion_parametrizacion(
+    obtener_configuracion_seccion_parametrizacion(`roles_permisos`),
+    filtrar_parametrizacion_listado(par.listado_roles_permisos, texto_busqueda)
   );
 }
 /**
@@ -461,7 +471,8 @@ function obtener_resumen_parametrizacion() {
     {titulo : `Integraciones`, cantidad : par.listado_integraciones.length},
     {titulo : `Menús`, cantidad : par.listado_menus.length},
     {titulo : `Roles`, cantidad : par.listado_roles.length},
-    {titulo : `Usuarios`, cantidad : par.listado_usuarios.length}
+    {titulo : `Usuarios`, cantidad : par.listado_usuarios.length},
+    {titulo : `Asignaciones`, cantidad : par.listado_roles_permisos.length}
   ];
 }
 /**
@@ -741,6 +752,25 @@ function obtener_configuracion_seccion_parametrizacion(seccion) {
         {nombre : `clave`, etiqueta : `Clave`, tipo : `input`, tipo_html : `password`, placeholder : `Clave del usuario`, ayuda : `En edición puede dejarla vacía para conservar la actual.`, requerido : false},
         {nombre : `rol_id`, etiqueta : `Rol`, tipo : `select`, catalogo : `roles`, valor : `rol_id`, texto : `nombre`, ayuda : `Obligatorio si no es superusuario.`, requerido : false},
         {nombre : `sw_superusuario`, etiqueta : `Superusuario`, tipo : `select`, catalogo : `estados_binarios`, valor : `valor`, texto : `texto`, requerido : true},
+        {nombre : `estado`, etiqueta : `Estado`, tipo : `select`, catalogo : `estados_binarios`, valor : `valor`, texto : `texto`, requerido : true}
+      ]
+    },
+    roles_permisos : {
+      seccion     : `roles_permisos`,
+      etiqueta    : `Seguridad`,
+      titulo      : `Asignación permisos`,
+      descripcion : `CRUD base para asignar permisos a roles del acceso administrativo y comercial.`,
+      pk          : `rol_permiso_id`,
+      columnas    : [
+        {campo : `rol`, titulo : `Rol`},
+        {campo : `permiso`, titulo : `Permiso`},
+        {campo : `modulo`, titulo : `Módulo`},
+        {campo : `tipo_permiso`, titulo : `Tipo`},
+        {campo : `estado`, titulo : `Estado`, tipo : `estado`}
+      ],
+      campos      : [
+        {nombre : `rol_id`, etiqueta : `Rol`, tipo : `select`, catalogo : `roles`, valor : `rol_id`, texto : `nombre`, requerido : true},
+        {nombre : `permiso_id`, etiqueta : `Permiso`, tipo : `select`, catalogo : `permisos`, valor : `permiso_id`, texto : `nombre`, requerido : true},
         {nombre : `estado`, etiqueta : `Estado`, tipo : `select`, catalogo : `estados_binarios`, valor : `valor`, texto : `texto`, requerido : true}
       ]
     }

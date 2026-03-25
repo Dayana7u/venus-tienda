@@ -55,6 +55,8 @@ class tienda_admin_model {
         'clientes'   => $this->consultar_clientes_tienda_admin(),
         'pedidos'    => $this->consultar_pedidos_tienda_admin(),
         'ventas'     => $this->consultar_ventas_tienda_admin(),
+        'pagos'      => $this->consultar_pagos_tienda_admin(),
+        'auditoria'  => $this->consultar_auditoria_tienda_admin(),
       ],
     ];
   }
@@ -109,6 +111,7 @@ class tienda_admin_model {
         $stmt->bindValue(':texto_alternativo', $datos['texto_alternativo'], PDO::PARAM_STR);
         $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
         $stmt->execute();
+        $this->registrar_auditoria_tienda_admin('CATALOGO', 'categorias', (int) $datos['categoria_id'], 'editar', 'Se actualiza la categoría ' . $datos['nombre'] . '.', $datos);
 
         return [
           'estado'  => true,
@@ -188,11 +191,13 @@ class tienda_admin_model {
       $stmt->bindValue(':orden', $this->consultar_siguiente_orden_categoria_tienda_admin(), PDO::PARAM_INT);
       $stmt->bindValue(':usuario_creacion', $this->usuario_id, PDO::PARAM_INT);
       $stmt->execute();
+      $categoria_id = (int) ($stmt->fetch()['categoria_id'] ?? 0);
+      $this->registrar_auditoria_tienda_admin('CATALOGO', 'categorias', $categoria_id, 'crear', 'Se registra la categoría ' . $datos['nombre'] . '.', $datos);
 
       return [
         'estado'  => true,
         'mensaje' => 'Categoría registrada correctamente.',
-        'datos'   => ['categoria_id' => (int) ($stmt->fetch()['categoria_id'] ?? 0)],
+        'datos'   => ['categoria_id' => $categoria_id],
       ];
     }
     catch (PDOException $e) {
@@ -279,6 +284,7 @@ class tienda_admin_model {
         $stmt->bindValue(':sw_oferta', $datos['sw_oferta'], PDO::PARAM_STR);
         $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
         $stmt->execute();
+        $this->registrar_auditoria_tienda_admin('CATALOGO', 'productos', (int) $datos['producto_id'], 'editar', 'Se actualiza el producto ' . $datos['nombre'] . '.', $datos);
 
         if ($datos['imagen_principal_url'] !== '') {
           $this->registrar_imagen_producto_principal_tienda_admin($datos['producto_id'], $datos['imagen_principal_url'], $datos['texto_alternativo']);
@@ -402,6 +408,8 @@ class tienda_admin_model {
         $this->registrar_imagen_producto_principal_tienda_admin($producto_id, $datos['imagen_principal_url'], $datos['texto_alternativo']);
       }
 
+      $this->registrar_auditoria_tienda_admin('CATALOGO', 'productos', $producto_id, 'crear', 'Se registra el producto ' . $datos['nombre'] . '.', $datos);
+
       return [
         'estado'  => true,
         'mensaje' => 'Producto registrado correctamente.',
@@ -462,6 +470,7 @@ class tienda_admin_model {
         $stmt->bindValue(':texto_alternativo', $datos['texto_alternativo'], PDO::PARAM_STR);
         $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
         $stmt->execute();
+        $this->registrar_auditoria_tienda_admin('VISUAL', 'producto_imagenes', (int) $datos['producto_imagen_id'], 'editar', 'Se actualiza imagen del producto ' . $datos['producto_id'] . '.', $datos);
 
         return [
           'estado'  => true,
@@ -531,11 +540,13 @@ class tienda_admin_model {
       $stmt->bindValue(':orden', $this->consultar_siguiente_orden_imagen_tienda_admin($datos['producto_id']), PDO::PARAM_INT);
       $stmt->bindValue(':usuario_creacion', $this->usuario_id, PDO::PARAM_INT);
       $stmt->execute();
+      $producto_imagen_id = (int) ($stmt->fetch()['producto_imagen_id'] ?? 0);
+      $this->registrar_auditoria_tienda_admin('VISUAL', 'producto_imagenes', $producto_imagen_id, 'crear', 'Se registra una imagen para el producto ' . $datos['producto_id'] . '.', $datos);
 
       return [
         'estado'  => true,
         'mensaje' => 'Imagen registrada correctamente.',
-        'datos'   => ['producto_imagen_id' => (int) ($stmt->fetch()['producto_imagen_id'] ?? 0)],
+        'datos'   => ['producto_imagen_id' => $producto_imagen_id],
       ];
     }
     catch (PDOException $e) {
@@ -554,16 +565,280 @@ class tienda_admin_model {
     }
   }
 
+  public function tienda_admin_guardar_cliente() {
+    $stmt = null;
+    $datos = $this->asignar_variables_tienda_admin_guardar_cliente();
+    $validacion = $this->validar_datos_tienda_admin_guardar_cliente($datos);
+
+    if ($validacion['estado'] !== true) {
+      return $validacion;
+    }
+
+    try {
+      $sql = "UPDATE public.clientes_tienda
+"
+           . "SET
+"
+           . "  nombres              = :nombres,
+"
+           . "  apellidos            = :apellidos,
+"
+           . "  correo               = :correo,
+"
+           . "  celular              = :celular,
+"
+           . "  usuario_modificacion = :usuario_modificacion,
+"
+           . "  fecha_modificacion   = NOW()
+"
+           . "WHERE
+"
+           . "  cliente_tienda_id = :cliente_tienda_id
+"
+           . "  AND borrado = B'0';";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':cliente_tienda_id', $datos['cliente_tienda_id'], PDO::PARAM_INT);
+      $stmt->bindValue(':nombres', $datos['nombres'], PDO::PARAM_STR);
+      $stmt->bindValue(':apellidos', $datos['apellidos'], PDO::PARAM_STR);
+      $stmt->bindValue(':correo', $datos['correo'], PDO::PARAM_STR);
+      $stmt->bindValue(':celular', $datos['celular'], PDO::PARAM_STR);
+      $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+      $stmt = null;
+
+      if ($this->tabla_existe_tienda_admin('public.clientes_tienda_direcciones')) {
+        $sql = "UPDATE public.clientes_tienda_direcciones
+"
+             . "SET
+"
+             . "  ciudad                = :ciudad,
+"
+             . "  telefono              = :telefono,
+"
+             . "  usuario_modificacion  = :usuario_modificacion,
+"
+             . "  fecha_modificacion    = NOW()
+"
+             . "WHERE
+"
+             . "  cliente_tienda_id = :cliente_tienda_id
+"
+             . "  AND sw_principal = B'1'
+"
+             . "  AND borrado = B'0';";
+
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->bindValue(':cliente_tienda_id', $datos['cliente_tienda_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':ciudad', $datos['ciudad'], PDO::PARAM_STR);
+        $stmt->bindValue(':telefono', $datos['celular'], PDO::PARAM_STR);
+        $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
+        $stmt->execute();
+      }
+
+      $this->registrar_auditoria_tienda_admin('CLIENTES', 'clientes_tienda', (int) $datos['cliente_tienda_id'], 'editar', 'Se actualiza información del cliente ' . trim($datos['nombres'] . ' ' . $datos['apellidos']) . '.', $datos);
+
+      return [
+        'estado'  => true,
+        'mensaje' => 'Cliente actualizado correctamente.',
+        'datos'   => ['cliente_tienda_id' => $datos['cliente_tienda_id']],
+      ];
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), (string) $datos['cliente_tienda_id']);
+      return [
+        'estado'  => false,
+        'mensaje' => 'No fue posible actualizar el cliente.',
+        'datos'   => [],
+      ];
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
+  public function tienda_admin_borrar_producto() {
+    $producto_id = (int) ($_POST['producto_id'] ?? 0);
+    $stmt = null;
+
+    if ($producto_id <= 0) {
+      return ['estado' => false, 'mensaje' => 'Producto inválido.', 'datos' => []];
+    }
+
+    if ($this->producto_tiene_pedidos_abiertos_tienda_admin($producto_id)) {
+      return ['estado' => false, 'mensaje' => 'No es posible eliminar el producto porque tiene pedidos activos o pendientes de entrega.', 'datos' => []];
+    }
+
+    try {
+      $sql = "UPDATE public.productos
+"
+           . "SET
+"
+           . "  estado                = B'0',
+"
+           . "  borrado               = B'1',
+"
+           . "  usuario_modificacion  = :usuario_modificacion,
+"
+           . "  fecha_modificacion    = NOW(),
+"
+           . "  usuario_borrado       = :usuario_borrado,
+"
+           . "  fecha_borrado         = NOW()
+"
+           . "WHERE
+"
+           . "  producto_id = :producto_id;";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':producto_id', $producto_id, PDO::PARAM_INT);
+      $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
+      $stmt->bindValue(':usuario_borrado', $this->usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+      $this->registrar_auditoria_tienda_admin('CATALOGO', 'productos', $producto_id, 'eliminar', 'Se ejecuta borrado lógico del producto ' . $this->obtener_nombre_producto_tienda_admin($producto_id) . '.', ['producto_id' => $producto_id]);
+
+      return ['estado' => true, 'mensaje' => 'Producto eliminado correctamente.', 'datos' => []];
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), (string) $producto_id);
+      return ['estado' => false, 'mensaje' => 'No fue posible eliminar el producto.', 'datos' => []];
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
+  public function tienda_admin_borrar_categoria() {
+    $categoria_id = (int) ($_POST['categoria_id'] ?? 0);
+    $stmt = null;
+
+    if ($categoria_id <= 0) {
+      return ['estado' => false, 'mensaje' => 'Categoría inválida.', 'datos' => []];
+    }
+
+    if ($this->categoria_tiene_productos_registrados_tienda_admin($categoria_id)) {
+      return ['estado' => false, 'mensaje' => 'No es posible eliminar la categoría porque aún tiene productos asociados.', 'datos' => []];
+    }
+
+    try {
+      $sql = "UPDATE public.categorias
+"
+           . "SET
+"
+           . "  estado                = B'0',
+"
+           . "  borrado               = B'1',
+"
+           . "  usuario_modificacion  = :usuario_modificacion,
+"
+           . "  fecha_modificacion    = NOW(),
+"
+           . "  usuario_borrado       = :usuario_borrado,
+"
+           . "  fecha_borrado         = NOW()
+"
+           . "WHERE
+"
+           . "  categoria_id = :categoria_id;";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':categoria_id', $categoria_id, PDO::PARAM_INT);
+      $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
+      $stmt->bindValue(':usuario_borrado', $this->usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+      $this->registrar_auditoria_tienda_admin('CATALOGO', 'categorias', $categoria_id, 'eliminar', 'Se ejecuta borrado lógico de la categoría ' . $this->obtener_nombre_categoria_tienda_admin($categoria_id) . '.', ['categoria_id' => $categoria_id]);
+
+      return ['estado' => true, 'mensaje' => 'Categoría eliminada correctamente.', 'datos' => []];
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), (string) $categoria_id);
+      return ['estado' => false, 'mensaje' => 'No fue posible eliminar la categoría.', 'datos' => []];
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
   public function tienda_admin_inactivar_categoria() {
-    return $this->inactivar_registro_tienda_admin('public.categorias', 'categoria_id', (int) ($_POST['categoria_id'] ?? 0), 'Categoría inactivada correctamente.');
+    $categoria_id = (int) ($_POST['categoria_id'] ?? 0);
+
+    if ($this->categoria_tiene_productos_activos_tienda_admin($categoria_id)) {
+      return ['estado' => false, 'mensaje' => 'No es posible inactivar la categoría porque tiene productos activos asociados.', 'datos' => []];
+    }
+
+    $respuesta = $this->cambiar_estado_registro_tienda_admin('public.categorias', 'categoria_id', $categoria_id, false, 'Categoría inactivada correctamente.');
+
+    if (($respuesta['estado'] ?? false) === true) {
+      $this->registrar_auditoria_tienda_admin('CATALOGO', 'categorias', $categoria_id, 'inactivar', 'Se inactiva la categoría ' . $this->obtener_nombre_categoria_tienda_admin($categoria_id) . '.', ['categoria_id' => $categoria_id]);
+    }
+
+    return $respuesta;
+  }
+
+  public function tienda_admin_activar_categoria() {
+    $categoria_id = (int) ($_POST['categoria_id'] ?? 0);
+    $respuesta = $this->cambiar_estado_registro_tienda_admin('public.categorias', 'categoria_id', $categoria_id, true, 'Categoría activada correctamente.');
+
+    if (($respuesta['estado'] ?? false) === true) {
+      $this->registrar_auditoria_tienda_admin('CATALOGO', 'categorias', $categoria_id, 'activar', 'Se activa la categoría ' . $this->obtener_nombre_categoria_tienda_admin($categoria_id) . '.', ['categoria_id' => $categoria_id]);
+    }
+
+    return $respuesta;
   }
 
   public function tienda_admin_inactivar_producto() {
-    return $this->inactivar_registro_tienda_admin('public.productos', 'producto_id', (int) ($_POST['producto_id'] ?? 0), 'Producto inactivado correctamente.');
+    $producto_id = (int) ($_POST['producto_id'] ?? 0);
+
+    if ($this->producto_tiene_pedidos_abiertos_tienda_admin($producto_id)) {
+      return ['estado' => false, 'mensaje' => 'No es posible inactivar el producto porque participa en pedidos activos o pendientes de entrega.', 'datos' => []];
+    }
+
+    $respuesta = $this->cambiar_estado_registro_tienda_admin('public.productos', 'producto_id', $producto_id, false, 'Producto inactivado correctamente.');
+
+    if (($respuesta['estado'] ?? false) === true) {
+      $this->registrar_auditoria_tienda_admin('CATALOGO', 'productos', $producto_id, 'inactivar', 'Se inactiva el producto ' . $this->obtener_nombre_producto_tienda_admin($producto_id) . '.', ['producto_id' => $producto_id]);
+    }
+
+    return $respuesta;
+  }
+
+  public function tienda_admin_activar_producto() {
+    $producto_id = (int) ($_POST['producto_id'] ?? 0);
+    $respuesta = $this->cambiar_estado_registro_tienda_admin('public.productos', 'producto_id', $producto_id, true, 'Producto activado correctamente.');
+
+    if (($respuesta['estado'] ?? false) === true) {
+      $this->registrar_auditoria_tienda_admin('CATALOGO', 'productos', $producto_id, 'activar', 'Se activa el producto ' . $this->obtener_nombre_producto_tienda_admin($producto_id) . '.', ['producto_id' => $producto_id]);
+    }
+
+    return $respuesta;
   }
 
   public function tienda_admin_inactivar_imagen() {
-    return $this->inactivar_registro_tienda_admin('public.producto_imagenes', 'producto_imagen_id', (int) ($_POST['producto_imagen_id'] ?? 0), 'Imagen inactivada correctamente.');
+    $producto_imagen_id = (int) ($_POST['producto_imagen_id'] ?? 0);
+    $respuesta = $this->cambiar_estado_registro_tienda_admin('public.producto_imagenes', 'producto_imagen_id', $producto_imagen_id, false, 'Imagen inactivada correctamente.');
+
+    if (($respuesta['estado'] ?? false) === true) {
+      $this->registrar_auditoria_tienda_admin('VISUAL', 'producto_imagenes', $producto_imagen_id, 'inactivar', 'Se inactiva una imagen de producto.', ['producto_imagen_id' => $producto_imagen_id]);
+    }
+
+    return $respuesta;
+  }
+
+  public function tienda_admin_activar_imagen() {
+    $producto_imagen_id = (int) ($_POST['producto_imagen_id'] ?? 0);
+    $respuesta = $this->cambiar_estado_registro_tienda_admin('public.producto_imagenes', 'producto_imagen_id', $producto_imagen_id, true, 'Imagen activada correctamente.');
+
+    if (($respuesta['estado'] ?? false) === true) {
+      $this->registrar_auditoria_tienda_admin('VISUAL', 'producto_imagenes', $producto_imagen_id, 'activar', 'Se activa una imagen de producto.', ['producto_imagen_id' => $producto_imagen_id]);
+    }
+
+    return $respuesta;
   }
 
   public function tienda_admin_actualizar_pedido() {
@@ -601,6 +876,8 @@ class tienda_admin_model {
       $stmt->bindValue(':estado_pago', $estado_pago, PDO::PARAM_STR);
       $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
       $stmt->execute();
+      $descripcion = 'Se actualiza el pedido ' . $this->obtener_codigo_pedido_tienda_admin($pedido_id) . '.';
+      $this->registrar_auditoria_tienda_admin('OPERACION', 'pedidos_tienda', $pedido_id, 'editar', $descripcion, ['estado_pedido' => $estado_pedido, 'estado_pago' => $estado_pago]);
 
       return ['estado' => true, 'mensaje' => 'Pedido actualizado correctamente.', 'datos' => []];
     }
@@ -686,9 +963,7 @@ class tienda_admin_model {
 "
            . "WHERE
 "
-           . "  estado = B'1'
-"
-           . "  AND borrado = B'0'
+           . "  borrado = B'0'
 "
            . "  AND estado_pedido = :estado_pedido;";
 
@@ -754,7 +1029,11 @@ class tienda_admin_model {
 "
            . "  texto_alternativo,
 "
-           . "  orden
+           . "  orden,
+"
+           . "  CASE WHEN estado = B'1' THEN 'Activo' ELSE 'Inactivo' END AS estado_texto,
+"
+           . "  CASE WHEN estado = B'1' THEN 1 ELSE 0 END AS estado_numero
 "
            . "FROM
 "
@@ -762,9 +1041,7 @@ class tienda_admin_model {
 "
            . "WHERE
 "
-           . "  estado = B'1'
-"
-           . "  AND borrado = B'0'
+           . "  borrado = B'0'
 "
            . "ORDER BY
 "
@@ -823,6 +1100,10 @@ class tienda_admin_model {
 "
            . "  pro.rating_promedio,
 "
+           . "  CASE WHEN pro.estado = B'1' THEN 'Activo' ELSE 'Inactivo' END AS estado_texto,
+"
+           . "  CASE WHEN pro.estado = B'1' THEN 1 ELSE 0 END AS estado_numero,
+"
            . "  cat.nombre AS categoria_nombre,
 "
            . "  pim.imagen_url,
@@ -871,9 +1152,7 @@ class tienda_admin_model {
 "
            . "WHERE
 "
-           . "  pro.estado = B'1'
-"
-           . "  AND pro.borrado = B'0'
+           . "  pro.borrado = B'0'
 "
            . "ORDER BY
 "
@@ -916,6 +1195,10 @@ class tienda_admin_model {
 "
            . "  pim.texto_alternativo,
 "
+           . "  CASE WHEN pim.estado = B'1' THEN 'Activo' ELSE 'Inactivo' END AS estado_texto,
+"
+           . "  CASE WHEN pim.estado = B'1' THEN 1 ELSE 0 END AS estado_numero,
+"
            . "  pro.nombre AS producto_nombre
 "
            . "FROM
@@ -928,9 +1211,7 @@ class tienda_admin_model {
 "
            . "WHERE
 "
-           . "  pim.estado = B'1'
-"
-           . "  AND pim.borrado = B'0'
+           . "  pim.borrado = B'0'
 "
            . "ORDER BY
 "
@@ -944,7 +1225,6 @@ class tienda_admin_model {
       $stmt->execute();
 
       while ($registro = $stmt->fetch()) {
-        $registro['imagen_url'] = $this->resolver_imagen_producto_tienda_admin((string) ($registro['imagen_url'] ?? ''), $this->generar_slug_tienda_admin((string) ($registro['producto_nombre'] ?? 'producto')), 'general');
         $datos[] = $registro;
       }
     }
@@ -976,13 +1256,21 @@ class tienda_admin_model {
 "
            . "  cli.codigo,
 "
+           . "  cli.nombres,
+"
+           . "  cli.apellidos,
+"
            . "  TRIM(cli.nombres || ' ' || cli.apellidos) AS nombre_completo,
 "
            . "  cli.correo,
 "
            . "  cli.celular,
 "
-           . "  dir.ciudad,
+           . "  COALESCE(dir.ciudad, '') AS ciudad,
+"
+           . "  COALESCE(dir.direccion_linea_1, '') AS direccion_linea_1,
+"
+           . "  COALESCE(dir.telefono, '') AS telefono_direccion,
 "
            . "  COUNT(DISTINCT ped.pedido_tienda_id) AS total_pedidos,
 "
@@ -998,23 +1286,17 @@ class tienda_admin_model {
 "
            . "  AND dir.sw_principal = B'1'
 "
-           . "  AND dir.estado = B'1'
-"
            . "  AND dir.borrado = B'0'
 "
            . "LEFT JOIN public.pedidos_tienda ped
 "
            . "  ON ped.cliente_tienda_id = cli.cliente_tienda_id
 "
-           . "  AND ped.estado = B'1'
-"
            . "  AND ped.borrado = B'0'
 "
            . "WHERE
 "
-           . "  cli.estado = B'1'
-"
-           . "  AND cli.borrado = B'0'
+           . "  cli.borrado = B'0'
 "
            . "GROUP BY
 "
@@ -1030,7 +1312,11 @@ class tienda_admin_model {
 "
            . "  cli.celular,
 "
-           . "  dir.ciudad
+           . "  dir.ciudad,
+"
+           . "  dir.direccion_linea_1,
+"
+           . "  dir.telefono
 "
            . "ORDER BY
 "
@@ -1038,13 +1324,12 @@ class tienda_admin_model {
 "
            . "  cli.cliente_tienda_id DESC
 "
-           . "LIMIT 12;";
+           . "LIMIT 30;";
 
       $stmt = $this->dbh->prepare($sql);
       $stmt->execute();
 
       while ($registro = $stmt->fetch()) {
-        $registro['imagen_url'] = $this->resolver_imagen_producto_tienda_admin((string) ($registro['imagen_url'] ?? ''), $this->generar_slug_tienda_admin((string) ($registro['producto_nombre'] ?? 'producto')), 'general');
         $datos[] = $registro;
       }
     }
@@ -1115,12 +1400,85 @@ class tienda_admin_model {
       $stmt->execute();
 
       while ($registro = $stmt->fetch()) {
-        $registro['imagen_url'] = $this->resolver_imagen_producto_tienda_admin((string) ($registro['imagen_url'] ?? ''), $this->generar_slug_tienda_admin((string) ($registro['producto_nombre'] ?? 'producto')), 'general');
         $datos[] = $registro;
       }
     }
     catch (PDOException $e) {
       configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), 'public.pedidos_tienda');
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+
+    return $datos;
+  }
+
+  private function consultar_pagos_tienda_admin() {
+    $stmt  = null;
+    $datos = [];
+
+    try {
+      if (!$this->tabla_existe_tienda_admin('public.pagos_tienda')) {
+        return $datos;
+      }
+
+      $sql = "SELECT
+"
+           . "  pag.pago_tienda_id,
+"
+           . "  pag.codigo,
+"
+           . "  pag.metodo_pago,
+"
+           . "  pag.estado_pago,
+"
+           . "  pag.monto,
+"
+           . "  COALESCE(pag.referencia_pasarela, '') AS referencia_pasarela,
+"
+           . "  COALESCE(TO_CHAR(pag.fecha_procesamiento, 'YYYY-MM-DD HH24:MI'), TO_CHAR(pag.fecha_creacion, 'YYYY-MM-DD HH24:MI')) AS fecha_pago_texto,
+"
+           . "  COALESCE(ped.codigo, '') AS pedido_codigo,
+"
+           . "  TRIM(COALESCE(cli.nombres, '') || ' ' || COALESCE(cli.apellidos, '')) AS cliente_nombre_completo
+"
+           . "FROM
+"
+           . "  public.pagos_tienda pag
+"
+           . "LEFT JOIN public.pedidos_tienda ped
+"
+           . "  ON ped.pedido_tienda_id = pag.pedido_tienda_id
+"
+           . "LEFT JOIN public.clientes_tienda cli
+"
+           . "  ON cli.cliente_tienda_id = pag.cliente_tienda_id
+"
+           . "WHERE
+"
+           . "  pag.estado = B'1'
+"
+           . "  AND pag.borrado = B'0'
+"
+           . "ORDER BY
+"
+           . "  pag.fecha_creacion DESC,
+"
+           . "  pag.pago_tienda_id DESC
+"
+           . "LIMIT 20;";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->execute();
+
+      while ($registro = $stmt->fetch()) {
+        $datos[] = $registro;
+      }
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), 'public.pagos_tienda');
     }
     finally {
       if ($stmt) {
@@ -1183,6 +1541,8 @@ class tienda_admin_model {
              . "  det.producto_codigo,
 "
              . "  det.producto_slug,
+"
+             . "  MAX(COALESCE(det.imagen_url, '')) AS imagen_url,
 "
              . "  COALESCE(SUM(det.cantidad), 0) AS unidades_vendidas,
 "
@@ -1342,6 +1702,33 @@ class tienda_admin_model {
     ];
   }
 
+  private function asignar_variables_tienda_admin_guardar_cliente() {
+    return [
+      'cliente_tienda_id' => (int) ($_POST['tienda_admin_cliente_id'] ?? 0),
+      'nombres'           => trim((string) ($_POST['tienda_admin_cliente_nombres'] ?? '')),
+      'apellidos'         => trim((string) ($_POST['tienda_admin_cliente_apellidos'] ?? '')),
+      'correo'            => trim((string) ($_POST['tienda_admin_cliente_correo'] ?? '')),
+      'celular'           => trim((string) ($_POST['tienda_admin_cliente_celular'] ?? '')),
+      'ciudad'            => trim((string) ($_POST['tienda_admin_cliente_ciudad'] ?? '')),
+    ];
+  }
+
+  private function validar_datos_tienda_admin_guardar_cliente($datos) {
+    if ((int) ($datos['cliente_tienda_id'] ?? 0) <= 0) {
+      return ['estado' => false, 'mensaje' => 'Debe seleccionar el cliente a editar.', 'datos' => []];
+    }
+
+    if (($datos['nombres'] ?? '') === '' || ($datos['apellidos'] ?? '') === '' || ($datos['correo'] ?? '') === '') {
+      return ['estado' => false, 'mensaje' => 'Debe diligenciar nombres, apellidos y correo del cliente.', 'datos' => []];
+    }
+
+    if (!filter_var((string) ($datos['correo'] ?? ''), FILTER_VALIDATE_EMAIL)) {
+      return ['estado' => false, 'mensaje' => 'Debe ingresar un correo válido para el cliente.', 'datos' => []];
+    }
+
+    return ['estado' => true, 'mensaje' => 'Validación correcta.', 'datos' => []];
+  }
+
   private function asignar_variables_tienda_admin_guardar_imagen() {
     $producto_imagen_id = (int) ($_POST['tienda_admin_imagen_id'] ?? 0);
     $producto_id        = (int) ($_POST['tienda_admin_imagen_producto_id'] ?? 0);
@@ -1451,7 +1838,7 @@ class tienda_admin_model {
     }
   }
 
-  private function inactivar_registro_tienda_admin($tabla, $campo_id, $registro_id, $mensaje_ok) {
+  private function cambiar_estado_registro_tienda_admin($tabla, $campo_id, $registro_id, $estado_activo, $mensaje_ok) {
     $stmt = null;
 
     if ($registro_id <= 0) {
@@ -1461,17 +1848,17 @@ class tienda_admin_model {
     try {
       $sql = "UPDATE " . $tabla . "\n"
            . "SET\n"
-           . "  estado               = B'0',\n"
-           . "  borrado              = B'1',\n"
-           . "  usuario_borrado      = :usuario_borrado,\n"
-           . "  fecha_borrado        = NOW()\n"
+           . "  estado               = :estado,\n"
+           . "  usuario_modificacion = :usuario_modificacion,\n"
+           . "  fecha_modificacion   = NOW()\n"
            . "WHERE\n"
            . "  " . $campo_id . " = :registro_id\n"
            . "  AND borrado = B'0';";
 
       $stmt = $this->dbh->prepare($sql);
       $stmt->bindValue(':registro_id', $registro_id, PDO::PARAM_INT);
-      $stmt->bindValue(':usuario_borrado', $this->usuario_id, PDO::PARAM_INT);
+      $stmt->bindValue(':estado', $estado_activo ? '1' : '0', PDO::PARAM_STR);
+      $stmt->bindValue(':usuario_modificacion', $this->usuario_id, PDO::PARAM_INT);
       $stmt->execute();
 
       return ['estado' => true, 'mensaje' => $mensaje_ok, 'datos' => []];
@@ -1479,6 +1866,248 @@ class tienda_admin_model {
     catch (PDOException $e) {
       configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), $tabla . '.' . $registro_id);
       return ['estado' => false, 'mensaje' => 'No fue posible actualizar el registro.', 'datos' => []];
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
+  private function consultar_auditoria_tienda_admin() {
+    $stmt  = null;
+    $datos = [];
+
+    try {
+      if (!$this->tabla_existe_tienda_admin('public.tienda_admin_auditoria')) {
+        return $datos;
+      }
+
+      $sql = "SELECT
+"
+           . "  tienda_admin_auditoria_id,
+"
+           . "  modulo,
+"
+           . "  entidad,
+"
+           . "  registro_id,
+"
+           . "  accion,
+"
+           . "  descripcion,
+"
+           . "  usuario_nombre,
+"
+           . "  TO_CHAR(fecha_evento, 'YYYY-MM-DD HH24:MI') AS fecha_evento_texto
+"
+           . "FROM
+"
+           . "  public.tienda_admin_auditoria
+"
+           . "WHERE
+"
+           . "  borrado = B'0'
+"
+           . "ORDER BY
+"
+           . "  fecha_evento DESC,
+"
+           . "  tienda_admin_auditoria_id DESC
+"
+           . "LIMIT 30;";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->execute();
+
+      while ($registro = $stmt->fetch()) {
+        $datos[] = $registro;
+      }
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), 'public.tienda_admin_auditoria');
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+
+    return $datos;
+  }
+
+  private function registrar_auditoria_tienda_admin($modulo, $entidad, $registro_id, $accion, $descripcion, $detalle = []) {
+    $stmt = null;
+
+    try {
+      if (!$this->tabla_existe_tienda_admin('public.tienda_admin_auditoria')) {
+        return;
+      }
+
+      $sql = "INSERT INTO public.tienda_admin_auditoria
+"
+           . "(
+"
+           . "  modulo,
+"
+           . "  entidad,
+"
+           . "  registro_id,
+"
+           . "  accion,
+"
+           . "  descripcion,
+"
+           . "  detalle_json,
+"
+           . "  usuario_id,
+"
+           . "  usuario_nombre,
+"
+           . "  estado,
+"
+           . "  borrado,
+"
+           . "  usuario_creacion,
+"
+           . "  fecha_creacion,
+"
+           . "  fecha_evento
+"
+           . ")
+"
+           . "VALUES
+"
+           . "(
+"
+           . "  :modulo,
+"
+           . "  :entidad,
+"
+           . "  :registro_id,
+"
+           . "  :accion,
+"
+           . "  :descripcion,
+"
+           . "  :detalle_json,
+"
+           . "  :usuario_id,
+"
+           . "  :usuario_nombre,
+"
+           . "  B'1',
+"
+           . "  B'0',
+"
+           . "  :usuario_creacion,
+"
+           . "  NOW(),
+"
+           . "  NOW()
+"
+           . ");";
+
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':modulo', (string) $modulo, PDO::PARAM_STR);
+      $stmt->bindValue(':entidad', (string) $entidad, PDO::PARAM_STR);
+      $stmt->bindValue(':registro_id', (int) $registro_id, PDO::PARAM_INT);
+      $stmt->bindValue(':accion', (string) $accion, PDO::PARAM_STR);
+      $stmt->bindValue(':descripcion', (string) $descripcion, PDO::PARAM_STR);
+      $stmt->bindValue(':detalle_json', json_encode($detalle, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), PDO::PARAM_STR);
+      $stmt->bindValue(':usuario_id', (int) $this->usuario_id, PDO::PARAM_INT);
+      $stmt->bindValue(':usuario_nombre', (string) ($_SESSION['tienda_admin_usuario_nombre_completo'] ?? 'Administrador tienda'), PDO::PARAM_STR);
+      $stmt->bindValue(':usuario_creacion', (int) $this->usuario_id, PDO::PARAM_INT);
+      $stmt->execute();
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), (string) $registro_id);
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
+  private function categoria_tiene_productos_activos_tienda_admin($categoria_id) {
+    return $this->contar_registros_tienda_admin(
+      "SELECT COUNT(producto_id) AS total FROM public.productos WHERE categoria_id = :registro_id AND estado = B'1' AND borrado = B'0';",
+      $categoria_id
+    ) > 0;
+  }
+
+  private function categoria_tiene_productos_registrados_tienda_admin($categoria_id) {
+    return $this->contar_registros_tienda_admin(
+      "SELECT COUNT(producto_id) AS total FROM public.productos WHERE categoria_id = :registro_id AND borrado = B'0';",
+      $categoria_id
+    ) > 0;
+  }
+
+  private function producto_tiene_pedidos_abiertos_tienda_admin($producto_id) {
+    return $this->contar_registros_tienda_admin(
+      "SELECT COUNT(det.pedido_tienda_detalle_id) AS total
+"
+      . "FROM public.pedido_tienda_detalles det
+"
+      . "INNER JOIN public.pedidos_tienda ped ON ped.pedido_tienda_id = det.pedido_tienda_id
+"
+      . "WHERE det.producto_id = :registro_id
+"
+      . "  AND det.borrado = B'0'
+"
+      . "  AND ped.borrado = B'0'
+"
+      . "  AND LOWER(COALESCE(ped.estado_pedido, 'pendiente')) NOT IN ('enviado', 'entregado', 'cerrado', 'cancelado');",
+      $producto_id
+    ) > 0;
+  }
+
+  private function contar_registros_tienda_admin($sql, $registro_id) {
+    $stmt = null;
+
+    try {
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':registro_id', (int) $registro_id, PDO::PARAM_INT);
+      $stmt->execute();
+      return (int) ($stmt->fetch()['total'] ?? 0);
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), (string) $registro_id);
+      return 0;
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
+      }
+    }
+  }
+
+  private function obtener_nombre_categoria_tienda_admin($categoria_id) {
+    return $this->obtener_valor_simple_tienda_admin('public.categorias', 'categoria_id', $categoria_id, 'nombre');
+  }
+
+  private function obtener_nombre_producto_tienda_admin($producto_id) {
+    return $this->obtener_valor_simple_tienda_admin('public.productos', 'producto_id', $producto_id, 'nombre');
+  }
+
+  private function obtener_codigo_pedido_tienda_admin($pedido_id) {
+    return $this->obtener_valor_simple_tienda_admin('public.pedidos_tienda', 'pedido_tienda_id', $pedido_id, 'codigo');
+  }
+
+  private function obtener_valor_simple_tienda_admin($tabla, $campo_id, $registro_id, $campo_valor) {
+    $stmt = null;
+
+    try {
+      $sql = "SELECT " . $campo_valor . " AS valor FROM " . $tabla . " WHERE " . $campo_id . " = :registro_id LIMIT 1;";
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->bindValue(':registro_id', (int) $registro_id, PDO::PARAM_INT);
+      $stmt->execute();
+      return (string) ($stmt->fetch()['valor'] ?? '');
+    }
+    catch (PDOException $e) {
+      configdb_registrar_log($this->modulo, __FUNCTION__, $e->getMessage(), $tabla . '.' . $registro_id);
+      return '';
     }
     finally {
       if ($stmt) {

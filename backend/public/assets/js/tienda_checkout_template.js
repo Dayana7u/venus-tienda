@@ -1,6 +1,10 @@
-function template_cargando_checkout_tienda(metodoPago = ``) {
+function template_cargando_checkout_tienda() {
+  return `Guardando datos...`;
+}
+
+function template_cargando_checkout_pago_tienda(metodoPago = ``) {
   if (metodoPago === `pse`) {
-    return `Procesando pago PSE...`;
+    return `Preparando PSE...`;
   }
 
   if (metodoPago === `tarjeta`) {

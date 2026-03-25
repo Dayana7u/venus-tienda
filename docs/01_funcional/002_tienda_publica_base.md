@@ -88,3 +88,21 @@ Se dejó la persistencia del pedido y del pago sobre las tablas operativas del e
 Se ajustó el carrito para redirigir al checkout desde la vista dedicada y desde el drawer lateral.
 
 - Checkout: se agregan validaciones por PSE, tarjeta y contra entrega, con referencia de pago y seguimiento administrativo de pagos.
+
+
+Se evidencia que, el checkout se dividió en dos vistas: /checkout/ para datos del pedido y /checkout/pago/ para método de pago, con adaptación del formulario según PSE, tarjeta o contra entrega y con resumen dinámico de productos del carrito.
+
+
+## v26 · Checkout parametrizable, soporte y comprobante
+Se evidencia que, el bloque de checkout y pago se ajusta para consumir configuración visible desde `system.modulo_configuraciones`, de modo que etiquetas, placeholders, obligatoriedad, mensajes comerciales y acciones de confirmación puedan cambiarse sin tocar la estructura base del frente público.
+
+Novedades y Modificaciones
+Se amplió la parametrización del checkout para comprador, entrega, PSE, tarjeta y contra entrega.
+Se corrigió el resumen del checkout y del pago para que cada línea del pedido muestre el total real y no un valor en cero cuando proviene del carrito en sesión.
+Se agregó el comprobante público del pedido en `/pedido/comprobante/` con vista lista para impresión y soporte comercial.
+Se ajustó `/contacto/` para recibir datos del pedido y dejar acciones directas de WhatsApp, correo o llamada cuando el usuario llega desde la confirmación.
+Se amplió el margen útil de `/checkout/` y `/checkout/pago/`, se estilizaron las tarjetas de métodos de pago con íconos visibles y se reorganizó el panel de filtros del catálogo.
+
+
+## Tema visual por stylesheet
+Se evidencia que, la tienda pública y el panel administrativo ya quedan preparados para consumir una hoja de estilos propia por tema activo, manteniendo la lógica funcional y la parametrización visual desde `system.temas`, `system.tema_tokens` y `system.tema_componentes`.

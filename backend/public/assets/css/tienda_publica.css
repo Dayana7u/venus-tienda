@@ -2611,3 +2611,891 @@ input {
   font-size: 0.9rem;
   line-height: 1.6;
 }
+
+/* Checkout V23 */
+.tv_checkout_pagina {
+  padding-bottom: 48px;
+}
+
+.tv_checkout_intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+.tv_checkout_intro_texto h1 {
+  margin: 12px 0 8px;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.tv_checkout_intro_texto p {
+  max-width: 720px;
+}
+
+.tv_checkout_pasos {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tv_checkout_paso {
+  border: 1px solid var(--tv-color-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--tv-color-text-soft);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 16px;
+  text-decoration: none;
+}
+
+.tv_checkout_paso_activo {
+  background: var(--tv-color-primary);
+  border-color: var(--tv-color-primary);
+  color: #fff;
+}
+
+.tv_checkout_compacto,
+.tv_checkout_pago_layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.8fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.tv_checkout_form_compacto {
+  display: grid;
+  gap: 24px;
+}
+
+.tv_checkout_panel {
+  background: #fff;
+  border: 1px solid var(--tv-color-border);
+  border-radius: 26px;
+  box-shadow: 0 14px 40px rgba(18, 18, 18, 0.05);
+  padding: 26px;
+}
+
+.tv_checkout_panel_header h3 {
+  margin: 14px 0 8px;
+}
+
+.tv_checkout_panel_formulario .tv_checkout_grid,
+.tv_checkout_pago_formulario .tv_checkout_grid {
+  margin-top: 20px;
+}
+
+.tv_checkout_form_compacto label,
+.tv_checkout_pago_formulario label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tv_checkout_form_compacto input,
+.tv_checkout_form_compacto select,
+.tv_checkout_form_compacto textarea,
+.tv_checkout_pago_formulario input,
+.tv_checkout_pago_formulario select,
+.tv_checkout_pago_formulario textarea {
+  border: 1px solid var(--tv-color-border);
+  border-radius: 16px;
+  min-height: 52px;
+  padding: 0 18px;
+}
+
+.tv_checkout_form_compacto textarea,
+.tv_checkout_pago_formulario textarea {
+  min-height: 110px;
+  padding-top: 14px;
+  resize: vertical;
+}
+
+.tv_checkout_acciones_compactas {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.tv_checkout_panel_resumen,
+.tv_checkout_panel_pago_resumen {
+  position: sticky;
+  top: 24px;
+}
+
+.tv_checkout_resumen_lista {
+  display: grid;
+  gap: 14px;
+}
+
+.tv_checkout_resumen_item {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  background: linear-gradient(180deg, #fff 0%, #fff7f9 100%);
+  border: 1px solid var(--tv-color-border);
+  border-radius: 22px;
+  padding: 14px;
+}
+
+.tv_checkout_resumen_media {
+  width: 92px;
+}
+
+.tv_checkout_resumen_media .tv_producto_media_checkout {
+  min-height: 92px;
+}
+
+.tv_checkout_resumen_media_pago {
+  width: 74px;
+}
+
+.tv_checkout_resumen_media_pago .tv_producto_media_checkout {
+  min-height: 74px;
+}
+
+.tv_checkout_resumen_info {
+  display: grid;
+  gap: 6px;
+}
+
+.tv_checkout_resumen_info strong {
+  font-family: var(--tv-font-heading);
+  font-size: 1.05rem;
+}
+
+.tv_checkout_resumen_info span {
+  color: var(--tv-color-text-soft);
+}
+
+.tv_checkout_resumen_info b {
+  color: var(--tv-color-text);
+  font-size: 1rem;
+}
+
+.tv_checkout_totales_laterales {
+  margin-top: 18px;
+}
+
+.tv_checkout_totales_laterales div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tv_checkout_totales_laterales div:last-child {
+  border-bottom: 0;
+}
+
+.tv_checkout_total_principal strong {
+  font-size: 1.35rem;
+  color: var(--tv-color-accent);
+}
+
+.tv_checkout_resumen_beneficios {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.tv_checkout_resumen_beneficios article {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff8fa;
+  border: 1px solid var(--tv-color-border);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.tv_checkout_resumen_beneficios span {
+  color: var(--tv-color-text-soft);
+}
+
+.tv_checkout_pago_encabezado {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 20px;
+}
+
+.tv_checkout_metodos_pago {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 20px;
+}
+
+.tv_checkout_metodo_pago_item {
+  min-height: 96px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tv_checkout_metodo_pago_item small {
+  color: var(--tv-color-text-soft);
+}
+
+.tv_checkout_pago_metodo {
+  display: grid;
+  gap: 18px;
+}
+
+.tv_checkout_alerta_compacta {
+  margin-bottom: 0;
+}
+
+.tv_checkout_tarjeta_preview {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  background: linear-gradient(135deg, #f8d7df 0%, #fff 100%);
+  border: 1px solid var(--tv-color-border);
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.tv_checkout_tarjeta_preview strong {
+  display: block;
+  font-family: var(--tv-font-heading);
+  font-size: 1.3rem;
+  margin-top: 4px;
+}
+
+.tv_checkout_pse_nota {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: #fff8fa;
+  border-radius: 18px;
+  padding: 14px 16px;
+}
+
+.tv_checkout_entrega_resumen {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tv_checkout_entrega_resumen article {
+  background: #fff8fa;
+  border: 1px solid var(--tv-color-border);
+  border-radius: 18px;
+  padding: 14px 16px;
+  display: grid;
+  gap: 6px;
+}
+
+.tv_checkout_check_label {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 12px !important;
+}
+
+.tv_checkout_check_label input {
+  min-height: auto !important;
+  width: 18px;
+  height: 18px;
+  padding: 0 !important;
+}
+
+.tv_checkout_exito_pago {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .tv_checkout_compacto,
+  .tv_checkout_pago_layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tv_checkout_panel_resumen,
+  .tv_checkout_panel_pago_resumen {
+    position: static;
+  }
+
+  .tv_checkout_intro,
+  .tv_checkout_pago_encabezado {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 780px) {
+  .tv_checkout_metodos_pago,
+  .tv_checkout_entrega_resumen,
+  .tv_checkout_grid_dos {
+    grid-template-columns: 1fr;
+  }
+
+  .tv_checkout_resumen_item {
+    grid-template-columns: 1fr;
+  }
+
+  .tv_checkout_resumen_media,
+  .tv_checkout_resumen_media_pago {
+    width: 100%;
+  }
+}
+
+/* Checkout v24 + modal */
+.tv_body_modal_activo {
+  overflow: hidden;
+}
+
+.tv_modal_checkout {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.tv_modal_checkout_backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(40, 24, 30, 0.58);
+  backdrop-filter: blur(2px);
+}
+
+.tv_modal_checkout_dialogo {
+  position: relative;
+  z-index: 2;
+  width: min(520px, calc(100% - 32px));
+  margin: min(14vh, 120px) auto 0;
+  background: #fff;
+  border: 1px solid var(--tv-color-border);
+  border-radius: 24px;
+  box-shadow: 0 22px 60px rgba(25, 12, 18, 0.28);
+  padding: 24px;
+  outline: none;
+}
+
+.tv_modal_checkout_cabecera h3 {
+  margin: 12px 0 0;
+}
+
+.tv_modal_checkout_cuerpo {
+  color: var(--tv-color-text-soft);
+  line-height: 1.7;
+  margin-top: 14px;
+}
+
+.tv_modal_checkout_acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.tv_checkout_intro_pago_v24 {
+  margin-bottom: 26px;
+}
+
+.tv_checkout_pago_layout_v24 {
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+}
+
+.tv_checkout_panel_pago_v24 {
+  background: linear-gradient(180deg, #ffffff 0%, #fff8fa 100%);
+}
+
+.tv_checkout_pago_encabezado_v24 {
+  margin-bottom: 16px;
+}
+
+.tv_checkout_pago_texto {
+  margin-top: 8px;
+  max-width: 640px;
+}
+
+.tv_checkout_pago_badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.tv_checkout_pago_badge {
+  border: 1px solid var(--tv-color-border);
+  background: #fff;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.tv_checkout_metodos_pago_v24 {
+  margin-top: 18px;
+  margin-bottom: 22px;
+}
+
+.tv_checkout_metodos_pago_v24 .tv_checkout_metodo {
+  padding: 18px 16px;
+  min-height: 104px;
+}
+
+.tv_checkout_metodos_pago_v24 .tv_checkout_metodo input {
+  align-self: flex-start;
+}
+
+.tv_checkout_pago_metodo_v24 {
+  background: rgba(255,255,255,0.78);
+  border: 1px solid var(--tv-color-border);
+  border-radius: 22px;
+  padding: 18px;
+}
+
+.tv_checkout_tarjeta_preview_v24 {
+  margin-bottom: 8px;
+}
+
+.tv_checkout_pse_grid_v24,
+.tv_checkout_tarjeta_grid_v24 {
+  align-items: end;
+}
+
+.tv_checkout_entrega_resumen_v24 {
+  margin-bottom: 6px;
+}
+
+.tv_checkout_legal_pasarela {
+  margin-top: 18px;
+}
+
+.tv_checkout_check_label_pasarela {
+  align-items: flex-start !important;
+}
+
+.tv_checkout_check_label_pasarela a {
+  color: var(--tv-color-accent);
+}
+
+.tv_checkout_panel_pago_resumen_v24 {
+  background: linear-gradient(180deg, #fff8fa 0%, #ffffff 100%);
+}
+
+.tv_checkout_resumen_item_pago_v24 {
+  grid-template-columns: 78px minmax(0, 1fr);
+}
+
+.tv_checkout_resumen_item_pago_v24 .tv_checkout_resumen_info strong {
+  font-size: 1rem;
+}
+
+.tv_checkout_estado_pendiente {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+@media (max-width: 980px) {
+  .tv_modal_checkout_dialogo {
+    margin-top: 80px;
+  }
+
+  .tv_checkout_pago_layout_v24 {
+    grid-template-columns: 1fr;
+  }
+
+  .tv_checkout_pago_badges {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .tv_modal_checkout_dialogo {
+    padding: 20px;
+  }
+
+  .tv_checkout_metodos_pago_v24,
+  .tv_checkout_pse_grid_v24,
+  .tv_checkout_tarjeta_grid_v24,
+  .tv_checkout_entrega_resumen_v24 {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.tv_checkout_toast_info {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1200;
+  max-width: 360px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(74, 58, 63, 0.94);
+  color: #FFFFFF;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(18px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.tv_checkout_toast_info_visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tv_checkout_pago_metodo_v24 input[inputmode="numeric"],
+.tv_checkout_form_compacto input[inputmode="numeric"] {
+  letter-spacing: 0.02em;
+}
+
+.tv_checkout_tarjeta_preview_v24,
+.tv_checkout_entrega_resumen_v24,
+.tv_checkout_alerta_compacta {
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 767px) {
+  .tv_checkout_toast_info {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: none;
+  }
+}
+
+
+/* Ajustes v26 */
+.tv_bloque_checkout_amplio {
+  width: min(1320px, calc(100% - 88px));
+}
+
+.tv_bloque_encabezado_catalogo {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 360px);
+  align-items: end;
+  gap: 32px;
+}
+
+.tv_filtros_catalogo_panel {
+  margin-left: auto;
+  width: 100%;
+  padding: 20px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #fff8fa 0%, #ffffff 100%);
+  box-shadow: 0 14px 34px rgba(198, 146, 163, 0.12);
+}
+
+.tv_grid_productos_store {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.tv_checkout_metodo {
+  position: relative;
+  align-items: stretch;
+}
+
+.tv_checkout_metodo input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tv_checkout_metodo_visual {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.tv_checkout_metodo_textos {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+}
+
+.tv_checkout_metodo_textos > span {
+  font-weight: 600;
+  color: var(--tv-color-text);
+}
+
+.tv_checkout_metodo_textos small {
+  color: var(--tv-color-text-soft);
+}
+
+.tv_checkout_metodo_icono_media,
+.tv_checkout_metodo_icono_svg {
+  width: 54px;
+  min-width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--tv-color-border);
+  background: #fff7fa;
+}
+
+.tv_checkout_metodo_icono_media img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.tv_checkout_metodo_icono_svg svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: var(--tv-color-accent);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tv_checkout_metodo_pago_card {
+  min-height: 118px;
+  padding: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.tv_checkout_metodo_pago_card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(198, 146, 163, 0.12);
+}
+
+.tv_checkout_metodo_pago_card_activo {
+  border-color: rgba(213, 140, 158, 0.88);
+  background: linear-gradient(180deg, #fff7fa 0%, #ffffff 100%);
+  box-shadow: 0 14px 30px rgba(213, 140, 158, 0.14);
+}
+
+.tv_checkout_tarjeta_preview {
+  gap: 22px;
+}
+
+.tv_checkout_tarjeta_preview small {
+  max-width: 360px;
+  text-align: right;
+  color: var(--tv-color-text-soft);
+  line-height: 1.6;
+}
+
+.tv_checkout_pago_layout_v24 {
+  gap: 30px;
+}
+
+.tv_checkout_resumen_item_pago_v24 {
+  align-items: center;
+}
+
+.tv_checkout_resumen_info b,
+.tv_checkout_resumen_info strong {
+  word-break: break-word;
+}
+
+.tv_checkout_exito_botones_v26 {
+  flex-wrap: wrap;
+}
+
+.tv_contacto_soporte_pedido {
+  margin-bottom: 26px;
+  background: linear-gradient(180deg, #fff7fa 0%, #ffffff 100%);
+  border: 1px solid var(--tv-color-border);
+}
+
+.tv_contacto_soporte_resumen {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.tv_contacto_soporte_resumen article {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #fff8fa;
+  border: 1px solid var(--tv-color-border);
+  display: grid;
+  gap: 6px;
+}
+
+.tv_contacto_soporte_resumen span {
+  color: var(--tv-color-text-soft);
+}
+
+.tv_contacto_soporte_acciones {
+  margin-top: 18px;
+}
+
+.tv_comprobante_bloque {
+  padding-bottom: 54px;
+}
+
+.tv_bloque_encabezado_comprobante {
+  align-items: center;
+}
+
+.tv_comprobante_panel {
+  display: grid;
+  gap: 24px;
+}
+
+.tv_comprobante_encabezado {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.tv_comprobante_estado {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tv_comprobante_estado article,
+.tv_comprobante_card {
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: #fff8fa;
+  border: 1px solid var(--tv-color-border);
+  display: grid;
+  gap: 6px;
+}
+
+.tv_comprobante_grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.tv_comprobante_tabla {
+  display: grid;
+  gap: 12px;
+}
+
+.tv_comprobante_tabla_head,
+.tv_comprobante_tabla_fila {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) 110px 140px 140px;
+  gap: 14px;
+  align-items: center;
+}
+
+.tv_comprobante_tabla_head {
+  padding: 0 14px 8px;
+  color: var(--tv-color-text-soft);
+  font-size: 0.9rem;
+}
+
+.tv_comprobante_tabla_fila {
+  padding: 16px 14px;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid var(--tv-color-border);
+}
+
+.tv_comprobante_tabla_fila div {
+  display: grid;
+  gap: 4px;
+}
+
+.tv_comprobante_tabla_fila span {
+  color: var(--tv-color-text-soft);
+}
+
+.tv_comprobante_totales {
+  width: min(380px, 100%);
+  margin-left: auto;
+  display: grid;
+  gap: 10px;
+}
+
+.tv_comprobante_totales div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.tv_comprobante_total_final {
+  padding-top: 12px;
+  border-top: 1px solid var(--tv-color-border);
+  font-size: 1.08rem;
+}
+
+.tv_comprobante_observacion {
+  margin-bottom: 0;
+}
+
+@media (max-width: 1280px) {
+  .tv_grid_productos_store {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1080px) {
+  .tv_bloque_checkout_amplio {
+    width: min(1320px, calc(100% - 56px));
+  }
+
+  .tv_bloque_encabezado_catalogo,
+  .tv_comprobante_grid,
+  .tv_comprobante_encabezado,
+  .tv_comprobante_estado {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+}
+
+@media (max-width: 920px) {
+  .tv_grid_productos_store,
+  .tv_contacto_soporte_resumen,
+  .tv_comprobante_tabla_head,
+  .tv_comprobante_tabla_fila {
+    grid-template-columns: 1fr;
+  }
+
+  .tv_comprobante_totales {
+    width: 100%;
+  }
+}
+
+@media (max-width: 680px) {
+  .tv_bloque_checkout_amplio {
+    width: min(1320px, calc(100% - 28px));
+  }
+
+  .tv_checkout_tarjeta_preview {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tv_checkout_tarjeta_preview small {
+    max-width: 100%;
+    text-align: left;
+  }
+}
+
+@media print {
+  .tv_topbar,
+  .tv_header,
+  .tv_footer,
+  .tv_carrito_drawer,
+  .tv_modal_checkout,
+  .tv_comprobante_acciones_top,
+  .tv_comprobante_acciones_bottom {
+    display: none !important;
+  }
+
+  .tv_pagina_modulo,
+  .tv_bloque_checkout_amplio {
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body {
+    background: #fff;
+  }
+}

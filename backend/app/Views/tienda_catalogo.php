@@ -12,7 +12,7 @@ $carrito = $tv_datos['carrito'] ?? [];
 $buscar = $filtros['buscar'] ?? '';
 $linea_activa = $filtros['linea'] ?? '';
 
-tienda_render_head('Catálogo', $tema_tokens, $componentes);
+tienda_render_head('Catálogo', $tema_tokens, $componentes, $contexto['tema'] ?? []);
 ?>
 <body>
   <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>
@@ -22,13 +22,13 @@ tienda_render_head('Catálogo', $tema_tokens, $componentes);
   <main class="tv_pagina_modulo">
     <section class="tv_bloque">
       <div class="tv_breadcrumb">Inicio / Catálogo</div>
-      <div class="tv_bloque_encabezado tv_bloque_encabezado_inline">
+      <div class="tv_bloque_encabezado tv_bloque_encabezado_inline tv_bloque_encabezado_catalogo">
         <div>
           <span class="tv_etiqueta">Catálogo</span>
           <h2>Explora la tienda por línea y producto</h2>
           <p>Vista separada para catálogo real, búsqueda y navegación por línea.</p>
         </div>
-        <form method="get" action="/catalogo/" class="tv_filtros_catalogo">
+        <form method="get" action="/catalogo/" class="tv_filtros_catalogo tv_filtros_catalogo_panel">
           <select name="linea">
             <option value="">Todas las líneas</option>
             <?php foreach ($lineas as $codigo_linea => $linea) { ?>

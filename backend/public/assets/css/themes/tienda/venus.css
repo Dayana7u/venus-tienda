@@ -1,0 +1,524 @@
+body {
+  background:
+    radial-gradient(circle at top left, rgba(221, 212, 231, 0.55), transparent 28%),
+    linear-gradient(180deg, #fffdfc 0%, #fff9fa 52%, #fff7f6 100%);
+  color: #5f5264;
+}
+
+.tv_topbar {
+  background: linear-gradient(90deg, #bfa4ba 0%, #d4b6ca 55%, #f3d6d3 100%);
+  border-bottom: 1px solid rgba(191, 175, 208, 0.35);
+}
+
+.tv_topbar_contenido,
+.tv_header_superior,
+.tv_bloque,
+.tv_footer_contenido,
+.tv_checkout_pagina,
+.tv_checkout_intro,
+.tv_checkout_pago_encabezado,
+.tv_checkout_compacto,
+.tv_checkout_pago_layout,
+.tv_bloque_contacto,
+.tv_bloque_newsletter {
+  max-width: 1260px;
+}
+
+.tv_header {
+  background: rgba(255, 251, 252, 0.84);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(212, 182, 202, 0.25);
+  box-shadow: 0 14px 34px rgba(191, 175, 208, 0.08);
+}
+
+.tv_header_superior {
+  min-height: 84px;
+  gap: 28px;
+}
+
+.tv_brand h1,
+.tv_logo_texto,
+.tv_hero_store_texto h1,
+.tv_bloque_encabezado h2,
+.tv_producto_card h3,
+.tv_checkout_intro_texto h1,
+.tv_checkout_panel_header h3,
+.tv_checkout_resumen_bloque h3,
+.tv_checkout_exito h3,
+.tv_checkout_pago_encabezado h1,
+.tv_bloque_contacto h2,
+.tv_bloque_newsletter h2,
+.tda_admin_pagina_encabezado h2,
+.tda_admin_panel_encabezado h3,
+.tda_admin_card_kpi strong,
+.tda_admin_tabla thead th,
+.tda_admin_tabla tbody td strong {
+  font-family: "Cormorant Garamond", "Playfair Display", serif;
+  letter-spacing: -0.02em;
+}
+
+.tv_brand h1,
+.tv_logo_texto {
+  color: #8f748f;
+  font-size: 3.1rem;
+  font-weight: 600;
+}
+
+.tv_header_menu a,
+.tv_header_acciones a,
+.tv_header_acciones button,
+.tv_header_acciones input,
+.tv_btn,
+.tv_producto_card,
+.tv_checkout_formulario,
+.tv_checkout_resumen_bloque,
+.tv_checkout_exito,
+.tda_btn,
+.tda_admin_nav_link,
+.tda_admin_topbar_busqueda input,
+.tda_admin_usuario_chip,
+.tda_admin_card,
+.tda_admin_panel,
+.tda_admin_sidebar,
+.tda_admin_modal_dialogo {
+  font-family: "Inter", "Poppins", sans-serif;
+}
+
+.tv_header_menu a {
+  color: #78697f;
+  font-weight: 500;
+}
+
+.tv_header_menu a:hover,
+.tv_header_menu a.tv_nav_activo {
+  color: #8f748f;
+}
+
+.tv_header_acciones .tv_input,
+.tv_header_acciones .tv_btn_icono,
+.tv_header_acciones .tv_carrito_boton {
+  border-radius: 999px;
+  border-color: rgba(191, 175, 208, 0.45);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.tv_pagina_modulo {
+  padding-top: 34px;
+  padding-bottom: 54px;
+}
+
+.tv_bloque {
+  margin-top: 0;
+  margin-bottom: 34px;
+  padding: 0 28px;
+}
+
+.tv_bloque_hero_store {
+  padding-top: 10px;
+}
+
+.tv_hero_store_layout {
+  grid-template-columns: minmax(0, 2.15fr) minmax(300px, 1fr);
+  gap: 20px;
+}
+
+.tv_hero_store_principal,
+.tv_hero_store_secundario,
+.tv_producto_card,
+.tv_tarjeta_info,
+.tv_checkout_formulario,
+.tv_checkout_resumen_bloque,
+.tv_checkout_exito,
+.tv_checkout_panel,
+.tv_checkout_panel_resumen,
+.tv_checkout_panel_pago_resumen,
+.tv_bloque_contacto,
+.tv_bloque_newsletter,
+.tda_admin_card,
+.tda_admin_panel,
+.tda_admin_sidebar,
+.tda_admin_topbar,
+.tda_admin_usuario_chip,
+.tda_admin_modal_dialogo {
+  border: 1px solid rgba(212, 182, 202, 0.34);
+  box-shadow: 0 24px 55px rgba(191, 175, 208, 0.12);
+}
+
+.tv_hero_store_principal {
+  background: linear-gradient(135deg, rgba(245, 207, 198, 0.66) 0%, rgba(243, 214, 211, 0.92) 44%, rgba(255, 250, 249, 0.98) 100%);
+  border-radius: 34px;
+  padding: 28px;
+  gap: 24px;
+}
+
+.tv_hero_store_texto {
+  max-width: 520px;
+}
+
+.tv_hero_store_texto h1 {
+  color: #6f5164;
+  font-size: clamp(3.7rem, 5vw, 5.5rem);
+  line-height: 0.9;
+  margin-bottom: 18px;
+}
+
+.tv_hero_store_texto p,
+.tv_bloque_encabezado p,
+.tv_producto_card p,
+.tv_hero_store_secundario p,
+.tv_checkout_intro_texto p,
+.tv_checkout_pago_texto,
+.tda_admin_panel_texto,
+.tda_admin_sidebar_texto,
+.tda_admin_kpi_texto,
+.tda_admin_pagina_encabezado p {
+  color: #7f7488;
+  line-height: 1.7;
+}
+
+.tv_hero_store_media {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.96));
+  border-radius: 26px;
+  padding: 16px;
+  min-height: 420px;
+}
+
+.tv_hero_store_secundario {
+  background: linear-gradient(180deg, rgba(243, 214, 211, 0.88), rgba(245, 207, 198, 0.68));
+  border-radius: 30px;
+  padding: 24px;
+  justify-content: space-between;
+}
+
+.tv_hero_store_secundario h3,
+.tv_bloque_encabezado h2,
+.tv_producto_card h3,
+.tv_checkout_titulo h3,
+.tv_checkout_panel_header h3,
+.tv_checkout_exito h3 {
+  color: #6d5366;
+}
+
+.tv_hero_store_precio strong,
+.tv_producto_precio strong,
+.tv_checkout_total_principal strong,
+.tv_checkout_totales_laterales div:last-child strong {
+  color: #c07f9f;
+}
+
+.tv_hero_store_mini_card,
+.tv_linea_store,
+.tv_checkout_alerta,
+.tv_checkout_tarjeta_preview,
+.tv_checkout_entrega_resumen article,
+.tv_checkout_resumen_beneficios article,
+.tv_checkout_exito_resumen article,
+.tda_admin_resumen_card,
+.tda_admin_kpi_card {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(212, 182, 202, 0.28);
+  border-radius: 22px;
+}
+
+.tv_linea_store {
+  min-height: 220px;
+  background: linear-gradient(180deg, rgba(221, 212, 231, 0.52), rgba(243, 214, 211, 0.4));
+  padding: 26px;
+}
+
+.tv_linea_store h3 {
+  font-size: 2rem;
+  color: #765b72;
+}
+
+.tv_grid_productos_store {
+  gap: 22px;
+}
+
+.tv_producto_card {
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 243, 246, 0.98));
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.tv_producto_card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 28px 60px rgba(191, 175, 208, 0.18);
+  border-color: rgba(191, 175, 208, 0.5);
+}
+
+.tv_producto_media,
+.tv_producto_media_hero,
+.tv_producto_media_catalogo,
+.tv_producto_media_checkout {
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(248, 243, 247, 0.95), rgba(255, 255, 255, 0.95));
+}
+
+.tv_bloque_encabezado_catalogo {
+  align-items: flex-start;
+  gap: 26px;
+}
+
+.tv_filtros_catalogo_panel {
+  min-width: 320px;
+  max-width: 360px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(246, 235, 240, 0.88));
+  border: 1px solid rgba(212, 182, 202, 0.35);
+  border-radius: 28px;
+  padding: 18px;
+  box-shadow: 0 18px 44px rgba(191, 175, 208, 0.14);
+}
+
+.tv_filtros_catalogo input,
+.tv_filtros_catalogo select,
+.tv_checkout_form_compacto input,
+.tv_checkout_form_compacto select,
+.tv_checkout_form_compacto textarea,
+.tv_checkout_pago_formulario input,
+.tv_checkout_pago_formulario select,
+.tv_checkout_pago_formulario textarea {
+  min-height: 54px;
+  border-radius: 18px;
+  border: 1px solid rgba(191, 175, 208, 0.45);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.tv_btn_principal,
+.tv_btn_principal:visited,
+.tda_btn_principal,
+.tda_btn_principal:visited {
+  background: linear-gradient(90deg, #b595ba 0%, #c89ab6 52%, #d4b6ca 100%);
+  color: #fffefd;
+  border: 0;
+  box-shadow: 0 16px 30px rgba(191, 149, 186, 0.26);
+}
+
+.tv_btn_secundario,
+.tda_btn_secundario {
+  background: rgba(255, 255, 255, 0.82);
+  color: #7a6177;
+  border-color: rgba(191, 175, 208, 0.42);
+}
+
+.tv_etiqueta,
+.tv_checkout_pago_badge,
+.tda_admin_badge,
+.tda_admin_etiqueta,
+.tda_admin_chip,
+.tda_admin_panel_badge {
+  border-radius: 999px;
+  background: rgba(221, 212, 231, 0.74);
+  color: #8c6e89;
+  border: 1px solid rgba(191, 175, 208, 0.4);
+  letter-spacing: 0.08em;
+}
+
+.tv_checkout_pagina,
+.tv_checkout_compacto,
+.tv_checkout_pago_layout {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+.tv_checkout_intro,
+.tv_checkout_pago_encabezado {
+  align-items: end;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.tv_checkout_intro_texto h1,
+.tv_checkout_pago_encabezado h1 {
+  color: #6d5366;
+  font-size: clamp(3.2rem, 4vw, 4.7rem);
+  line-height: 0.95;
+}
+
+.tv_checkout_pasos {
+  gap: 12px;
+}
+
+.tv_checkout_paso {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(191, 175, 208, 0.4);
+  border-radius: 999px;
+  color: #8a708a;
+  padding: 14px 22px;
+}
+
+.tv_checkout_paso_activo {
+  background: linear-gradient(90deg, #d4b6ca 0%, #caa3bc 100%);
+  color: #fff;
+  box-shadow: 0 16px 30px rgba(212, 182, 202, 0.26);
+}
+
+.tv_checkout_panel,
+.tv_checkout_panel_resumen,
+.tv_checkout_panel_pago_resumen,
+.tv_checkout_exito {
+  border-radius: 30px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 245, 247, 0.96));
+  padding: 28px;
+}
+
+.tv_checkout_pago_layout,
+.tv_checkout_compacto {
+  gap: 22px;
+}
+
+.tv_checkout_metodos_pago {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tv_checkout_metodo_pago_card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 239, 244, 0.96));
+  border: 1px solid rgba(191, 175, 208, 0.32);
+  border-radius: 24px;
+  min-height: 148px;
+  padding: 20px;
+}
+
+.tv_checkout_metodo_pago_card input {
+  display: none;
+}
+
+.tv_checkout_metodo_pago_card .tv_checkout_metodo_visual {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  height: 100%;
+}
+
+.tv_checkout_metodo_pago_card .tv_checkout_metodo_icono_svg,
+.tv_checkout_metodo_pago_card .tv_checkout_metodo_icono_media {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(221, 212, 231, 0.8), rgba(245, 207, 198, 0.75));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.tv_checkout_metodo_pago_card .tv_checkout_metodo_textos span {
+  display: block;
+  font-size: 1.9rem;
+  font-family: "Cormorant Garamond", serif;
+  color: #6d5366;
+}
+
+.tv_checkout_metodo_pago_card .tv_checkout_metodo_textos small {
+  color: #7d6f82;
+  line-height: 1.55;
+}
+
+.tv_checkout_metodo_pago_card_activo,
+.tv_checkout_metodo_pago_card:has(input:checked) {
+  border-color: rgba(181, 149, 186, 0.68);
+  background: linear-gradient(180deg, rgba(221, 212, 231, 0.34), rgba(255, 255, 255, 0.96));
+  box-shadow: 0 22px 48px rgba(191, 149, 186, 0.18);
+}
+
+.tv_checkout_tarjeta_preview,
+.tv_checkout_alerta_compacta,
+.tv_checkout_entrega_resumen {
+  border-radius: 24px;
+  padding: 22px;
+  background: linear-gradient(180deg, rgba(243, 214, 211, 0.55), rgba(255, 255, 255, 0.92));
+}
+
+.tv_checkout_check_label {
+  min-height: 58px;
+  border-radius: 20px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(191, 175, 208, 0.32);
+}
+
+.tv_checkout_exito_pago,
+.tv_checkout_exito {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.tv_checkout_exito_botones {
+  gap: 14px;
+}
+
+.tv_footer {
+  background: linear-gradient(180deg, rgba(248, 240, 243, 0.95), rgba(233, 221, 232, 0.95));
+  border-top: 1px solid rgba(212, 182, 202, 0.25);
+}
+
+.tv_footer_contenido {
+  padding-top: 28px;
+  padding-bottom: 28px;
+}
+
+@media (max-width: 1100px) {
+  .tv_bloque,
+  .tv_checkout_pagina,
+  .tv_checkout_compacto,
+  .tv_checkout_pago_layout {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .tv_hero_store_layout,
+  .tv_bloque_encabezado_catalogo,
+  .tv_checkout_intro,
+  .tv_checkout_pago_encabezado {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tv_filtros_catalogo_panel {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .tv_brand h1,
+  .tv_logo_texto {
+    font-size: 2.3rem;
+  }
+
+  .tv_bloque,
+  .tv_checkout_pagina,
+  .tv_checkout_compacto,
+  .tv_checkout_pago_layout {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .tv_hero_store_principal,
+  .tv_hero_store_secundario,
+  .tv_checkout_panel,
+  .tv_checkout_panel_resumen,
+  .tv_checkout_panel_pago_resumen,
+  .tv_checkout_exito,
+  .tv_producto_card {
+    border-radius: 24px;
+    padding: 20px;
+  }
+
+  .tv_checkout_metodos_pago {
+    grid-template-columns: 1fr;
+  }
+
+  .tv_checkout_intro_texto h1,
+  .tv_checkout_pago_encabezado h1,
+  .tv_hero_store_texto h1 {
+    font-size: 3.3rem;
+  }
+}

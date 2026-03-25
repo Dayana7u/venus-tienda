@@ -12,7 +12,7 @@ $imagenes = $producto['imagenes'] ?? [];
 $precio = (int) ($producto['precio'] ?? 0);
 $precio_anterior = (int) ($producto['precio_anterior'] ?? 0);
 
-tienda_render_head(empty($producto) ? 'Producto' : $producto['nombre'], $tema_tokens, $componentes);
+tienda_render_head(empty($producto) ? 'Producto' : $producto['nombre'], $tema_tokens, $componentes, $contexto['tema'] ?? []);
 ?>
 <body>
   <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>

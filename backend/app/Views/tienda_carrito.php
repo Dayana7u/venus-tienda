@@ -7,7 +7,7 @@ $tema_tokens = $contexto['tema_tokens'] ?? [];
 $componentes = $contexto['componentes'] ?? [];
 $carrito = $tv_datos['carrito'] ?? ['items' => [], 'subtotal' => 0, 'envio' => 0, 'total' => 0, 'ahorro' => 0];
 
-tienda_render_head('Carrito', $tema_tokens, $componentes);
+tienda_render_head('Carrito', $tema_tokens, $componentes, $contexto['tema'] ?? []);
 ?>
 <body>
   <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>

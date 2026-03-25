@@ -179,3 +179,43 @@ Se incorpora el script `016_sql_pasarela_pago_base.sql` para registrar pagos en 
 Se ajusta el carrito para redirigir a `/checkout/` desde la vista completa y desde el drawer lateral.
 
 - Se ajusta checkout para validar por método de pago, registrar referencia interna y dejar módulo de pagos para seguimiento administrativo.
+
+
+Se evidencia que, el checkout se dividió en dos vistas: /checkout/ para datos del pedido y /checkout/pago/ para método de pago, con adaptación del formulario según PSE, tarjeta o contra entrega y con resumen dinámico de productos del carrito.
+
+## V24 · Checkout pasarela Wompi y alertas bloqueantes
+- Se separa y mejora la vista de pago del checkout con flujo compacto por método.
+- Se adiciona configuración de pasarela Wompi por archivo de configuración y servicio dedicado.
+- Se prepara tokenización directa de tarjeta con llave pública, detección automática de franquicia y validaciones finas.
+- Se adiciona flujo PSE real con redirección bancaria cuando la configuración de llaves esté habilitada.
+- Se incorporan alertas bloqueantes tipo modal para confirmación y validación en checkout.
+
+## v25
+- Se corrige el flujo de checkout y pago sobre la base v24.
+- Se agrega envío correcto del titular de tarjeta hacia el backend para evitar bloqueo en el cobro con tarjeta.
+- Se endurecen validaciones de celular, teléfono, documentos, titular, fecha y CVV.
+- Se mantiene modal bloqueante para confirmaciones/validaciones y se agrega toast informativo flotante para avisos no críticos.
+- Se ajustan campos numéricos y experiencia visual del formulario de pago.
+
+
+## v26 · Checkout parametrizable, soporte y comprobante
+Se evidencia que, el checkout y la confirmación comercial se ajustan para cerrar huecos visuales y funcionales sin romper la base multivista ni la parametrización ya acordada.
+
+Novedades y Modificaciones
+- Se ajusta `backend/app/Models/tienda_checkout_model.class.php` para validar los campos del checkout y del pago según la configuración visible y obligatoria del módulo `TIENDA_PUBLICA`.
+- Se ajustan `backend/app/Views/tienda_checkout.php` y `backend/app/Views/tienda_checkout_pago.php` para consumir textos, labels, placeholders, mensajes y acciones desde la parametrización del módulo público.
+- Se ajusta `backend/public/assets/js/tienda_checkout.js` y `backend/public/assets/js/tienda_checkout_pago.js` para sostener validación dinámica, selección visual de método de pago y confirmaciones bloqueantes dentro del flujo de compra.
+- Se ajusta `backend/public/assets/css/tienda_publica.css` para ampliar margen lateral en `/checkout/` y `/checkout/pago/`, reemplazar el punto del radio por tarjetas con ícono y mejorar la posición del filtro en catálogo.
+- Se ajustan `backend/app/Models/tienda_contacto_model.class.php` y `backend/app/Views/tienda_contacto.php` para soportar atención postcompra desde la confirmación del pedido.
+- Se agregan `backend/app/Models/tienda_pedido_comprobante_model.class.php`, `backend/app/Controllers/tienda_pedido_comprobante_controller.php`, `backend/app/Views/tienda_pedido_comprobante.php` y `backend/pedido/comprobante/index.php` para el comprobante público listo para impresión.
+- Se agrega `database/sql/018_sql_checkout_parametrizable_visual_y_soporte.sql` para sembrar configuraciones parametrizables del checkout, pago y confirmación dentro de `system.modulo_configuraciones`.
+
+## v28 · Tema VENUS con CSS separado por tema
+Se evidencia que, la base visual del ecommerce pasa a consumir un tema real por archivo CSS separado, sin sobrescribir el tema pink y sin dejar el diseño quemado dentro del mismo stylesheet general.
+
+Novedades y Modificaciones
+- Se ajusta `backend/app/Views/tienda/tienda_helper.php` para cargar de forma dinámica un CSS específico del tema activo en la tienda pública.
+- Se ajustan las vistas públicas para enviar el tema activo al helper y permitir que cada identidad visual consuma su stylesheet sin tocar la lógica comercial.
+- Se ajusta `backend/app/Views/tienda_admin/tienda_admin_helper.php` para consultar el tema activo, mostrarlo en el panel y cargar un CSS específico del tema administrativo.
+- Se agregan `backend/public/assets/css/themes/tienda/venus.css` y `backend/public/assets/css/themes/admin/venus.css` con la propuesta visual VENUS para tienda pública y panel administrativo.
+- Se agrega `database/sql/019_sql_tema_venus_parametrizable.sql` para crear el tema `VENUS`, clonar tokens y componentes desde `PINK_NUDE`, actualizar la paleta y dejar activo el nuevo tema.

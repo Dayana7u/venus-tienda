@@ -20,7 +20,7 @@ $items_linea = [
   'cabello' => ['titulo' => 'Cabello', 'descripcion' => 'Tratamientos y apoyo para styling.'],
 ];
 
-tienda_render_head('Tienda pública', $tema_tokens, $componentes);
+tienda_render_head('Tienda pública', $tema_tokens, $componentes, $contexto['tema'] ?? []);
 ?>
 <body>
   <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>

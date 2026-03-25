@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   ];
 
   switch ($accion) {
-    case 'guardar_checkout_datos':
-      $respuesta = $tienda_checkout_model->guardar_checkout_datos_tienda();
+    case 'guardar_checkout_pago':
+      $respuesta = $tienda_checkout_model->guardar_checkout_pago_tienda();
       break;
   }
 
@@ -28,14 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   if (($respuesta['estado'] ?? false) === true) {
-    header('Location: ' . ($respuesta['datos']['redirect'] ?? '/checkout/'));
+    header('Location: ' . ($respuesta['datos']['redirect'] ?? '/checkout/pago/'));
     exit;
   }
 
-  $_SESSION['tv_mensaje'] = $respuesta['mensaje'] ?? 'No fue posible continuar con el checkout.';
-  header('Location: /checkout/');
+  $_SESSION['tv_mensaje'] = $respuesta['mensaje'] ?? 'No fue posible continuar con el pago.';
+  header('Location: /checkout/pago/');
   exit;
 }
 
-$tv_datos = $tienda_checkout_model->consultar_checkout_modulo_tienda();
+$tv_datos = $tienda_checkout_model->consultar_checkout_pago_modulo_tienda();
 ?>

@@ -1,0 +1,147 @@
+.tda_admin_body {
+  background:
+    radial-gradient(circle at top left, rgba(221, 212, 231, 0.52), transparent 24%),
+    linear-gradient(180deg, #fffdfd 0%, #faf5f8 55%, #f7f0f5 100%);
+  color: #655c6d;
+  font-family: "Inter", "Poppins", sans-serif;
+}
+
+.tda_admin_layout {
+  gap: 20px;
+  padding: 18px;
+}
+
+.tda_admin_sidebar {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(241, 233, 242, 0.94));
+  border: 1px solid rgba(212, 182, 202, 0.38);
+  box-shadow: 0 24px 50px rgba(191, 175, 208, 0.14);
+  border-radius: 26px;
+}
+
+.tda_admin_brand_logo,
+.tda_admin_usuario_avatar {
+  background: linear-gradient(135deg, #ddd4e7 0%, #d4b6ca 55%, #f5cfc6 100%);
+  color: #7c637a;
+  box-shadow: 0 14px 28px rgba(191, 149, 186, 0.2);
+}
+
+.tda_admin_brand h1,
+.tda_admin_pagina_encabezado h2,
+.tda_admin_panel_titulo,
+.tda_admin_card_kpi strong,
+.tda_admin_tabla thead th,
+.tda_admin_modal_encabezado h3 {
+  font-family: "Cormorant Garamond", "Playfair Display", serif;
+  color: #66515f;
+  letter-spacing: -0.02em;
+}
+
+.tda_admin_badge,
+.tda_admin_etiqueta,
+.tda_admin_chip,
+.tda_admin_panel_badge {
+  background: rgba(221, 212, 231, 0.76);
+  border: 1px solid rgba(191, 175, 208, 0.45);
+  color: #8c6e89;
+  border-radius: 999px;
+}
+
+.tda_admin_nav_link,
+.tda_admin_topbar,
+.tda_admin_card,
+.tda_admin_panel,
+.tda_admin_usuario_chip,
+.tda_admin_modal_dialogo,
+.tda_admin_tabla_contenedor,
+.tda_admin_formulario,
+.tda_admin_resumen_card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(212, 182, 202, 0.34);
+  box-shadow: 0 20px 42px rgba(191, 175, 208, 0.12);
+}
+
+.tda_admin_nav_link {
+  border-radius: 20px;
+  min-height: 56px;
+}
+
+.tda_admin_nav_link.tda_admin_nav_activo,
+.tda_admin_nav_link:hover {
+  background: linear-gradient(90deg, rgba(221, 212, 231, 0.72), rgba(243, 214, 211, 0.78));
+  border-color: rgba(191, 175, 208, 0.5);
+  color: #6f596d;
+}
+
+.tda_admin_topbar {
+  border-radius: 24px;
+  padding: 14px 18px;
+}
+
+.tda_admin_topbar_busqueda input,
+.tda_admin_formulario input,
+.tda_admin_formulario select,
+.tda_admin_formulario textarea,
+.tda_admin_filtros input,
+.tda_admin_filtros select {
+  min-height: 52px;
+  border-radius: 18px;
+  border: 1px solid rgba(191, 175, 208, 0.42);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.tda_btn_principal {
+  background: linear-gradient(90deg, #b595ba 0%, #c89ab6 50%, #d4b6ca 100%);
+  border: 0;
+  color: #fffefd;
+  box-shadow: 0 14px 28px rgba(191, 149, 186, 0.22);
+}
+
+.tda_btn_secundario {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(191, 175, 208, 0.42);
+  color: #7a6177;
+}
+
+.tda_admin_card_kpi,
+.tda_admin_panel,
+.tda_admin_tabla_contenedor,
+.tda_admin_formulario,
+.tda_admin_modal_dialogo {
+  border-radius: 26px;
+}
+
+.tda_admin_card_kpi_icono {
+  background: linear-gradient(135deg, rgba(221, 212, 231, 0.95), rgba(243, 214, 211, 0.95));
+  color: #836884;
+}
+
+.tda_admin_sidebar_footer {
+  background: linear-gradient(180deg, rgba(221, 212, 231, 0.38), rgba(243, 214, 211, 0.28));
+  border-radius: 22px;
+  border: 1px solid rgba(212, 182, 202, 0.28);
+}
+
+.tda_admin_panel_grafico,
+.tda_admin_panel_estado {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 241, 245, 0.96));
+}
+
+.tda_admin_tabla thead th {
+  font-size: 1.65rem;
+  color: #6c5968;
+}
+
+.tda_admin_tabla tbody tr:hover {
+  background: rgba(243, 214, 211, 0.18);
+}
+
+.tda_admin_modal_backdrop {
+  backdrop-filter: blur(6px);
+  background: rgba(95, 82, 100, 0.24);
+}
+
+@media (max-width: 1024px) {
+  .tda_admin_layout {
+    padding: 12px;
+  }
+}

@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../../config/configdb.php';
+
 function tienda_admin_mbstring_disponible() {
   return extension_loaded('mbstring');
 }
@@ -99,7 +101,82 @@ function tienda_admin_obtener_resumen_sidebar($pagina_activa) {
   return $resumenes[strtoupper((string) $pagina_activa)] ?? 'Panel comercial de administración de tienda.';
 }
 
+
+function tienda_admin_obtener_tema_activo() {
+  static $tema = null;
+
+  if ($tema !== null) {
+    return $tema;
+  }
+
+  $tema = [
+    'codigo' => 'PINK_NUDE',
+    'nombre' => 'Pink Nude',
+  ];
+
+  try {
+    $dbh = configdb_obtener_conexion();
+    $sql = "SELECT
+"
+         . "  tem.codigo,
+"
+         . "  tem.nombre
+"
+         . "FROM
+"
+         . "  system.modulo_configuraciones mco
+"
+         . "  INNER JOIN system.temas tem
+"
+         . "    ON tem.codigo = mco.valor
+"
+         . "    AND tem.estado = B'1'
+"
+         . "    AND tem.borrado = B'0'
+"
+         . "WHERE
+"
+         . "  mco.codigo = 'tienda_publica.tema_activo'
+"
+         . "  AND mco.estado = B'1'
+"
+         . "  AND mco.borrado = B'0'
+"
+         . "LIMIT 1;";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $registro = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($registro) {
+      $tema = $registro;
+    }
+  }
+  catch (Throwable $e) {
+    $tema = $tema;
+  }
+
+  return $tema;
+}
+
+function tienda_admin_obtener_css_tema() {
+  $tema = tienda_admin_obtener_tema_activo();
+  $codigo_tema = strtolower(trim((string) ($tema['codigo'] ?? '')));
+
+  if ($codigo_tema === '') {
+    return '';
+  }
+
+  $ruta_absoluta = $_SERVER['DOCUMENT_ROOT'] . '/public/assets/css/themes/admin/' . $codigo_tema . '.css';
+
+  if (!file_exists($ruta_absoluta)) {
+    return '';
+  }
+
+  return '/public/assets/css/themes/admin/' . $codigo_tema . '.css';
+}
+
 function tienda_admin_render_head($titulo = 'Admin tienda') {
+  $css_tema = tienda_admin_obtener_css_tema();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -107,8 +184,14 @@ function tienda_admin_render_head($titulo = 'Admin tienda') {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?php echo htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8'); ?></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/public/assets/css/admin_base.css">
   <link rel="stylesheet" href="/public/assets/css/tienda_admin.css">
+  <?php if ($css_tema !== '') { ?>
+  <link rel="stylesheet" href="<?php echo htmlspecialchars($css_tema, ENT_QUOTES, 'UTF-8'); ?>">
+  <?php } ?>
 </head>
 <?php
 }
@@ -117,6 +200,10 @@ function tienda_admin_render_layout_inicio($pagina_activa, $titulo, $subtitulo) 
   $usuario_nombre = $_SESSION['tienda_admin_usuario_nombre_completo'] ?? 'Administrador tienda';
   $usuario_iniciales = tienda_admin_obtener_iniciales_usuario($usuario_nombre);
   $resumen_sidebar = tienda_admin_obtener_resumen_sidebar($pagina_activa);
+  $tema_activo = tienda_admin_obtener_tema_activo();
+  $tema_codigo = (string) ($tema_activo['codigo'] ?? 'PINK_NUDE');
+  $tema_nombre = (string) ($tema_activo['nombre'] ?? 'Pink Nude');
+  $logo_inicial = tienda_admin_texto_substring($tema_nombre, 0, 1);
 ?>
 <body class="tda_admin_body" data-pagina-activa="<?php echo htmlspecialchars($pagina_activa, ENT_QUOTES, 'UTF-8'); ?>">
   <input type="hidden" id="token" value="<?php echo htmlspecialchars($_SESSION['tienda_admin_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
@@ -128,7 +215,7 @@ function tienda_admin_render_layout_inicio($pagina_activa, $titulo, $subtitulo) 
     <aside class="tda_admin_sidebar">
       <div class="tda_admin_sidebar_superior">
         <div class="tda_admin_brand tda_admin_brand_stack">
-          <div class="tda_admin_brand_logo">B</div>
+          <div class="tda_admin_brand_logo"><?php echo htmlspecialchars($logo_inicial !== '' ? $logo_inicial : 'T', ENT_QUOTES, 'UTF-8'); ?></div>
           <div>
             <span class="tda_admin_badge">Tienda</span>
             <h1><?php echo htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8'); ?></h1>
@@ -200,8 +287,8 @@ function tienda_admin_render_layout_inicio($pagina_activa, $titulo, $subtitulo) 
 
       <div class="tda_admin_sidebar_footer">
         <span class="tda_admin_etiqueta">Tema</span>
-        <strong>PINK_NUDE</strong>
-        <p>Identidad activa para el catálogo y la operación de la tienda.</p>
+        <strong><?php echo htmlspecialchars($tema_codigo, ENT_QUOTES, 'UTF-8'); ?></strong>
+        <p>Identidad activa para el catálogo y la operación de la tienda. Tema visible: <?php echo htmlspecialchars($tema_nombre, ENT_QUOTES, 'UTF-8'); ?>.</p>
       </div>
     </aside>
 

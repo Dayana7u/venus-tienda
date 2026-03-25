@@ -141,8 +141,118 @@ function tienda_generar_variables_css($tema_tokens = [], $componentes = []) {
   return $css;
 }
 
-function tienda_render_head($titulo, $tema_tokens = [], $componentes = []) {
+
+function tienda_obtener_configuracion_modulo_publico($modulo = [], $codigo = '', $valor_defecto = '') {
+  $configuraciones = $modulo['configuraciones'] ?? [];
+
+  if (!isset($configuraciones[$codigo])) {
+    return $valor_defecto;
+  }
+
+  $valor = $configuraciones[$codigo]['valor'] ?? $valor_defecto;
+  return $valor !== null && $valor !== '' ? $valor : $valor_defecto;
+}
+
+function tienda_obtener_booleano_modulo_publico($modulo = [], $codigo = '', $valor_defecto = true) {
+  $valor = strtolower(trim((string) tienda_obtener_configuracion_modulo_publico($modulo, $codigo, $valor_defecto === true ? '1' : '0')));
+
+  return in_array($valor, ['1', 'true', 'si', 'sí', 'yes', 'on'], true);
+}
+
+function tienda_obtener_definicion_campo_publico($modulo = [], $prefijo = '', $definicion = []) {
+  return [
+    'label'       => tienda_obtener_configuracion_modulo_publico($modulo, $prefijo . '.label', $definicion['label'] ?? ''),
+    'placeholder' => tienda_obtener_configuracion_modulo_publico($modulo, $prefijo . '.placeholder', $definicion['placeholder'] ?? ''),
+    'visible'     => tienda_obtener_booleano_modulo_publico($modulo, $prefijo . '.visible', $definicion['visible'] ?? true),
+    'requerido'   => tienda_obtener_booleano_modulo_publico($modulo, $prefijo . '.required', $definicion['requerido'] ?? true),
+  ];
+}
+
+function tienda_formatear_metodo_pago_publico($metodo_pago = '') {
+  switch ((string) $metodo_pago) {
+    case 'tarjeta':
+      return 'Tarjeta';
+
+    case 'pse':
+      return 'PSE';
+
+    case 'contra_entrega':
+      return 'Contra entrega';
+
+    default:
+      return ucfirst(str_replace('_', ' ', (string) $metodo_pago));
+  }
+}
+
+function tienda_formatear_telefono_whatsapp_publico($telefono = '') {
+  $numero = preg_replace('/\D+/', '', (string) $telefono);
+
+  if ($numero === '') {
+    return '';
+  }
+
+  if (strlen($numero) == 10) {
+    return '57' . $numero;
+  }
+
+  if (strpos($numero, '57') === 0) {
+    return $numero;
+  }
+
+  return $numero;
+}
+
+function tienda_render_icono_metodo_pago_publico($metodo = '', $icono = '') {
+  $icono = trim((string) $icono);
+
+  if ($icono !== '') {
+    return '<span class="tv_checkout_metodo_icono_media"><img src="' . htmlspecialchars($icono, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars((string) $metodo, ENT_QUOTES, 'UTF-8') . '"></span>';
+  }
+
+  switch ((string) $metodo) {
+    case 'tarjeta':
+      return '<span class="tv_checkout_metodo_icono_svg" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><rect x="8" y="14" width="48" height="36" rx="10"></rect><path d="M8 24h48"></path><path d="M18 39h10"></path><path d="M34 39h12"></path></svg></span>';
+
+    case 'pse':
+      return '<span class="tv_checkout_metodo_icono_svg" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><path d="M14 24h36a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H14z"></path><path d="M20 20h24"></path><path d="M24 34h12"></path><path d="M46 20l4 4-4 4"></path></svg></span>';
+
+    case 'contra_entrega':
+      return '<span class="tv_checkout_metodo_icono_svg" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><path d="M14 24h26v22H14z"></path><path d="M40 30h8l4 6v10H40z"></path><circle cx="24" cy="48" r="4"></circle><circle cx="46" cy="48" r="4"></circle></svg></span>';
+
+    default:
+      return '<span class="tv_checkout_metodo_icono_svg" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><circle cx="32" cy="32" r="18"></circle></svg></span>';
+  }
+}
+
+function tienda_generar_url_whatsapp_soporte_publico($telefono = '', $mensaje = '') {
+  $telefono = tienda_formatear_telefono_whatsapp_publico($telefono);
+
+  if ($telefono === '') {
+    return '';
+  }
+
+  return 'https://wa.me/' . rawurlencode($telefono) . '?text=' . rawurlencode((string) $mensaje);
+}
+
+function tienda_obtener_css_tema_publico($tema = []) {
+  $codigo_tema = strtolower(trim((string) ($tema['codigo'] ?? '')));
+
+  if ($codigo_tema === '') {
+    return '';
+  }
+
+  $ruta_absoluta = $_SERVER['DOCUMENT_ROOT'] . '/public/assets/css/themes/tienda/' . $codigo_tema . '.css';
+
+  if (!file_exists($ruta_absoluta)) {
+    return '';
+  }
+
+  return '/public/assets/css/themes/tienda/' . $codigo_tema . '.css';
+}
+
+function tienda_render_head($titulo, $tema_tokens = [], $componentes = [], $tema = []) {
   $css_variables = tienda_generar_variables_css($tema_tokens, $componentes);
+  $css_tema = tienda_obtener_css_tema_publico($tema);
 
   echo '<!DOCTYPE html>';
   echo '<html lang="es">';
@@ -152,8 +262,13 @@ function tienda_render_head($titulo, $tema_tokens = [], $componentes = []) {
   echo '  <title>' . htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') . '</title>';
   echo '  <link rel="preconnect" href="https://fonts.googleapis.com">';
   echo '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
-  echo '  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">';
+  echo '  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">';
   echo '  <link rel="stylesheet" href="/public/assets/css/tienda_publica.css">';
+
+  if ($css_tema !== '') {
+    echo '  <link rel="stylesheet" href="' . htmlspecialchars($css_tema, ENT_QUOTES, 'UTF-8') . '">';
+  }
+
   echo '  <style>' . PHP_EOL . $css_variables . '  </style>';
   echo '</head>';
 }

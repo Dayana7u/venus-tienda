@@ -526,7 +526,7 @@ class tienda_publica_model {
     }
   }
 
-  private function consultar_modulo_configuraciones_tienda_publica($modulo_id) {
+  protected function consultar_modulo_configuraciones_tienda_publica($modulo_id) {
     $stmt = null;
     $datos = [];
 
@@ -594,7 +594,7 @@ class tienda_publica_model {
     }
   }
 
-  private function consultar_valor_modulo_tienda_publica($codigo, $valor_defecto) {
+  protected function consultar_valor_modulo_tienda_publica($codigo, $valor_defecto) {
     $stmt = null;
 
     try {

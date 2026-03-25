@@ -112,3 +112,15 @@ Se evidencia que, se incorporan rutas locales de imágenes de prueba para catego
 
 Checkout y pago base
 Se evidencia que, el proyecto incorpora una etapa de checkout separada del carrito, con persistencia de cliente, dirección, pedido y pago para soportar la operación comercial del ecommerce y dejar lista la integración posterior con pasarela real.
+
+## Checkout y pasarela
+- El frente público usa `/checkout/` para datos de comprador y `/checkout/pago/` para el cobro.
+- La integración de pago se prepara con servicio `pasarela_wompi_service.class.php` y configuración `backend/config/pasarela_wompi.php`.
+- Para activar pagos reales se deben definir `WOMPI_ENABLED`, `WOMPI_PUBLIC_KEY`, `WOMPI_PRIVATE_KEY`, `WOMPI_INTEGRITY_KEY` y `APP_BASE_URL`.
+
+## v25
+- Se corrige el flujo de checkout y pago sobre la base v24.
+- Se agrega envío correcto del titular de tarjeta hacia el backend para evitar bloqueo en el cobro con tarjeta.
+- Se endurecen validaciones de celular, teléfono, documentos, titular, fecha y CVV.
+- Se mantiene modal bloqueante para confirmaciones/validaciones y se agrega toast informativo flotante para avisos no críticos.
+- Se ajustan campos numéricos y experiencia visual del formulario de pago.

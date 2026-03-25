@@ -104,5 +104,28 @@ Se ajustó `/contacto/` para recibir datos del pedido y dejar acciones directas 
 Se amplió el margen útil de `/checkout/` y `/checkout/pago/`, se estilizaron las tarjetas de métodos de pago con íconos visibles y se reorganizó el panel de filtros del catálogo.
 
 
-## Tema visual por stylesheet
-Se evidencia que, la tienda pública y el panel administrativo ya quedan preparados para consumir una hoja de estilos propia por tema activo, manteniendo la lógica funcional y la parametrización visual desde `system.temas`, `system.tema_tokens` y `system.tema_componentes`.
+## Nuevo tema `VENUS`
+
+Se agregó `019_sql_tema_venus_base.sql` para crear el nuevo tema `VENUS` sobre la misma base funcional de `PINK_NUDE`, conservando ambos temas dentro de la parametrización.
+
+El nuevo tema deja activa la paleta `#DDD4E7`, `#BFAFD0`, `#D4B6CA`, `#F3D6D3`, `#F5CFC6` y ajusta la identidad comercial visible de la tienda pública a `VENUS`.
+
+
+Tema VENUS parametrizable
+Se evidencia que, el frente visual VENUS ahora se aplica mediante archivos CSS por tema y no únicamente por tokens guardados en base de datos.
+Se evidencia que, la tienda pública carga el archivo del tema activo desde backend/public/assets/css/themes/tienda/, mientras el panel administrativo lo hace desde backend/public/assets/css/themes/admin/.
+Se evidencia que, esta estructura conserva la parametrización visual y permite mantener temas paralelos, como pink y venus, sin mezclar estilos ni sobrescribir la base anterior.
+
+
+Home VENUS
+Se evidencia que, la página principal del tema VENUS se ajusta a una composición editorial con hero visual, navegación superior liviana, categorías circulares, productos destacados compactos, bloques promocionales y footer integrado dentro del mismo contenedor visual.
+Se evidencia que, este ajuste no modifica la lógica funcional de carrito, catálogo, producto, checkout ni pedido; únicamente aterriza la capa visual de la portada para alinearla con la guía enviada para escritorio y con soporte responsive para móvil.
+
+## Ajuste visual integral tema VENUS
+Se evidencia que, el homepage VENUS ahora consume productos, imágenes y líneas reales del catálogo, evitando tarjetas fijas que no correspondan a la operación comercial visible.
+
+Novedades y Modificaciones
+Se dejó el hero principal preparado para tomar un producto configurado por slug o, en su defecto, el primer destacado activo.
+Se dejó el bloque de destacados preparado para seleccionar hasta cuatro productos por slug desde `system.modulo_configuraciones` o completar con destacados reales del catálogo.
+Se dejó el homepage preparado para consumir banner principal y banner secundario parametrizables, manteniendo respaldo visual cuando aún no exista material cargado.
+Se unificó la identidad visual VENUS sobre catálogo, detalle, carrito, checkout, pago y panel tienda para continuar los siguientes ajustes sobre una misma base estética.

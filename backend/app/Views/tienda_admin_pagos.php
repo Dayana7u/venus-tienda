@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/tienda_admin/tienda_admin_helper.php';
 
-tienda_admin_render_head('Admin tienda - Pagos');
-tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo comercial para revisar transacciones registradas, referencias y estados del pago.');
+tienda_admin_render_head('Admin tienda - Pagos', $tda_tema ?? []);
+tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo comercial para revisar transacciones registradas, referencias y estados del pago.', $tda_branding ?? [], $tda_tema ?? []);
 ?>
       <section class="tda_admin_bloque">
         <div class="tda_admin_bloque_encabezado">

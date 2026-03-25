@@ -5,6 +5,7 @@ $branding = $contexto['branding'] ?? [];
 $menus = $contexto['menus'] ?? [];
 $tema_tokens = $contexto['tema_tokens'] ?? [];
 $componentes = $contexto['componentes'] ?? [];
+$tema = $contexto['tema'] ?? [];
 $carrito = $tv_datos['carrito'] ?? ['items' => [], 'subtotal' => 0, 'envio' => 0, 'total' => 0, 'ahorro' => 0];
 $checkout_datos = $tv_datos['checkout_datos'] ?? [];
 $modulo = $contexto['modulo'] ?? [];
@@ -94,11 +95,11 @@ $campos_checkout = [
   ]),
 ];
 
-tienda_render_head('Checkout · Datos del pedido', $tema_tokens, $componentes, $contexto['tema'] ?? []);
+tienda_render_head('Checkout · Datos del pedido', $tema_tokens, $componentes, $tema);
 ?>
 <body>
   <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>
-  <?php tienda_render_header($branding, $menus, 'CHECKOUT'); ?>
+  <?php tienda_render_header($branding, $menus, 'CHECKOUT', $tema); ?>
   <?php tienda_render_flash(); ?>
 
   <main class="tv_pagina_modulo tv_checkout_pagina">
@@ -261,7 +262,7 @@ tienda_render_head('Checkout · Datos del pedido', $tema_tokens, $componentes, $
     <?php } ?>
   </main>
 
-  <?php tienda_render_footer($branding, $menus); ?>
+  <?php tienda_render_footer($branding, $menus, $tema); ?>
   <?php tienda_render_carrito_drawer($carrito); ?>
   <?php tienda_render_public_scripts(); ?>
   <script src="/public/assets/js/tienda_checkout_template.js"></script>

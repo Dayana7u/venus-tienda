@@ -159,6 +159,21 @@ function tienda_obtener_booleano_modulo_publico($modulo = [], $codigo = '', $val
   return in_array($valor, ['1', 'true', 'si', 'sí', 'yes', 'on'], true);
 }
 
+function tienda_obtener_parametro_publico($parametros = [], $codigo = '', $valor_defecto = '') {
+  if (!isset($parametros[$codigo])) {
+    return $valor_defecto;
+  }
+
+  $valor = $parametros[$codigo];
+  return $valor !== null && $valor !== '' ? $valor : $valor_defecto;
+}
+
+function tienda_obtener_booleano_parametro_publico($parametros = [], $codigo = '', $valor_defecto = true) {
+  $valor = strtolower(trim((string) tienda_obtener_parametro_publico($parametros, $codigo, $valor_defecto === true ? '1' : '0')));
+
+  return in_array($valor, ['1', 'true', 'si', 'sí', 'yes', 'on'], true);
+}
+
 function tienda_obtener_definicion_campo_publico($modulo = [], $prefijo = '', $definicion = []) {
   return [
     'label'       => tienda_obtener_configuracion_modulo_publico($modulo, $prefijo . '.label', $definicion['label'] ?? ''),
@@ -202,6 +217,37 @@ function tienda_formatear_telefono_whatsapp_publico($telefono = '') {
   return $numero;
 }
 
+
+function tienda_tema_es_venus_publico($tema = []) {
+  $codigo_tema = is_array($tema) ? (string) ($tema['codigo'] ?? '') : (string) $tema;
+  return strtolower(trim($codigo_tema)) === 'venus';
+}
+
+function tienda_obtener_logo_tema_publico($branding = [], $tema = []) {
+  $logo_principal = trim((string) ($branding['logo_principal'] ?? ''));
+
+  if (tienda_tema_es_venus_publico($tema)) {
+    return '/public/assets/img/themes/venus/logo_venus_principal.png';
+  }
+
+  if ($logo_principal !== '') {
+    return $logo_principal;
+  }
+
+  return '';
+}
+
+function tienda_render_logo_publico($branding = [], $tema = [], $clase = 'tv_logo') {
+  $nombre = trim((string) ($branding['nombre_comercial'] ?? 'Tienda Pública Base'));
+  $logo = tienda_obtener_logo_tema_publico($branding, $tema);
+
+  if ($logo !== '') {
+    return '<span class="' . htmlspecialchars($clase, ENT_QUOTES, 'UTF-8') . ' tv_logo_marca"><img src="' . htmlspecialchars($logo, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . '" class="tv_logo_imagen"><span class="tv_sr_only">' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . '</span></span>';
+  }
+
+  return '<span class="' . htmlspecialchars($clase, ENT_QUOTES, 'UTF-8') . ' tv_logo_texto">' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . '</span>';
+}
+
 function tienda_render_icono_metodo_pago_publico($metodo = '', $icono = '') {
   $icono = trim((string) $icono);
 
@@ -234,16 +280,24 @@ function tienda_generar_url_whatsapp_soporte_publico($telefono = '', $mensaje = 
   return 'https://wa.me/' . rawurlencode($telefono) . '?text=' . rawurlencode((string) $mensaje);
 }
 
-function tienda_obtener_css_tema_publico($tema = []) {
-  $codigo_tema = strtolower(trim((string) ($tema['codigo'] ?? '')));
+
+function tienda_normalizar_codigo_tema_publico($tema = []) {
+  $codigo_tema = is_array($tema) ? (string) ($tema['codigo'] ?? '') : (string) $tema;
+  $codigo_tema = strtolower(trim($codigo_tema));
+  $codigo_tema = preg_replace('/[^a-z0-9]+/', '_', $codigo_tema);
+  return trim((string) $codigo_tema, '_');
+}
+
+function tienda_obtener_archivo_css_tema_publico($tema = []) {
+  $codigo_tema = tienda_normalizar_codigo_tema_publico($tema);
 
   if ($codigo_tema === '') {
     return '';
   }
 
-  $ruta_absoluta = $_SERVER['DOCUMENT_ROOT'] . '/public/assets/css/themes/tienda/' . $codigo_tema . '.css';
+  $ruta_archivo = __DIR__ . '/../../../public/assets/css/themes/tienda/' . $codigo_tema . '.css';
 
-  if (!file_exists($ruta_absoluta)) {
+  if (!is_file($ruta_archivo)) {
     return '';
   }
 
@@ -252,7 +306,7 @@ function tienda_obtener_css_tema_publico($tema = []) {
 
 function tienda_render_head($titulo, $tema_tokens = [], $componentes = [], $tema = []) {
   $css_variables = tienda_generar_variables_css($tema_tokens, $componentes);
-  $css_tema = tienda_obtener_css_tema_publico($tema);
+  $archivo_css_tema = tienda_obtener_archivo_css_tema_publico($tema);
 
   echo '<!DOCTYPE html>';
   echo '<html lang="es">';
@@ -262,14 +316,13 @@ function tienda_render_head($titulo, $tema_tokens = [], $componentes = [], $tema
   echo '  <title>' . htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') . '</title>';
   echo '  <link rel="preconnect" href="https://fonts.googleapis.com">';
   echo '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
-  echo '  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">';
+  echo '  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">';
   echo '  <link rel="stylesheet" href="/public/assets/css/tienda_publica.css">';
-
-  if ($css_tema !== '') {
-    echo '  <link rel="stylesheet" href="' . htmlspecialchars($css_tema, ENT_QUOTES, 'UTF-8') . '">';
-  }
-
   echo '  <style>' . PHP_EOL . $css_variables . '  </style>';
+
+  if ($archivo_css_tema !== '') {
+    echo '  <link rel="stylesheet" href="' . htmlspecialchars($archivo_css_tema, ENT_QUOTES, 'UTF-8') . '">';
+  }
   echo '</head>';
 }
 
@@ -282,13 +335,16 @@ function tienda_render_topbar($modulo = []) {
   echo '</section>';
 }
 
-function tienda_render_header($branding = [], $menus = [], $pagina_activa = '') {
+function tienda_render_header($branding = [], $menus = [], $pagina_activa = '', $tema = []) {
   $nombre = $branding['nombre_comercial'] ?? 'Tienda Pública Base';
   $total_carrito = tienda_obtener_total_carrito();
+  $es_tema_venus = tienda_tema_es_venus_publico($tema);
 
-  echo '<header class="tv_header tv_header_publico">';
+  echo '<header class="tv_header tv_header_publico' . ($es_tema_venus ? ' tv_header_venus' : '') . '">';
   echo '  <div class="tv_header_superior">';
-  echo '    <a href="/" class="tv_logo">' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . '</a>';
+  echo '    <div class="tv_header_marca">';
+  echo '      <a href="/" class="tv_logo_link" aria-label="' . htmlspecialchars((string) $nombre, ENT_QUOTES, 'UTF-8') . '">' . tienda_render_logo_publico($branding, $tema, 'tv_logo') . '</a>';
+  echo '    </div>';
   echo '    <nav class="tv_nav">';
 
   foreach ($menus as $menu) {
@@ -301,10 +357,18 @@ function tienda_render_header($branding = [], $menus = [], $pagina_activa = '') 
   echo '    </nav>';
   echo '    <div class="tv_header_acciones">';
   echo '      <form action="/catalogo/" method="get" class="tv_buscador_campo">';
-  echo '        <input type="text" name="buscar" placeholder="Buscar productos">';
+  echo '        <input type="text" name="buscar" placeholder="Buscar" aria-label="Buscar producto">';
+  echo '        <button type="submit" class="tv_buscador_boton" aria-label="Buscar">';
+  echo '          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>';
+  echo '        </button>';
   echo '      </form>';
-  echo '      <button type="button" id="btn_abrir_carrito_tienda_publica" class="tv_btn tv_btn_secundario tv_btn_carrito_encabezado">';
-  echo '        Carrito';
+  echo '      <a href="/contacto/" class="tv_btn_icono tv_btn_icono_header" aria-label="Perfil y contacto">';
+  echo '        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c1.5-3 4-4.5 7-4.5s5.5 1.5 7 4.5"></path></svg>';
+  echo '      </a>';
+  echo '      <button type="button" id="btn_abrir_carrito_tienda_publica" class="tv_btn_icono tv_btn_icono_header tv_btn_carrito_encabezado" aria-label="Carrito">';
+  echo '        <span class="tv_btn_carrito_icono">';
+  echo '          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="19" r="1.5"></circle><circle cx="17" cy="19" r="1.5"></circle><path d="M4 5h2l2.2 9h8.8l2-6H8.2"></path></svg>';
+  echo '        </span>';
   echo '        <span id="span_contador_carrito_tienda_publica" class="tv_contador_inline">' . (int) $total_carrito . '</span>';
   echo '      </button>';
   echo '    </div>';
@@ -324,46 +388,87 @@ function tienda_render_flash() {
   echo '</section>';
 }
 
-function tienda_render_footer($branding = [], $menus = []) {
-  $nombre = $branding['nombre_comercial'] ?? 'Tienda Pública Base';
-  $texto = $branding['texto_footer'] ?? 'Compra fácil, rápida y segura.';
-  $correo = trim((string) ($branding['correo_contacto'] ?? 'contacto@tiendapublica.com'));
-  $telefono = trim((string) ($branding['telefono_contacto'] ?? 'Pendiente por parametrizar'));
-  $direccion = trim((string) ($branding['direccion'] ?? 'Pendiente por parametrizar'));
+function tienda_render_footer($branding = [], $menus = [], $tema = []) {
+  $nombre = trim((string) ($branding['nombre_comercial'] ?? 'VENUS'));
+  $texto_footer = trim((string) ($branding['texto_footer'] ?? 'Skincare, maquillaje y accesorios para una compra clara y elegante.'));
+  $correo = trim((string) ($branding['correo_contacto'] ?? 'contacto@venusbeauty.co'));
+  $telefono = trim((string) ($branding['telefono_contacto'] ?? ''));
+  $direccion = trim((string) ($branding['direccion'] ?? ''));
+  $menus_footer = [];
+
+  foreach ($menus as $menu) {
+    $codigo = strtoupper((string) ($menu['codigo'] ?? ''));
+
+    if (!in_array($codigo, ['INICIO', 'CATALOGO', 'OFERTAS', 'CONTACTO'], true)) {
+      continue;
+    }
+
+    $menus_footer[] = [
+      'nombre' => (string) ($menu['nombre'] ?? $codigo),
+      'ruta'   => tienda_obtener_ruta_publica($codigo, (string) ($menu['ruta'] ?? '/')),
+    ];
+  }
+
+  if (count($menus_footer) === 0) {
+    $menus_footer = [
+      ['nombre' => 'Inicio', 'ruta' => '/'],
+      ['nombre' => 'Catálogo', 'ruta' => '/catalogo/'],
+      ['nombre' => 'Ofertas', 'ruta' => '/ofertas/'],
+      ['nombre' => 'Contacto', 'ruta' => '/contacto/'],
+    ];
+  }
 
   echo '<footer class="tv_footer">';
   echo '  <div class="tv_footer_contenido">';
+  echo '    <div class="tv_footer_copy">' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . ' · Home de belleza · contacto</div>';
   echo '    <div class="tv_footer_columnas">';
   echo '      <article class="tv_footer_bloque tv_footer_bloque_marca">';
-  echo '        <h3>' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . '</h3>';
-  echo '        <p>' . htmlspecialchars($texto, ENT_QUOTES, 'UTF-8') . '</p>';
+  echo '        <div class="tv_footer_logo">' . tienda_render_logo_publico($branding, $tema, 'tv_logo tv_logo_footer') . '</div>';
+  echo '        <p>' . htmlspecialchars($texto_footer, ENT_QUOTES, 'UTF-8') . '</p>';
   echo '      </article>';
   echo '      <article class="tv_footer_bloque">';
-  echo '        <h3>Categorías</h3>';
-  echo '        <ul class="tv_footer_lista">';
-  echo '          <li><a href="/catalogo/?linea=maquillaje">Maquillaje</a></li>';
-  echo '          <li><a href="/catalogo/?linea=skincare">Skincare</a></li>';
-  echo '          <li><a href="/catalogo/?linea=accesorios">Accesorios</a></li>';
-  echo '        </ul>';
-  echo '      </article>';
-  echo '      <article class="tv_footer_bloque">';
-  echo '        <h3>Navegación</h3>';
+  echo '        <h3>Ayuda</h3>';
   echo '        <ul class="tv_footer_lista">';
 
-  foreach ($menus as $menu) {
-    $ruta = tienda_obtener_ruta_publica($menu['codigo'] ?? '', $menu['ruta'] ?? '/');
-    echo '          <li><a href="' . htmlspecialchars($ruta, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($menu['nombre'], ENT_QUOTES, 'UTF-8') . '</a></li>';
+  foreach ($menus_footer as $menu_footer) {
+    echo '          <li><a href="' . htmlspecialchars($menu_footer['ruta'], ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($menu_footer['nombre'], ENT_QUOTES, 'UTF-8') . '</a></li>';
   }
 
   echo '        </ul>';
   echo '      </article>';
-  echo '      <article class="tv_footer_bloque tv_footer_bloque_contacto">';
-  echo '        <h3>Atención</h3>';
+  echo '      <article class="tv_footer_bloque">';
+  echo '        <h3>Contacto</h3>';
   echo '        <ul class="tv_footer_lista tv_footer_lista_contacto">';
-  echo '          <li><a href="mailto:' . htmlspecialchars($correo, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($correo, ENT_QUOTES, 'UTF-8') . '</a></li>';
-  echo '          <li>' . htmlspecialchars($telefono, ENT_QUOTES, 'UTF-8') . '</li>';
-  echo '          <li>' . htmlspecialchars($direccion, ENT_QUOTES, 'UTF-8') . '</li>';
+
+  if ($correo !== '') {
+    echo '          <li><a href="mailto:' . htmlspecialchars($correo, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($correo, ENT_QUOTES, 'UTF-8') . '</a></li>';
+  }
+
+  if ($telefono !== '') {
+    echo '          <li><a href="tel:' . htmlspecialchars($telefono, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($telefono, ENT_QUOTES, 'UTF-8') . '</a></li>';
+  }
+
+  if ($direccion !== '') {
+    echo '          <li><span>' . htmlspecialchars($direccion, ENT_QUOTES, 'UTF-8') . '</span></li>';
+  }
+
+  if ($correo === '' && $telefono === '' && $direccion === '') {
+    echo '          <li><a href="/contacto/">Canales de atención</a></li>';
+  }
+
   echo '        </ul>';
+  echo '      </article>';
+  echo '      <article class="tv_footer_bloque">';
+  echo '        <h3>Redes sociales</h3>';
+  echo '        <ul class="tv_footer_lista">';
+  echo '          <li><a href="/contacto/">Facebook</a></li>';
+  echo '          <li><a href="/contacto/">Instagram</a></li>';
+  echo '          <li><a href="/contacto/">WhatsApp</a></li>';
+  echo '        </ul>';
+  echo '      </article>';
+  echo '      <article class="tv_footer_bloque">';
+  echo '        <h3>Aviso legal</h3>';
+  echo '        <p class="tv_footer_legal">Contenido, campañas, branding, imágenes destacadas y textos visibles desde parametrización.</p>';
   echo '      </article>';
   echo '    </div>';
   echo '  </div>';

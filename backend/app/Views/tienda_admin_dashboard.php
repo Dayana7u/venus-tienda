@@ -3,8 +3,8 @@ require_once __DIR__ . '/tienda_admin/tienda_admin_helper.php';
 $tda_resumen = $tda_datos['resumen'] ?? [];
 $tda_ventas  = $tda_datos['ventas'] ?? [];
 
-tienda_admin_render_head('Admin tienda - Dashboard');
-tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Panel comercial de la tienda con navegación por módulos, indicadores, pedidos, clientes y catálogo.');
+tienda_admin_render_head('Admin tienda - Dashboard', $tda_tema ?? []);
+tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Panel comercial de la tienda con navegación por módulos, indicadores, pedidos, clientes y catálogo.', $tda_branding ?? [], $tda_tema ?? []);
 ?>
       <section class="tda_admin_bloque">
         <div class="tda_admin_bloque_encabezado">

@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/tienda_admin/tienda_admin_helper.php';
 
-tienda_admin_render_head('Admin tienda - Auditoría');
-tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo para revisar trazabilidad de cambios ejecutados en el panel comercial de la tienda.');
+tienda_admin_render_head('Admin tienda - Auditoría', $tda_tema ?? []);
+tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo para revisar trazabilidad de cambios ejecutados en el panel comercial de la tienda.', $tda_branding ?? [], $tda_tema ?? []);
 ?>
       <section class="tda_admin_bloque">
         <div class="tda_admin_bloque_encabezado">

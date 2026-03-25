@@ -1,147 +1,392 @@
-.tda_admin_body {
-  background:
-    radial-gradient(circle at top left, rgba(221, 212, 231, 0.52), transparent 24%),
-    linear-gradient(180deg, #fffdfd 0%, #faf5f8 55%, #f7f0f5 100%);
-  color: #655c6d;
-  font-family: "Inter", "Poppins", sans-serif;
+:root {
+  --tda-background: #fffefb;
+  --tda-panel: #ffffff;
+  --tda-panel-soft: #fbf4f6;
+  --tda-border: #eadce8;
+  --tda-text: #6f5772;
+  --tda-text-soft: #917f95;
+  --tda-primary: #bfafd0;
+  --tda-primary-dark: #a388ad;
+  --tda-badge: #f6edf6;
+  --tda-shadow: 0 24px 48px rgba(137, 112, 143, 0.12);
+  --tda-shadow-soft: 0 14px 30px rgba(137, 112, 143, 0.08);
 }
 
-.tda_admin_layout {
-  gap: 20px;
-  padding: 18px;
+body.tda_admin_body {
+  background:
+    radial-gradient(circle at top left, rgba(221, 212, 231, 0.38) 0%, rgba(221, 212, 231, 0) 34%),
+    radial-gradient(circle at top right, rgba(245, 207, 198, 0.24) 0%, rgba(245, 207, 198, 0) 30%),
+    linear-gradient(180deg, #fffefb 0%, #fff8f6 100%);
 }
 
 .tda_admin_sidebar {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(241, 233, 242, 0.94));
-  border: 1px solid rgba(212, 182, 202, 0.38);
-  box-shadow: 0 24px 50px rgba(191, 175, 208, 0.14);
-  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(247,241,248,0.92) 0%, rgba(255,247,244,0.88) 100%);
+  border-right-color: #eadce8;
 }
 
-.tda_admin_brand_logo,
-.tda_admin_usuario_avatar {
-  background: linear-gradient(135deg, #ddd4e7 0%, #d4b6ca 55%, #f5cfc6 100%);
-  color: #7c637a;
-  box-shadow: 0 14px 28px rgba(191, 149, 186, 0.2);
+.tda_admin_brand_logo {
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(251,245,248,0.92) 100%);
+  color: #aa91aa;
+  border: 1px solid #eadce8;
+  width: 108px;
+  min-width: 108px;
+  height: 108px;
+  border-radius: 28px;
+  box-shadow: 0 16px 28px rgba(137, 112, 143, 0.08);
+}
+
+.tda_admin_brand_logo_img {
+  max-width: 82px;
+  max-height: 70px;
+  object-fit: contain;
+}
+
+.tda_admin_badge,
+.tda_admin_etiqueta {
+  background: linear-gradient(90deg, #f6edf6 0%, #f9f0ee 100%);
+  color: #8c7087;
 }
 
 .tda_admin_brand h1,
 .tda_admin_pagina_encabezado h2,
-.tda_admin_panel_titulo,
-.tda_admin_card_kpi strong,
-.tda_admin_tabla thead th,
-.tda_admin_modal_encabezado h3 {
-  font-family: "Cormorant Garamond", "Playfair Display", serif;
-  color: #66515f;
-  letter-spacing: -0.02em;
+.tda_admin_bloque h3,
+.tda_admin_bloque h4,
+.tda_admin_card_fila h5,
+.tda_admin_card_categoria h5,
+.tda_admin_card_producto h5,
+.tda_admin_card_imagen h5,
+.tda_admin_metric_card strong,
+.tda_admin_panel h4,
+.tda_admin_resumen_card strong {
+  color: #785b7d;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.tda_admin_badge,
-.tda_admin_etiqueta,
-.tda_admin_chip,
-.tda_admin_panel_badge {
-  background: rgba(221, 212, 231, 0.76);
-  border: 1px solid rgba(191, 175, 208, 0.45);
-  color: #8c6e89;
-  border-radius: 999px;
+.tda_admin_brand h1 {
+  font-size: 2rem;
+}
+
+.tda_admin_nav_titulo {
+  color: #a78ea7;
 }
 
 .tda_admin_nav_link,
-.tda_admin_topbar,
-.tda_admin_card,
-.tda_admin_panel,
+.tda_btn,
+.tda_admin_sidebar_footer,
 .tda_admin_usuario_chip,
-.tda_admin_modal_dialogo,
-.tda_admin_tabla_contenedor,
-.tda_admin_formulario,
-.tda_admin_resumen_card {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(212, 182, 202, 0.34);
-  box-shadow: 0 20px 42px rgba(191, 175, 208, 0.12);
+.tda_admin_topbar_busqueda,
+.tda_admin_card_formulario,
+.tda_admin_card_listado,
+.tda_admin_bloque,
+.tda_admin_panel,
+.tda_admin_metric_card,
+.tda_admin_resumen_card,
+.tda_admin_modulo_card,
+.tda_admin_card_categoria,
+.tda_admin_card_producto,
+.tda_admin_card_imagen,
+.tda_admin_card_fila {
+  border-color: #eadce8;
+  box-shadow: var(--tda-shadow-soft);
 }
 
 .tda_admin_nav_link {
-  border-radius: 20px;
-  min-height: 56px;
+  background: rgba(255,255,255,0.9);
 }
 
-.tda_admin_nav_link.tda_admin_nav_activo,
-.tda_admin_nav_link:hover {
-  background: linear-gradient(90deg, rgba(221, 212, 231, 0.72), rgba(243, 214, 211, 0.78));
-  border-color: rgba(191, 175, 208, 0.5);
-  color: #6f596d;
+.tda_admin_nav_link:hover,
+.tda_admin_nav_link_activo {
+  background: linear-gradient(135deg, #f7eff7 0%, #fff5f1 100%);
+  border-color: #dbc7df;
+  color: #866d84;
 }
 
-.tda_admin_topbar {
-  border-radius: 24px;
-  padding: 14px 18px;
-}
-
-.tda_admin_topbar_busqueda input,
-.tda_admin_formulario input,
-.tda_admin_formulario select,
-.tda_admin_formulario textarea,
-.tda_admin_filtros input,
-.tda_admin_filtros select {
-  min-height: 52px;
-  border-radius: 18px;
-  border: 1px solid rgba(191, 175, 208, 0.42);
-  background: rgba(255, 255, 255, 0.92);
+.tda_admin_nav_icono {
+  background: linear-gradient(180deg, #f7eef7 0%, #fff5f1 100%);
+  color: #9a7f95;
 }
 
 .tda_btn_principal {
-  background: linear-gradient(90deg, #b595ba 0%, #c89ab6 50%, #d4b6ca 100%);
-  border: 0;
-  color: #fffefd;
-  box-shadow: 0 14px 28px rgba(191, 149, 186, 0.22);
+  background: linear-gradient(135deg, #c09fbe 0%, #aa88b0 100%);
+  border-color: transparent;
+  color: #ffffff;
 }
 
-.tda_btn_secundario {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(191, 175, 208, 0.42);
-  color: #7a6177;
+.tda_btn_secundario,
+.tda_btn_terciario {
+  background: rgba(255,255,255,0.94);
+  color: #6b586d;
 }
 
-.tda_admin_card_kpi,
+.tda_admin_metric_card,
+.tda_admin_modulo_card,
+.tda_admin_resumen_card,
 .tda_admin_panel,
-.tda_admin_tabla_contenedor,
-.tda_admin_formulario,
-.tda_admin_modal_dialogo {
-  border-radius: 26px;
-}
-
-.tda_admin_card_kpi_icono {
-  background: linear-gradient(135deg, rgba(221, 212, 231, 0.95), rgba(243, 214, 211, 0.95));
-  color: #836884;
+.tda_admin_card_formulario,
+.tda_admin_card_listado,
+.tda_admin_card_categoria,
+.tda_admin_card_producto,
+.tda_admin_card_imagen,
+.tda_admin_card_fila,
+.tda_admin_sidebar_footer {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,249,248,0.98) 100%);
+  border-radius: 28px;
 }
 
 .tda_admin_sidebar_footer {
-  background: linear-gradient(180deg, rgba(221, 212, 231, 0.38), rgba(243, 214, 211, 0.28));
+  background: linear-gradient(180deg, #f7eef6 0%, #fff7f4 100%);
+}
+
+.tda_admin_topbar_busqueda,
+.tda_admin_usuario_chip,
+.tda_admin_formulario input,
+.tda_admin_formulario select,
+.tda_admin_formulario textarea {
+  background: rgba(255,255,255,0.96);
+  border-color: #eadce8;
+}
+
+.tda_admin_formulario input:focus,
+.tda_admin_formulario select:focus,
+.tda_admin_formulario textarea:focus,
+.tda_admin_topbar_busqueda input:focus {
+  outline: none;
+  border-color: #c8b0cc;
+  box-shadow: 0 0 0 4px rgba(191, 175, 208, 0.16);
+}
+
+@media (max-width: 1080px) {
+  .tda_admin_sidebar {
+    padding-bottom: 18px;
+  }
+
+  .tda_admin_brand_logo {
+    width: 88px;
+    min-width: 88px;
+    height: 88px;
+  }
+}
+
+@media (max-width: 720px) {
+  .tda_admin_sidebar,
+  .tda_admin_contenido {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .tda_admin_brand_logo {
+    width: 72px;
+    min-width: 72px;
+    height: 72px;
+    border-radius: 22px;
+  }
+
+  .tda_admin_brand_logo_img {
+    max-width: 58px;
+    max-height: 48px;
+  }
+
+  .tda_admin_topbar_busqueda {
+    min-width: 100%;
+  }
+}
+
+body.tda_admin_body {
+  color: #5f4b5f;
+}
+
+.tda_admin_layout {
+  grid-template-columns: 312px 1fr;
+}
+
+.tda_admin_sidebar {
+  padding: 30px 20px 24px;
+}
+
+.tda_admin_brand_stack {
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.tda_admin_brand_logo {
+  width: 116px;
+  min-width: 116px;
+  height: 116px;
+  border-radius: 32px;
+}
+
+.tda_admin_brand h1,
+.tda_admin_pagina_encabezado h2 {
+  line-height: 0.98;
+}
+
+.tda_admin_brand_subtitulo,
+.tda_admin_sidebar_texto,
+.tda_admin_sidebar_footer p,
+.tda_admin_pagina_encabezado p,
+.tda_admin_bloque p,
+.tda_admin_card_categoria p,
+.tda_admin_card_producto p,
+.tda_admin_card_imagen p,
+.tda_admin_card_fila p,
+.tda_admin_metric_card p,
+.tda_admin_panel_subtitulo {
+  color: #8b7490;
+}
+
+.tda_admin_nav {
+  gap: 12px;
+}
+
+.tda_admin_nav_link {
+  min-height: 56px;
+  border-radius: 20px;
+}
+
+.tda_admin_nav_icono {
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+}
+
+.tda_admin_sidebar_footer,
+.tda_admin_card_formulario,
+.tda_admin_card_listado,
+.tda_admin_bloque,
+.tda_admin_panel,
+.tda_admin_metric_card,
+.tda_admin_resumen_card,
+.tda_admin_modulo_card,
+.tda_admin_card_categoria,
+.tda_admin_card_producto,
+.tda_admin_card_imagen,
+.tda_admin_card_fila {
+  border-radius: 30px;
+}
+
+.tda_admin_contenido {
+  padding: 30px 30px 42px;
+}
+
+.tda_admin_topbar {
+  align-items: center;
+}
+
+.tda_admin_topbar_busqueda {
+  min-height: 60px;
+  max-width: 520px;
+  border-radius: 24px;
+}
+
+.tda_admin_topbar_acciones {
+  gap: 14px;
+}
+
+.tda_admin_usuario_chip {
+  padding: 10px 14px 10px 10px;
   border-radius: 22px;
-  border: 1px solid rgba(212, 182, 202, 0.28);
 }
 
-.tda_admin_panel_grafico,
-.tda_admin_panel_estado {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 241, 245, 0.96));
+.tda_admin_pagina_encabezado,
+.tda_admin_bloque {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,249,248,0.98) 100%);
 }
 
-.tda_admin_tabla thead th {
-  font-size: 1.65rem;
-  color: #6c5968;
+.tda_admin_pagina_encabezado {
+  padding: 8px 4px 0;
 }
 
-.tda_admin_tabla tbody tr:hover {
-  background: rgba(243, 214, 211, 0.18);
+.tda_admin_bloque {
+  padding: 24px;
 }
 
-.tda_admin_modal_backdrop {
-  backdrop-filter: blur(6px);
-  background: rgba(95, 82, 100, 0.24);
+.tda_admin_modulos_grid,
+.tda_admin_dos_columnas,
+.tda_admin_dos_columnas_resumen {
+  gap: 20px;
 }
 
-@media (max-width: 1024px) {
+.tda_admin_modulo_card {
+  min-height: 220px;
+  padding: 22px;
+}
+
+.tda_admin_modulo_card h4,
+.tda_admin_card_titulo_inline h4,
+.tda_admin_metric_card strong,
+.tda_admin_resumen_card strong,
+.tda_admin_card_categoria h5,
+.tda_admin_card_producto h5,
+.tda_admin_card_imagen h5,
+.tda_admin_card_fila h5 {
+  font-size: 1.55rem;
+}
+
+.tda_admin_formulario input,
+.tda_admin_formulario select,
+.tda_admin_formulario textarea,
+.tda_admin_topbar_busqueda input {
+  min-height: 52px;
+  border-radius: 18px;
+}
+
+.tda_admin_formulario textarea {
+  min-height: 132px;
+}
+
+.tda_btn {
+  min-height: 46px;
+  border-radius: 16px;
+}
+
+.tda_btn_principal {
+  box-shadow: 0 14px 28px rgba(170, 136, 176, 0.16);
+}
+
+.tda_admin_modal_dialogo,
+.tda_admin_modal_dialogo_lg {
+  border-radius: 28px;
+  border: 1px solid #eadce8;
+  box-shadow: 0 26px 60px rgba(137, 112, 143, 0.18);
+}
+
+@media (max-width: 1220px) {
   .tda_admin_layout {
-    padding: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .tda_admin_sidebar {
+    position: relative;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid #eadce8;
+  }
+}
+
+@media (max-width: 760px) {
+  .tda_admin_contenido,
+  .tda_admin_sidebar {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .tda_admin_brand_logo {
+    width: 78px;
+    min-width: 78px;
+    height: 78px;
+    border-radius: 24px;
+  }
+
+  .tda_admin_bloque,
+  .tda_admin_card_formulario,
+  .tda_admin_card_listado,
+  .tda_admin_sidebar_footer {
+    border-radius: 24px;
+  }
+
+  .tda_admin_topbar_busqueda {
+    max-width: 100%;
   }
 }

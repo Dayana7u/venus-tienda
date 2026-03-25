@@ -246,6 +246,26 @@ class tienda_catalogo_base_model extends tienda_publica_model {
     return $this->obtener_imagen_demo_producto_tienda($slug, $linea);
   }
 
+  private function resolver_imagen_categoria_tienda($imagen_url, $slug, $linea = 'general') {
+    $imagen_url = trim((string) $imagen_url);
+
+    if ($imagen_url !== '') {
+      return $imagen_url;
+    }
+
+    $slug = trim((string) $slug);
+    $linea = trim((string) $linea);
+    $clave = $slug !== '' ? $slug : $linea;
+    $ruta = '/public/uploads/tienda/demo/categorias/' . $clave . '.jpg';
+    $ruta_absoluta = dirname(__DIR__, 2) . '/public/uploads/tienda/demo/categorias/' . $clave . '.jpg';
+
+    if (is_file($ruta_absoluta)) {
+      return $ruta;
+    }
+
+    return '/public/uploads/tienda/demo/categorias/general.jpg';
+  }
+
   private function obtener_imagen_demo_producto_tienda($slug, $linea = 'general') {
     $slug = trim((string) $slug);
 
@@ -632,20 +652,82 @@ class tienda_catalogo_base_model extends tienda_publica_model {
   }
 
   public function consultar_lineas_tienda() {
+    $stmt = null;
     $lineas = [];
 
-    foreach ($this->consultar_productos_tienda() as $producto) {
-      $codigo_linea = strtolower((string) ($producto['linea'] ?? ''));
+    try {
+      $dbh = $this->consultar_conexion_tienda_bd();
+      $sql = "SELECT
+"
+           . "  categoria_id,
+"
+           . "  codigo,
+"
+           . "  nombre,
+"
+           . "  slug,
+"
+           . "  linea,
+"
+           . "  descripcion,
+"
+           . "  imagen_url,
+"
+           . "  texto_alternativo,
+"
+           . "  orden
+"
+           . "FROM
+"
+           . "  public.categorias
+"
+           . "WHERE
+"
+           . "  estado = B'1'
+"
+           . "  AND borrado = B'0'
+"
+           . "ORDER BY
+"
+           . "  orden ASC,
+"
+           . "  categoria_id ASC;";
 
-      if ($codigo_linea === '') {
-        continue;
-      }
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
 
-      if (!isset($lineas[$codigo_linea])) {
+      while ($registro = $stmt->fetch()) {
+        $codigo_linea = $this->texto_minuscula_tienda((string) ($registro['linea'] ?? ''));
+
+        if ($codigo_linea === '' || isset($lineas[$codigo_linea])) {
+          continue;
+        }
+
+        $titulo = trim((string) ($registro['nombre'] ?? ''));
+
+        if ($titulo === '') {
+          $titulo = ucfirst($codigo_linea);
+        }
+
         $lineas[$codigo_linea] = [
-          'titulo'       => ucfirst($codigo_linea),
-          'descripcion'  => 'Línea principal de ' . ucfirst($codigo_linea) . '.',
+          'titulo'             => $titulo,
+          'descripcion'        => trim((string) ($registro['descripcion'] ?? '')),
+          'ruta'               => '/catalogo/?linea=' . rawurlencode($codigo_linea),
+          'imagen_url'         => $this->resolver_imagen_categoria_tienda((string) ($registro['imagen_url'] ?? ''), (string) ($registro['slug'] ?? ''), $codigo_linea),
+          'texto_alternativo'  => trim((string) ($registro['texto_alternativo'] ?? $titulo)),
+          'categoria_id'       => (int) ($registro['categoria_id'] ?? 0),
+          'codigo_categoria'   => (string) ($registro['codigo'] ?? ''),
+          'slug'               => (string) ($registro['slug'] ?? ''),
+          'linea'              => $codigo_linea,
         ];
+      }
+    }
+    catch (PDOException $e) {
+      $lineas = [];
+    }
+    finally {
+      if ($stmt) {
+        $stmt = null;
       }
     }
 
@@ -655,16 +737,37 @@ class tienda_catalogo_base_model extends tienda_publica_model {
 
     return [
       'maquillaje' => [
-        'titulo'       => 'Maquillaje diario',
-        'descripcion'  => 'Bases, rubores, labios y pestañas con foco comercial.',
+        'titulo'             => 'Maquillaje',
+        'descripcion'        => 'Bases, rubores, labios y pestañas con foco comercial.',
+        'ruta'               => '/catalogo/?linea=maquillaje',
+        'imagen_url'         => $this->resolver_imagen_categoria_tienda('', 'maquillaje', 'maquillaje'),
+        'texto_alternativo'  => 'Maquillaje',
+        'categoria_id'       => 0,
+        'codigo_categoria'   => 'MAQ',
+        'slug'               => 'maquillaje',
+        'linea'              => 'maquillaje',
       ],
       'skincare' => [
-        'titulo'       => 'Skincare',
-        'descripcion'  => 'Rutinas de limpieza, hidratación y glow.',
+        'titulo'             => 'Skincare',
+        'descripcion'        => 'Rutinas de limpieza, hidratación y glow.',
+        'ruta'               => '/catalogo/?linea=skincare',
+        'imagen_url'         => $this->resolver_imagen_categoria_tienda('', 'skincare', 'skincare'),
+        'texto_alternativo'  => 'Skincare',
+        'categoria_id'       => 0,
+        'codigo_categoria'   => 'SKIN',
+        'slug'               => 'skincare',
+        'linea'              => 'skincare',
       ],
       'accesorios' => [
-        'titulo'       => 'Accesorios',
-        'descripcion'  => 'Brochas, kits, organizadores y detalles para regalo.',
+        'titulo'             => 'Accesorios',
+        'descripcion'        => 'Brochas, kits, organizadores y detalles para regalo.',
+        'ruta'               => '/catalogo/?linea=accesorios',
+        'imagen_url'         => $this->resolver_imagen_categoria_tienda('', 'accesorios', 'accesorios'),
+        'texto_alternativo'  => 'Accesorios',
+        'categoria_id'       => 0,
+        'codigo_categoria'   => 'ACC',
+        'slug'               => 'accesorios',
+        'linea'              => 'accesorios',
       ],
     ];
   }

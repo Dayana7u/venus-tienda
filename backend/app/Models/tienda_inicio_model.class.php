@@ -7,8 +7,9 @@ class tienda_inicio_model extends tienda_catalogo_base_model {
 
     return [
       'contexto'     => $contexto,
-      'destacados'   => $this->consultar_destacados_tienda(6),
-      'ofertas'      => $this->consultar_ofertas_tienda(4),
+      'productos'    => $this->consultar_catalogo_tienda('', ''),
+      'destacados'   => $this->consultar_destacados_tienda(8),
+      'ofertas'      => $this->consultar_ofertas_tienda(6),
       'lineas'       => $this->consultar_lineas_tienda(),
       'carrito'      => $this->consultar_carrito_tienda(),
     ];

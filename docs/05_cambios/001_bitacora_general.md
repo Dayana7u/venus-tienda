@@ -210,12 +210,47 @@ Novedades y Modificaciones
 - Se agregan `backend/app/Models/tienda_pedido_comprobante_model.class.php`, `backend/app/Controllers/tienda_pedido_comprobante_controller.php`, `backend/app/Views/tienda_pedido_comprobante.php` y `backend/pedido/comprobante/index.php` para el comprobante público listo para impresión.
 - Se agrega `database/sql/018_sql_checkout_parametrizable_visual_y_soporte.sql` para sembrar configuraciones parametrizables del checkout, pago y confirmación dentro de `system.modulo_configuraciones`.
 
-## v28 · Tema VENUS con CSS separado por tema
-Se evidencia que, la base visual del ecommerce pasa a consumir un tema real por archivo CSS separado, sin sobrescribir el tema pink y sin dejar el diseño quemado dentro del mismo stylesheet general.
+
+#### Tema visual VENUS
+
+- Se agregó `database/sql/019_sql_tema_venus_base.sql` para registrar el nuevo tema `VENUS` sin eliminar `PINK_NUDE`, clonar su estructura visual y activar la nueva paleta lila, rosa suave y durazno desde parametrización.
+- Se ajustó la identidad comercial base de la tienda pública a `VENUS` y se actualizó el valor de `tienda_publica.tema_activo` para que el frente comercial consuma el nuevo tema desde base de datos.
+- Se retiró la referencia fija a `PINK_NUDE` en textos visibles del frente comercial y del panel tienda para mantener la reutilización por tema.
+
+
+Tema visual VENUS con carga real por CSS
+Se evidencia que, el tema VENUS dejó de ser solo un cambio de registros en base de datos y ahora consume archivos CSS separados para tienda pública y panel administrativo.
+Se evidencia que, la carga del CSS del tema activo quedó resuelta desde tienda_helper.php y tienda_admin_helper.php, permitiendo conservar el tema pink sin sobrescribirlo y aplicar VENUS solo cuando sea el tema activo.
+Se evidencia que, se creó la ruta backend/public/assets/css/themes/tienda/venus.css para aplicar la paleta #DDD4E7, #BFAFD0, #D4B6CA, #F3D6D3 y #F5CFC6 sobre header, hero, catálogo, cards, checkout, comprobante y footer.
+Se evidencia que, se creó la ruta backend/public/assets/css/themes/admin/venus.css para aplicar la identidad VENUS sobre sidebar, navegación, cards, formularios, topbar y bloques del panel administrativo.
+Se evidencia que, se ampliaron márgenes laterales y reglas responsive de tienda pública y checkout para escritorio, tableta y móvil, evitando que los bloques queden pegados a los bordes en resoluciones intermedias y pequeñas.
+
+## v30 · Home VENUS ajustada a guía visual
+Se evidencia que, la portada pública del tema VENUS se aterriza sobre la guía enviada para escritorio, priorizando hero editorial, líneas destacadas circulares, productos compactos, promos inferiores y footer integrado dentro de una sola composición visual.
 
 Novedades y Modificaciones
-- Se ajusta `backend/app/Views/tienda/tienda_helper.php` para cargar de forma dinámica un CSS específico del tema activo en la tienda pública.
-- Se ajustan las vistas públicas para enviar el tema activo al helper y permitir que cada identidad visual consuma su stylesheet sin tocar la lógica comercial.
-- Se ajusta `backend/app/Views/tienda_admin/tienda_admin_helper.php` para consultar el tema activo, mostrarlo en el panel y cargar un CSS específico del tema administrativo.
-- Se agregan `backend/public/assets/css/themes/tienda/venus.css` y `backend/public/assets/css/themes/admin/venus.css` con la propuesta visual VENUS para tienda pública y panel administrativo.
-- Se agrega `database/sql/019_sql_tema_venus_parametrizable.sql` para crear el tema `VENUS`, clonar tokens y componentes desde `PINK_NUDE`, actualizar la paleta y dejar activo el nuevo tema.
+- Se ajustó `backend/app/Views/tienda_inicio.php` para reemplazar la portada anterior por una composición VENUS con hero principal, líneas destacadas, grid compacto de productos, promos y footer integrado.
+- Se ajustó `backend/app/Views/tienda/tienda_helper.php` para usar el logo del tema VENUS en header y footer, además de un encabezado visual con buscador e iconografía ligera.
+- Se ajustó `backend/public/assets/css/themes/tienda/venus.css` para aplicar la paleta `#DDD4E7`, `#BFAFD0`, `#D4B6CA`, `#F3D6D3`, `#F5CFC6`, mejorar aire visual y dejar responsive real para escritorio, tableta y móvil.
+- Se agregó `backend/public/assets/img/themes/venus/logo_home_ref.png` como apoyo visual del tema VENUS mientras llega el logo final limpio.
+
+Se ajustó nuevamente la home del tema VENUS para corregir logo, hero, líneas destacadas, productos destacados y footer, tomando como guía directa la composición visual enviada para escritorio y corrigiendo la distribución responsive.
+
+## v34 · Ajuste visual home VENUS
+Se evidencia que, se corrige la distribución del encabezado, el grid de productos destacados y el footer de la home VENUS para evitar bloques desproporcionados y mejorar la lectura en escritorio, tableta y móvil.
+
+Novedades y Modificaciones
+- Se ajustó `backend/app/Views/tienda/tienda_helper.php` para reorganizar el copy del footer, evitar duplicidad del nombre comercial y mejorar la salida de correo y bloques de contacto.
+- Se ajustó `backend/public/assets/css/themes/tienda/venus.css` para refinar buscador, iconografía del encabezado, tarjetas de productos destacados, promos y footer compacto del tema VENUS.
+
+## v35 · Home real parametrizable y ajuste visual Venus integral
+Se evidencia que, la portada VENUS deja de depender de imágenes y textos quemados, toma productos reales del catálogo y se alinea visualmente con una misma identidad para home, catálogo, detalle, carrito, checkout, pago y panel administrativo.
+
+Novedades y Modificaciones
+- Se ajustó `backend/app/Models/tienda_catalogo_base_model.class.php` para devolver líneas con imagen, ruta y texto alternativo desde categorías activas, con respaldo visual de demo cuando aún no exista material cargado.
+- Se ajustó `backend/app/Models/tienda_inicio_model.class.php` para exponer el catálogo completo al homepage y permitir selección parametrizable de hero y destacados.
+- Se ajustó `backend/app/Views/tienda_inicio.php` para reemplazar la portada fija por una composición que consume producto hero, líneas, destacados y campañas con datos reales del catálogo.
+- Se ajustó `backend/app/Views/tienda/tienda_helper.php` para mejorar el footer, dejar navegación y contacto más limpios y soportar lectura de configuraciones públicas adicionales.
+- Se ajustó `backend/public/assets/css/themes/tienda/venus.css` para unificar la capa visual de home, catálogo, detalle, carrito, checkout, pago, contacto y footer bajo el tema VENUS.
+- Se ajustó `backend/public/assets/css/themes/admin/venus.css` para acercar el panel tienda a la misma identidad visual del frente comercial.
+- Se agregó `database/sql/020_sql_homepage_parametrizable_tema_venus.sql` para dejar parametrizable el producto hero, los destacados y los banners del homepage desde `system.modulo_configuraciones`.

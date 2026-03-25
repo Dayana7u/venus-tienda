@@ -5,6 +5,7 @@ $branding = $contexto['branding'] ?? [];
 $menus = $contexto['menus'] ?? [];
 $tema_tokens = $contexto['tema_tokens'] ?? [];
 $componentes = $contexto['componentes'] ?? [];
+$tema = $contexto['tema'] ?? [];
 $productos = $tv_datos['productos'] ?? [];
 $lineas = $tv_datos['lineas'] ?? [];
 $filtros = $tv_datos['filtros'] ?? [];
@@ -12,11 +13,11 @@ $carrito = $tv_datos['carrito'] ?? [];
 $buscar = $filtros['buscar'] ?? '';
 $linea_activa = $filtros['linea'] ?? '';
 
-tienda_render_head('Catálogo', $tema_tokens, $componentes, $contexto['tema'] ?? []);
+tienda_render_head('Catálogo', $tema_tokens, $componentes, $tema);
 ?>
 <body>
   <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>
-  <?php tienda_render_header($branding, $menus, 'CATALOGO'); ?>
+  <?php tienda_render_header($branding, $menus, 'CATALOGO', $tema); ?>
   <?php tienda_render_flash(); ?>
 
   <main class="tv_pagina_modulo">
@@ -49,7 +50,7 @@ tienda_render_head('Catálogo', $tema_tokens, $componentes, $contexto['tema'] ??
     </section>
   </main>
 
-  <?php tienda_render_footer($branding, $menus); ?>
+  <?php tienda_render_footer($branding, $menus, $tema); ?>
   <?php tienda_render_carrito_drawer($carrito); ?>
   <?php tienda_render_public_scripts(); ?>
 </body>

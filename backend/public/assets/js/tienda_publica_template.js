@@ -83,7 +83,7 @@ function template_hero_tienda_publica(branding, modulo, parametros) {
   const hero_item_3 = obtener_valor_configuracion_tienda_publica(
     modulo,
     `tienda_publica.hero_item_3`,
-    `Tema pink nude parametrizable`
+    `Tema visual parametrizable`
   );
   const hero_panel_titulo = obtener_valor_configuracion_tienda_publica(
     modulo,

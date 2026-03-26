@@ -3,7 +3,7 @@ require_once __DIR__ . '/tienda_admin/tienda_admin_helper.php';
 
 $tda_puede_editar_clientes = tienda_admin_usuario_tiene_permiso('TIENDA_CLIENTES_EDITAR');
 
-tienda_admin_render_head('Admin tienda - Clientes', $tda_tema ?? []);
+tienda_admin_render_head('Admin tienda - Clientes', $tda_tema ?? [], $tda_tema_tokens ?? [], $tda_componentes ?? []);
 tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo comercial para revisar clientes registrados, contacto y actividad de compra.', $tda_branding ?? [], $tda_tema ?? []);
 ?>
       <section class="tda_admin_bloque">

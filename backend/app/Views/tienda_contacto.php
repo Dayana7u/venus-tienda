@@ -29,76 +29,58 @@ $url_whatsapp_soporte = tienda_generar_url_whatsapp_soporte_publico((string) $te
 tienda_render_head('Contacto', $tema_tokens, $componentes, $tema);
 ?>
 <body>
-  <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>
+  <?php tienda_render_topbar($contexto['modulo'] ?? [], $tema); ?>
   <?php tienda_render_header($branding, $menus, 'CONTACTO', $tema); ?>
   <?php tienda_render_flash(); ?>
 
-  <main class="tv_pagina_modulo">
-    <section class="tv_bloque">
+  <main class="tv_page">
+    <section class="tv_section tv_shell">
       <div class="tv_breadcrumb">Inicio / Contacto</div>
-      <div class="tv_bloque_encabezado">
-        <span class="tv_etiqueta">Contacto</span>
-        <h2>Canales para venta, asesoría y seguimiento</h2>
-        <p>Sección separada del catálogo para soporte comercial y atención personalizada.</p>
+      <div class="tv_section_head">
+        <div>
+          <span class="tv_etiqueta">Contacto</span>
+          <h1 class="tv_page_title">Acompañamiento y postcompra</h1>
+        </div>
+        <p>Canales más claros para resolver dudas sobre productos, pagos, entregas o seguimiento de pedidos.</p>
       </div>
+
       <?php if (($soporte['activo'] ?? false) === true) { ?>
-        <article class="tv_tarjeta_info tv_contacto_soporte_pedido">
-          <span class="tv_etiqueta">Soporte de compra</span>
-          <h3>Atención para seguimiento del pedido</h3>
-          <p>Se dejó este bloque listo para dar continuidad a la compra y a la gestión comercial sin salir del frente público.</p>
-          <div class="tv_contacto_soporte_resumen">
-            <?php if ($pedido_soporte !== '') { ?>
-              <article>
-                <span>Pedido</span>
-                <strong><?php echo htmlspecialchars($pedido_soporte, ENT_QUOTES, 'UTF-8'); ?></strong>
-              </article>
-            <?php } ?>
-            <?php if ($cliente_soporte !== '') { ?>
-              <article>
-                <span>Cliente</span>
-                <strong><?php echo htmlspecialchars($cliente_soporte, ENT_QUOTES, 'UTF-8'); ?></strong>
-              </article>
-            <?php } ?>
-            <?php if ($total_soporte !== '') { ?>
-              <article>
-                <span>Total</span>
-                <strong><?php echo htmlspecialchars($total_soporte, ENT_QUOTES, 'UTF-8'); ?></strong>
-              </article>
-            <?php } ?>
+        <article class="tv_support_banner">
+          <div>
+            <span class="tv_etiqueta">Soporte</span>
+            <h2>Seguimiento de tu pedido</h2>
+            <p>Consulta rápida para acompañar pagos, entregas o soporte posterior a la compra.</p>
           </div>
-          <div class="tv_checkout_exito_botones tv_contacto_soporte_acciones">
+          <div class="tv_support_actions">
             <?php if ($url_whatsapp_soporte !== '') { ?>
               <a href="<?php echo htmlspecialchars($url_whatsapp_soporte, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer" class="tv_btn tv_btn_principal">Hablar por WhatsApp</a>
             <?php } ?>
             <?php if ($correo_soporte !== '') { ?>
-              <a href="mailto:<?php echo htmlspecialchars($correo_soporte, ENT_QUOTES, 'UTF-8'); ?>?subject=<?php echo rawurlencode('Soporte pedido ' . ($pedido_soporte !== '' ? $pedido_soporte : 'tienda')); ?>" class="tv_btn tv_btn_secundario">Escribir por correo</a>
-            <?php } ?>
-            <?php if ($telefono_soporte !== '') { ?>
-              <a href="tel:<?php echo htmlspecialchars((string) $telefono_soporte, ENT_QUOTES, 'UTF-8'); ?>" class="tv_btn tv_btn_secundario">Llamar</a>
+              <a href="mailto:<?php echo htmlspecialchars($correo_soporte, ENT_QUOTES, 'UTF-8'); ?>" class="tv_btn tv_btn_secundario">Escribir por correo</a>
             <?php } ?>
           </div>
         </article>
       <?php } ?>
-      <div class="tv_grid_lineas_store">
+
+      <div class="tv_contact_grid">
         <?php foreach ($canales as $canal) { ?>
-          <article class="tv_tarjeta_info tv_linea_store">
+          <article class="tv_contact_card">
+            <span class="tv_etiqueta">Canal</span>
             <h3><?php echo htmlspecialchars($canal['titulo'], ENT_QUOTES, 'UTF-8'); ?></h3>
             <p><?php echo htmlspecialchars($canal['descripcion'], ENT_QUOTES, 'UTF-8'); ?></p>
           </article>
         <?php } ?>
-      </div>
-      <div class="tv_contacto_cards_store">
-        <article class="tv_tarjeta_info">
+        <article class="tv_contact_card">
           <span class="tv_etiqueta">Correo</span>
-          <h3><?php echo htmlspecialchars($branding['correo_contacto'] ?? 'contacto@tiendapublica.com', ENT_QUOTES, 'UTF-8'); ?></h3>
+          <h3><?php echo htmlspecialchars($branding['correo_contacto'] ?? 'hola@venusbeauty.co', ENT_QUOTES, 'UTF-8'); ?></h3>
         </article>
-        <article class="tv_tarjeta_info">
+        <article class="tv_contact_card">
           <span class="tv_etiqueta">Teléfono</span>
-          <h3><?php echo htmlspecialchars($branding['telefono_contacto'] ?? 'Pendiente por parametrizar', ENT_QUOTES, 'UTF-8'); ?></h3>
+          <h3><?php echo htmlspecialchars($branding['telefono_contacto'] ?? 'Disponible por parametrización', ENT_QUOTES, 'UTF-8'); ?></h3>
         </article>
-        <article class="tv_tarjeta_info">
+        <article class="tv_contact_card">
           <span class="tv_etiqueta">Dirección</span>
-          <h3><?php echo htmlspecialchars($branding['direccion'] ?? 'Pendiente por parametrizar', ENT_QUOTES, 'UTF-8'); ?></h3>
+          <h3><?php echo htmlspecialchars($branding['direccion'] ?? 'Disponible por parametrización', ENT_QUOTES, 'UTF-8'); ?></h3>
         </article>
       </div>
     </section>

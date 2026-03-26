@@ -3,7 +3,7 @@ require_once __DIR__ . '/tienda_admin/tienda_admin_helper.php';
 
 $tda_permiso_formulario = tienda_admin_usuario_tiene_permiso('TIENDA_IMAGENES_GUARDAR') || tienda_admin_usuario_tiene_permiso('TIENDA_IMAGENES_EDITAR');
 
-tienda_admin_render_head('Admin tienda - Imágenes', $tda_tema ?? []);
+tienda_admin_render_head('Admin tienda - Imágenes', $tda_tema ?? [], $tda_tema_tokens ?? [], $tda_componentes ?? []);
 tienda_admin_render_layout_inicio($tda_pagina_activa, 'Admin tienda', 'Módulo exclusivo para registrar, actualizar e inactivar galerías de producto.', $tda_branding ?? [], $tda_tema ?? []);
 ?>
       <section id="seccion_imagenes_tienda_admin" class="tda_admin_bloque">

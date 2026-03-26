@@ -99,7 +99,6 @@ function tienda_admin_obtener_resumen_sidebar($pagina_activa) {
   return $resumenes[strtoupper((string) $pagina_activa)] ?? 'Panel comercial de administración de tienda.';
 }
 
-
 function tienda_admin_normalizar_codigo_tema($tema = []) {
   $codigo_tema = is_array($tema) ? (string) ($tema['codigo'] ?? '') : (string) $tema;
   $codigo_tema = strtolower(trim($codigo_tema));
@@ -123,10 +122,67 @@ function tienda_admin_obtener_archivo_css_tema($tema = []) {
   return '/public/assets/css/themes/admin/' . $codigo_tema . '.css';
 }
 
-
 function tienda_admin_tema_es_venus($tema = []) {
   $codigo_tema = is_array($tema) ? (string) ($tema['codigo'] ?? '') : (string) $tema;
   return strtolower(trim($codigo_tema)) === 'venus';
+}
+
+function tienda_admin_generar_variables_css($tema_tokens = [], $componentes = []) {
+  $header = $componentes['header'] ?? [];
+  $footer = $componentes['footer'] ?? [];
+  $input_search = $componentes['input.search'] ?? [];
+  $card_product = $componentes['card.product'] ?? [];
+  $button_primary = $componentes['button.primary'] ?? [];
+
+  $color_primary = $tema_tokens['color.primary'] ?? '#BFAFD0';
+  $color_secondary = $tema_tokens['color.secondary'] ?? '#D4B6CA';
+  $color_background = $tema_tokens['color.background'] ?? '#F5F2F8';
+  $color_surface = $tema_tokens['color.surface'] ?? '#FFFFFF';
+  $color_text = $tema_tokens['color.text'] ?? '#685666';
+  $color_text_soft = $tema_tokens['color.text.soft'] ?? '#8A7A88';
+  $color_border = $tema_tokens['color.border'] ?? '#BFAFD0';
+
+  $variables = [
+    '--tda-background'             => $color_background,
+    '--tda-panel'                  => $color_surface,
+    '--tda-panel-soft'             => $card_product['background'] ?? '#fbf4f6',
+    '--tda-border'                 => $color_border,
+    '--tda-text'                   => $color_text,
+    '--tda-text-soft'              => $color_text_soft,
+    '--tda-primary'                => $color_primary,
+    '--tda-primary-dark'           => $button_primary['background'] ?? $color_secondary,
+    '--tda-badge'                  => $componentes['badge']['background'] ?? '#F5CFC6',
+    '--tda-shadow'                 => $tema_tokens['shadow.card'] ?? '0 20px 42px rgba(104, 86, 102, 0.10)',
+    '--tda-shadow-soft'            => $card_product['box_shadow'] ?? '0 14px 30px rgba(104, 86, 102, 0.08)',
+    '--tda-body-background'        => 'linear-gradient(180deg, ' . $color_background . ' 0%, #ffffff 100%)',
+    '--tda-sidebar-background'     => $header['background'] ?? 'linear-gradient(180deg, rgba(245,242,248,0.96) 0%, rgba(255,255,255,0.92) 100%)',
+    '--tda-sidebar-border'         => $header['border_color'] ?? $color_border,
+    '--tda-brand-logo-background'  => $card_product['background'] ?? 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(251,245,248,0.92) 100%)',
+    '--tda-brand-logo-color'       => $header['link_color'] ?? $color_text,
+    '--tda-nav-link-background'    => $card_product['background'] ?? 'rgba(255,255,255,0.9)',
+    '--tda-nav-link-active'        => $header['link_hover_color'] ?? 'linear-gradient(135deg, #DDD4E7 0%, #F3D6D3 100%)',
+    '--tda-nav-link-color'         => $color_text,
+    '--tda-nav-link-active-color'  => $color_text,
+    '--tda-search-background'      => $input_search['background'] ?? $color_surface,
+    '--tda-search-border'          => $input_search['border_color'] ?? $color_border,
+    '--tda-panel-background'       => $card_product['background'] ?? 'linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,249,248,0.98) 100%)',
+    '--tda-button-primary'         => $button_primary['background'] ?? '#BFAFD0',
+    '--tda-button-primary-text'    => $button_primary['color'] ?? '#ffffff',
+    '--tda-footer-background'      => $footer['background'] ?? '#685666',
+  ];
+
+  $css = ":root {
+";
+
+  foreach ($variables as $clave => $valor) {
+    $css .= "  {$clave}: {$valor};
+";
+  }
+
+  $css .= "}
+";
+
+  return $css;
 }
 
 function tienda_admin_obtener_logo_tema($branding = [], $tema = []) {
@@ -143,8 +199,9 @@ function tienda_admin_obtener_logo_tema($branding = [], $tema = []) {
   return '';
 }
 
-function tienda_admin_render_head($titulo = 'Admin tienda', $tema = []) {
+function tienda_admin_render_head($titulo = 'Admin tienda', $tema = [], $tema_tokens = [], $componentes = []) {
   $archivo_css_tema = tienda_admin_obtener_archivo_css_tema($tema);
+  $css_variables = tienda_admin_generar_variables_css($tema_tokens, $componentes);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -152,14 +209,12 @@ function tienda_admin_render_head($titulo = 'Admin tienda', $tema = []) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?php echo htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8'); ?></title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/public/assets/css/admin_base.css">
   <link rel="stylesheet" href="/public/assets/css/tienda_admin.css">
   <?php if ($archivo_css_tema !== '') { ?>
   <link rel="stylesheet" href="<?php echo htmlspecialchars($archivo_css_tema, ENT_QUOTES, 'UTF-8'); ?>">
   <?php } ?>
+  <style><?php echo PHP_EOL . $css_variables; ?></style>
 </head>
 <?php
 }

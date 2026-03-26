@@ -1,30 +1,15 @@
-@import url('./parametrizacion.css');
+@import url('./neutral_base.css');
 
-.dx_seccion_compacta {
-  margin-bottom: 0;
+.dx_layout {
+  min-height: 100vh;
 }
 
-.dx_formulario_seguridad {
-  gap: 18px;
+.dx_sidebar,
+.dx_contenido {
+  padding: 16px;
 }
 
-.dx_formulario_seguridad .dx_campos {
+.dx_sidebar_nav {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.dx_formulario_seguridad .dx_campo_completo {
-  grid-column: 1 / -1;
-}
-
-#div_mensaje_seguridad:empty,
-#div_resumen_seguridad:empty {
-  display: none;
-}
-
-@media (max-width: 720px) {
-  .dx_formulario_seguridad .dx_campos {
-    grid-template-columns: minmax(0, 1fr);
-  }
+  gap: 8px;
 }

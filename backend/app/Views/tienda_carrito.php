@@ -11,32 +11,31 @@ $carrito = $tv_datos['carrito'] ?? ['items' => [], 'subtotal' => 0, 'envio' => 0
 tienda_render_head('Carrito', $tema_tokens, $componentes, $tema);
 ?>
 <body>
-  <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>
+  <?php tienda_render_topbar($contexto['modulo'] ?? [], $tema); ?>
   <?php tienda_render_header($branding, $menus, 'CARRITO', $tema); ?>
   <?php tienda_render_flash(); ?>
 
-  <main class="tv_pagina_modulo">
-    <section class="tv_bloque">
+  <main class="tv_page">
+    <section class="tv_section tv_shell">
       <div class="tv_breadcrumb">Inicio / Carrito</div>
-      <div class="tv_bloque_encabezado tv_bloque_encabezado_inline">
+      <div class="tv_section_head">
         <div>
           <span class="tv_etiqueta">Carrito</span>
-          <h2>Revisa tu compra</h2>
-          <p>Vista dedicada para el paso previo al checkout, manteniendo también el carrito lateral en toda la tienda.</p>
+          <h1 class="tv_page_title">Tu selección actual</h1>
         </div>
-        <button type="button" id="btn_abrir_carrito_pagina" class="tv_btn tv_btn_secundario">Abrir carrito lateral</button>
+        <p>Una vista más clara para revisar cantidades, subtotales y el paso a checkout desde cualquier tamaño de pantalla.</p>
       </div>
       <?php if (count($carrito['items']) === 0) { ?>
-        <div class="tv_vacio">Todavía no has agregado productos. Ve al <a href="/catalogo/">catálogo</a>.</div>
+        <div class="tv_empty_state">Todavía no has agregado productos. Ve al <a href="/catalogo/">catálogo</a>.</div>
       <?php } else { ?>
-        <div class="tv_carrito_layout tv_carrito_layout_real">
-          <div class="tv_carrito_items tv_carrito_items_real">
+        <div class="tv_cart_layout">
+          <div class="tv_cart_items">
             <?php foreach ($carrito['items'] as $item) { ?>
-              <article class="tv_carrito_item tv_carrito_item_real">
-                <div class="tv_carrito_item_media_wrap">
+              <article class="tv_cart_item">
+                <div class="tv_cart_item_media">
                   <?php tienda_render_producto_media($item, 'tv_producto_media_drawer', true); ?>
                 </div>
-                <div class="tv_carrito_info tv_carrito_info_real">
+                <div class="tv_cart_item_content">
                   <span class="tv_etiqueta"><?php echo htmlspecialchars((string) ($item['etiqueta'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
                   <h3><?php echo htmlspecialchars((string) ($item['nombre'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></h3>
                   <p><?php echo htmlspecialchars((string) ($item['resumen'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></p>
@@ -47,11 +46,12 @@ tienda_render_head('Carrito', $tema_tokens, $componentes, $tema);
                     <?php } ?>
                   </div>
                 </div>
-                <div class="tv_carrito_acciones tv_carrito_acciones_real">
-                  <form action="/carrito/" method="post" class="tv_form_carrito_linea tv_form_actualizar_carrito">
+                <div class="tv_cart_item_actions">
+                  <form action="/carrito/" method="post" class="tv_cart_line_form tv_form_actualizar_carrito">
                     <input type="hidden" name="accion" value="actualizar">
                     <input type="hidden" name="slug" value="<?php echo htmlspecialchars((string) ($item['slug'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                     <input type="hidden" name="redireccion" value="/carrito/">
+                    <label>Cantidad</label>
                     <input type="number" name="cantidad" value="<?php echo (int) ($item['cantidad'] ?? 1); ?>" min="0" max="10">
                     <button type="submit" class="tv_btn tv_btn_secundario">Actualizar</button>
                   </form>
@@ -61,19 +61,26 @@ tienda_render_head('Carrito', $tema_tokens, $componentes, $tema);
                     <input type="hidden" name="redireccion" value="/carrito/">
                     <button type="submit" class="tv_btn tv_btn_secundario">Eliminar</button>
                   </form>
-                  <span class="tv_carrito_total_linea">$<?php echo number_format((int) ($item['total'] ?? 0), 0, ',', '.'); ?></span>
+                  <strong class="tv_cart_line_total">$<?php echo number_format((int) ($item['total'] ?? 0), 0, ',', '.'); ?></strong>
                 </div>
               </article>
             <?php } ?>
           </div>
-          <aside class="tv_resumen_compra tv_resumen_compra_real">
-            <h3>Resumen</h3>
-            <div><span>Subtotal</span><strong>$<?php echo number_format((int) ($carrito['subtotal'] ?? 0), 0, ',', '.'); ?></strong></div>
-            <div><span>Ahorro</span><strong>$<?php echo number_format((int) ($carrito['ahorro'] ?? 0), 0, ',', '.'); ?></strong></div>
-            <div><span>Envío</span><strong>$<?php echo number_format((int) ($carrito['envio'] ?? 0), 0, ',', '.'); ?></strong></div>
-            <div class="tv_resumen_total"><span>Total</span><strong>$<?php echo number_format((int) ($carrito['total'] ?? 0), 0, ',', '.'); ?></strong></div>
-            <a href="/contacto/" class="tv_btn tv_btn_secundario">Continuar por asesoría</a>
-            <a href="/checkout/" class="tv_btn tv_btn_principal">Finalizar compra</a>
+          <aside class="tv_cart_summary">
+            <span class="tv_etiqueta">Resumen</span>
+            <div class="tv_cart_summary_badges"><span>Pago seguro</span><span>Entrega nacional</span></div>
+            <h3>Pedido actual</h3>
+            <div class="tv_cart_summary_rows">
+              <div><span>Subtotal</span><strong>$<?php echo number_format((int) ($carrito['subtotal'] ?? 0), 0, ',', '.'); ?></strong></div>
+              <div><span>Ahorro</span><strong>$<?php echo number_format((int) ($carrito['ahorro'] ?? 0), 0, ',', '.'); ?></strong></div>
+              <div><span>Envío</span><strong>$<?php echo number_format((int) ($carrito['envio'] ?? 0), 0, ',', '.'); ?></strong></div>
+              <div class="tv_cart_summary_total"><span>Total</span><strong>$<?php echo number_format((int) ($carrito['total'] ?? 0), 0, ',', '.'); ?></strong></div>
+            </div>
+            <div class="tv_cart_summary_actions">
+              <a href="/catalogo/" class="tv_btn tv_btn_secundario">Seguir comprando</a>
+              <a href="/checkout/" class="tv_btn tv_btn_principal">Ir al checkout</a>
+            </div>
+            <button type="button" id="btn_abrir_carrito_pagina" class="tv_link_button">Abrir carrito lateral</button>
           </aside>
         </div>
       <?php } ?>

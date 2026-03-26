@@ -40,7 +40,7 @@ if ($total <= 0) {
 tienda_render_head($titulo, $tema_tokens, $componentes, $tema);
 ?>
 <body>
-  <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>
+  <?php tienda_render_topbar($contexto['modulo'] ?? [], $tema); ?>
   <?php tienda_render_header($branding, $menus, 'CHECKOUT', $tema); ?>
   <?php tienda_render_flash(); ?>
 
@@ -51,7 +51,7 @@ tienda_render_head($titulo, $tema_tokens, $componentes, $tema);
         <div>
           <span class="tv_etiqueta">Comprobante</span>
           <h2><?php echo htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8'); ?></h2>
-          <p>Vista lista para impresión y soporte comercial del pedido registrado en la tienda.</p>
+          <p>Resumen final del pedido con detalle de productos, entrega y pago para impresión o seguimiento.</p>
         </div>
         <div class="tv_checkout_exito_botones tv_comprobante_acciones_top">
           <button type="button" class="tv_btn tv_btn_principal" onclick="window.print();">Imprimir</button>
@@ -64,7 +64,7 @@ tienda_render_head($titulo, $tema_tokens, $componentes, $tema);
           <div>
             <span class="tv_etiqueta">Pedido</span>
             <h3><?php echo htmlspecialchars($pedido_codigo !== '' ? $pedido_codigo : 'Pendiente de generación', ENT_QUOTES, 'UTF-8'); ?></h3>
-            <p><?php echo htmlspecialchars((string) ($branding['nombre_comercial'] ?? 'Tienda Virtual'), ENT_QUOTES, 'UTF-8'); ?></p>
+            <p><?php echo htmlspecialchars((string) ($branding['nombre_comercial'] ?? 'VENUS'), ENT_QUOTES, 'UTF-8'); ?></p>
           </div>
           <div class="tv_comprobante_estado">
             <article>

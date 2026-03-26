@@ -254,3 +254,24 @@ Novedades y Modificaciones
 - Se ajustó `backend/public/assets/css/themes/tienda/venus.css` para unificar la capa visual de home, catálogo, detalle, carrito, checkout, pago, contacto y footer bajo el tema VENUS.
 - Se ajustó `backend/public/assets/css/themes/admin/venus.css` para acercar el panel tienda a la misma identidad visual del frente comercial.
 - Se agregó `database/sql/020_sql_homepage_parametrizable_tema_venus.sql` para dejar parametrizable el producto hero, los destacados y los banners del homepage desde `system.modulo_configuraciones`.
+
+## 2026-03-25 - Parametrización real del tema VENUS
+Se evidencia que, el tema VENUS deja de depender únicamente de colores y estilos quemados dentro de los archivos CSS y pasa a consumir variables reales generadas desde los tokens y componentes del tema activo.
+
+Novedades y Modificaciones
+- Se ajustó `backend/app/Views/tienda/tienda_helper.php` para generar variables CSS ampliadas del tema y cargarlas después del archivo `venus.css`, permitiendo que la parametrización prevalezca sobre los valores base del archivo visual.
+- Se ajustó `backend/public/assets/css/themes/tienda/venus.css` para consumir variables dinámicas del tema en encabezado, buscador, hero, cards, CTA, checkout, detalle, carrito y footer, manteniendo la estructura del frente comercial.
+- Se ajustó `backend/app/Controllers/tienda_admin_bootstrap_controller.php` para exponer `tema_tokens` y `tema_componentes` al panel administrativo de tienda.
+- Se ajustó `backend/app/Views/tienda_admin/tienda_admin_helper.php` y las vistas `tienda_admin_*.php` para inyectar variables del tema activo dentro del panel administrativo.
+- Se ajustó `backend/public/assets/css/themes/admin/venus.css` para consumir variables dinámicas del tema en sidebar, navegación, tarjetas, buscador y botones del panel tienda.
+
+## v38 · Guia premium editorial VENUS y refuerzo parametrizable
+Se evidencia que, el tema VENUS se ajusta a una guia visual premium editorial definida por paleta, tipografia y semantica de componentes, manteniendo la parametrizacion del proyecto como fuente principal de colores, tipografias, radios, sombras y superficies.
+
+Novedades y Modificaciones
+- Se ajusto `backend/app/Views/tienda/tienda_helper.php` para usar como base la paleta `#DDD4E7`, `#BFAFD0`, `#D4B6CA`, `#F3D6D3`, `#F5CFC6`, `#685666`, `#8A7A88`, ademas de `Playfair Display` para headings e `Inter` para texto base.
+- Se ajusto `backend/app/Views/tienda_admin/tienda_admin_helper.php` para mantener consistencia de tipografia y tokens del tema activo dentro del panel de tienda.
+- Se ajusto `backend/public/assets/css/themes/tienda/venus.css` para consumir variables semanticas del tema en home, catalogo, producto, carrito, checkout y confirmacion, reduciendo dependencia de colores quemados.
+- Se ajusto `backend/public/assets/css/themes/admin/venus.css` para consumir las variables del tema VENUS en sidebar, navegacion, cards y botones del panel comercial.
+- Se agrega `database/sql/021_sql_tema_venus_premium_editorial.sql` para registrar valores premium editoriales del tema VENUS en `system.tema_tokens` y `system.tema_componentes`.
+- Se agrega `docs/04_front/001_guia_tema_venus_tailwind.md` como guia concreta para implementacion del tema con CSS custom properties y Tailwind.

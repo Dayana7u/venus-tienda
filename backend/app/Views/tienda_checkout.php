@@ -10,9 +10,9 @@ $carrito = $tv_datos['carrito'] ?? ['items' => [], 'subtotal' => 0, 'envio' => 0
 $checkout_datos = $tv_datos['checkout_datos'] ?? [];
 $modulo = $contexto['modulo'] ?? [];
 
-$checkout_titulo = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_datos_titulo', 'Datos de entrega');
-$checkout_descripcion = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_datos_descripcion', 'Completa la información del comprador y la entrega. El método de pago se selecciona en el siguiente paso.');
-$checkout_boton = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_datos_boton', 'Continuar al pago');
+$checkout_titulo = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_datos_titulo', ''), 'Contacto y envío');
+$checkout_descripcion = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_datos_descripcion', ''), 'Completa tus datos de contacto y la dirección de entrega para continuar al pago.');
+$checkout_boton = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_datos_boton', ''), 'Continuar al pago');
 
 $campos_checkout = [
   'nombres' => tienda_obtener_definicion_campo_publico($modulo, 'tienda_publica.checkout_datos_nombres', [
@@ -98,7 +98,7 @@ $campos_checkout = [
 tienda_render_head('Checkout · Datos del pedido', $tema_tokens, $componentes, $tema);
 ?>
 <body>
-  <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>
+  <?php tienda_render_topbar($contexto['modulo'] ?? [], $tema); ?>
   <?php tienda_render_header($branding, $menus, 'CHECKOUT', $tema); ?>
   <?php tienda_render_flash(); ?>
 
@@ -130,7 +130,7 @@ tienda_render_head('Checkout · Datos del pedido', $tema_tokens, $componentes, $
           <article class="tv_checkout_panel tv_checkout_panel_formulario">
             <header class="tv_checkout_panel_header">
               <span class="tv_etiqueta">Comprador</span>
-              <h3>Información principal</h3>
+              <h3>Datos de contacto</h3>
             </header>
             <div class="tv_checkout_grid tv_checkout_grid_dos">
               <?php if (($campos_checkout['nombres']['visible'] ?? false) === true) { ?>
@@ -163,7 +163,7 @@ tienda_render_head('Checkout · Datos del pedido', $tema_tokens, $componentes, $
           <article class="tv_checkout_panel tv_checkout_panel_formulario">
             <header class="tv_checkout_panel_header">
               <span class="tv_etiqueta">Entrega</span>
-              <h3>Dirección del pedido</h3>
+              <h3>Información de envío</h3>
             </header>
             <div class="tv_checkout_grid tv_checkout_grid_dos">
               <?php if (($campos_checkout['destinatario']['visible'] ?? false) === true) { ?>
@@ -253,8 +253,8 @@ tienda_render_head('Checkout · Datos del pedido', $tema_tokens, $componentes, $
             <div><span>Envío</span><strong>$<?php echo number_format((int) ($carrito['envio'] ?? 0), 0, ',', '.'); ?></strong></div>
             <div class="tv_checkout_total_principal"><span>Total</span><strong>$<?php echo number_format((int) ($carrito['total'] ?? 0), 0, ',', '.'); ?></strong></div>
           </div>
-          <div class="tv_checkout_resumen_beneficios">
-            <article><span>Despacho</span><strong>1 a 8 días hábiles</strong></article>
+          <div class="tv_checkout_resumen_beneficios tv_checkout_resumen_beneficios_venus">
+            <article><span>Despacho</span><strong>1 a 5 días hábiles</strong></article>
             <article><span>Métodos</span><strong>PSE · Tarjeta · Contra entrega</strong></article>
           </div>
         </aside>

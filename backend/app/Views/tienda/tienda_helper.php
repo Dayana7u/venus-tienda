@@ -79,6 +79,61 @@ function tienda_consumir_mensaje_flash() {
   return $mensaje;
 }
 
+function tienda_texto_es_placeholder_venus_publico($texto = '') {
+  $texto = strtolower(trim((string) $texto));
+
+  if ($texto === '') {
+    return true;
+  }
+
+  $marcadores = [
+    'parametriz',
+    'bloques',
+    'catálogo real',
+    'catalogo real',
+    'panel administrativo',
+    'módulo',
+    'modulo',
+    'estructura comercial',
+    'datos visibles',
+    'portada',
+    'reutil',
+    'continuidad',
+    'tema venus',
+    'vista separada',
+    'vista dedicada',
+    'soporte comercial',
+    'flujo de compra',
+    'identidad visual',
+    'preparad',
+    'panel tienda',
+    'tienda pública',
+    'tienda publica',
+  ];
+
+  foreach ($marcadores as $marcador) {
+    if (strpos($texto, $marcador) !== false) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function tienda_texto_comercial_venus_publico($tema = [], $texto = '', $valor_defecto = '') {
+  $texto = trim((string) $texto);
+
+  if (tienda_tema_es_venus_publico($tema) === false) {
+    return $texto !== '' ? $texto : $valor_defecto;
+  }
+
+  if (tienda_texto_es_placeholder_venus_publico($texto) === true) {
+    return $valor_defecto;
+  }
+
+  return $texto !== '' ? $texto : $valor_defecto;
+}
+
 function tienda_generar_variables_css($tema_tokens = [], $componentes = []) {
   $badge = $componentes['badge'] ?? [];
   $footer = $componentes['footer'] ?? [];
@@ -88,46 +143,113 @@ function tienda_generar_variables_css($tema_tokens = [], $componentes = []) {
   $topbar = $componentes['topbar'] ?? [];
   $collection_card = $componentes['collection.card'] ?? [];
   $contact_highlight = $componentes['contact.highlight'] ?? [];
+  $header = $componentes['header'] ?? [];
+  $home_hero = $componentes['home.hero'] ?? [];
+  $home_surface = $componentes['home.surface'] ?? [];
+  $home_card = $componentes['home.card'] ?? [];
+  $cta = $componentes['home.cta'] ?? [];
+
+  $color_primary = $tema_tokens['color.primary'] ?? '#BFAFD0';
+  $color_secondary = $tema_tokens['color.secondary'] ?? '#DDD4E7';
+  $color_accent = $tema_tokens['color.accent'] ?? '#D4B6CA';
+  $color_background = $tema_tokens['color.background'] ?? '#F5F2F8';
+  $color_surface = $tema_tokens['color.surface'] ?? '#FFFFFF';
+  $color_text = $tema_tokens['color.text'] ?? '#685666';
+  $color_text_soft = $tema_tokens['color.text.soft'] ?? '#8A7A88';
+  $color_border = $tema_tokens['color.border'] ?? '#BFAFD0';
+  $shadow_card = $tema_tokens['shadow.card'] ?? '0 18px 42px rgba(104, 86, 102, 0.10)';
+  $button_background = $button_primary['background'] ?? '#BFAFD0';
+  $header_background = $header['background'] ?? 'rgba(245, 242, 248, 0.96)';
+  $header_border = $header['border_color'] ?? $color_border;
+  $nav_link = $header['link_color'] ?? $color_text;
+  $nav_link_hover = $header['link_hover_color'] ?? '#685666';
+  $search_background = $input_search['background'] ?? $color_surface;
+  $search_border = $input_search['border_color'] ?? $color_border;
+  $shell_background = $home_surface['background'] ?? 'rgba(255, 255, 255, 0.86)';
+  $shell_border = $home_surface['border_color'] ?? $color_border;
+  $card_background = $home_card['background'] ?? $card_product['background'] ?? '#FFFFFF';
+  $card_border = $home_card['border_color'] ?? $card_product['border_color'] ?? $color_border;
+  $hero_panel_background = $home_hero['background'] ?? 'linear-gradient(180deg, #F3D6D3 0%, #F5CFC6 100%)';
+  $hero_visual_background = $home_hero['background_alt'] ?? 'linear-gradient(180deg, #DDD4E7 0%, #F5F2F8 100%)';
+  $hero_title = $home_hero['title_color'] ?? $color_text;
+  $hero_text = $home_hero['text_color'] ?? $color_text_soft;
+  $cta_background = $cta['background'] ?? 'linear-gradient(135deg, #DDD4E7 0%, #F3D6D3 100%)';
+  $footer_background = $footer['background'] ?? '#685666';
+  $footer_border = $footer['border_color'] ?? '#685666';
+  $footer_title = $footer['title_color'] ?? '#FFFFFF';
+  $footer_text = $footer['color'] ?? '#F5F2F8';
+  $footer_copy_border = $footer['copy_border_color'] ?? 'rgba(255, 255, 255, 0.18)';
 
   $variables = [
-    '--tv-color-primary'                => $tema_tokens['color.primary'] ?? '#E8B4BC',
-    '--tv-color-secondary'              => $tema_tokens['color.secondary'] ?? '#D98F9D',
-    '--tv-color-accent'                 => $tema_tokens['color.accent'] ?? '#C46A7A',
-    '--tv-color-background'             => $tema_tokens['color.background'] ?? '#FFF7F8',
-    '--tv-color-surface'                => $tema_tokens['color.surface'] ?? '#FFFFFF',
-    '--tv-color-text'                   => $tema_tokens['color.text'] ?? '#4A3A3F',
-    '--tv-color-text-soft'              => $tema_tokens['color.text.soft'] ?? '#7A666C',
-    '--tv-color-border'                 => $tema_tokens['color.border'] ?? '#F1D7DC',
+    '--tv-color-primary'                => $color_primary,
+    '--tv-color-secondary'              => $color_secondary,
+    '--tv-color-accent'                 => $color_accent,
+    '--tv-color-background'             => $color_background,
+    '--tv-color-surface'                => $color_surface,
+    '--tv-color-text'                   => $color_text,
+    '--tv-color-text-soft'              => $color_text_soft,
+    '--tv-color-border'                 => $color_border,
     '--tv-font-heading'                 => '"' . ($tema_tokens['font.family.heading'] ?? 'Playfair Display') . '", serif',
-    '--tv-font-base'                    => '"' . ($tema_tokens['font.family.body'] ?? 'Poppins') . '", sans-serif',
+    '--tv-font-base'                    => '"' . ($tema_tokens['font.family.body'] ?? 'Inter') . '", sans-serif',
     '--tv-font-size-base'               => $tema_tokens['font.size.base'] ?? '16px',
     '--tv-radius-sm'                    => $tema_tokens['border.radius.sm'] ?? '8px',
     '--tv-radius-md'                    => $tema_tokens['border.radius.md'] ?? '14px',
     '--tv-radius-lg'                    => $tema_tokens['border.radius.lg'] ?? '22px',
-    '--tv-shadow-card'                  => $tema_tokens['shadow.card'] ?? '0 10px 30px rgba(212, 166, 176, 0.18)',
-    '--tv-badge-background'             => $badge['background'] ?? '#F7E5E9',
-    '--tv-badge-text'                   => $badge['color'] ?? '#8D5D68',
-    '--tv-badge-border'                 => $badge['border_color'] ?? '#E8C6CE',
-    '--tv-footer-background'            => $footer['background'] ?? '#E9D7DD',
-    '--tv-footer-background-alt'        => $footer['background_alt'] ?? '#E2CCD4',
-    '--tv-footer-text'                  => $footer['color'] ?? '#5E454D',
-    '--tv-footer-link'                  => $footer['link_color'] ?? '#6F525B',
-    '--tv-footer-link-hover-background' => $footer['link_hover_background'] ?? 'rgba(255, 255, 255, 0.45)',
-    '--tv-footer-border'                => $footer['border_color'] ?? '#E7CAD2',
-    '--tv-topbar-background'            => $topbar['background'] ?? '#DCA3AF',
-    '--tv-topbar-text'                  => $topbar['color'] ?? '#FFFAF9',
-    '--tv-button-primary-background'    => $button_primary['background'] ?? '#D58C9E',
+    '--tv-shadow-card'                  => $shadow_card,
+    '--tv-badge-background'             => $badge['background'] ?? '#F5CFC6',
+    '--tv-badge-text'                   => $badge['color'] ?? '#685666',
+    '--tv-badge-border'                 => $badge['border_color'] ?? '#BFAFD0',
+    '--tv-footer-background'            => $footer_background,
+    '--tv-footer-background-alt'        => $footer['background_alt'] ?? '#5E4E5C',
+    '--tv-footer-text'                  => $footer_text,
+    '--tv-footer-link'                  => $footer['link_color'] ?? '#FFFFFF',
+    '--tv-footer-link-hover-background' => $footer['link_hover_background'] ?? 'rgba(255, 255, 255, 0.12)',
+    '--tv-footer-border'                => $footer_border,
+    '--tv-topbar-background'            => $topbar['background'] ?? 'linear-gradient(90deg, #DDD4E7 0%, #F3D6D3 100%)',
+    '--tv-topbar-text'                  => $topbar['color'] ?? '#685666',
+    '--tv-button-primary-background'    => $button_background,
     '--tv-button-primary-text'          => $button_primary['color'] ?? '#FFFFFF',
     '--tv-button-primary-radius'        => $button_primary['border_radius'] ?? '999px',
     '--tv-card-product-background'      => $card_product['background'] ?? '#FFFFFF',
-    '--tv-card-product-border'          => $card_product['border_color'] ?? '#F1D7DC',
-    '--tv-card-product-shadow'          => $card_product['box_shadow'] ?? '0 14px 32px rgba(17, 17, 17, 0.08)',
-    '--tv-input-search-background'      => $input_search['background'] ?? '#FFFFFF',
-    '--tv-input-search-border'          => $input_search['border_color'] ?? '#E8C6CE',
-    '--tv-collection-background'        => $collection_card['background'] ?? '#FFF5F7',
-    '--tv-collection-border'            => $collection_card['border_color'] ?? '#ECD1D8',
-    '--tv-contact-highlight-background' => $contact_highlight['background'] ?? '#FFF2F5',
-    '--tv-contact-highlight-border'     => $contact_highlight['border_color'] ?? '#EAD1D8',
+    '--tv-card-product-border'          => $card_product['border_color'] ?? '#BFAFD0',
+    '--tv-card-product-shadow'          => $card_product['box_shadow'] ?? '0 16px 36px rgba(104, 86, 102, 0.10)',
+    '--tv-input-search-background'      => $search_background,
+    '--tv-input-search-border'          => $search_border,
+    '--tv-collection-background'        => $collection_card['background'] ?? '#F5F2F8',
+    '--tv-collection-border'            => $collection_card['border_color'] ?? '#BFAFD0',
+    '--tv-contact-highlight-background' => $contact_highlight['background'] ?? '#F3D6D3',
+    '--tv-contact-highlight-border'     => $contact_highlight['border_color'] ?? '#BFAFD0',
+    '--tv-venus-page-background'        => 'linear-gradient(180deg, ' . $color_background . ' 0%, #fff8f6 100%)',
+    '--tv-venus-header-background'      => $header_background,
+    '--tv-venus-header-border'          => $header_border,
+    '--tv-venus-nav-link'               => $nav_link,
+    '--tv-venus-nav-link-hover'         => $nav_link_hover,
+    '--tv-venus-search-background'      => $search_background,
+    '--tv-venus-search-border'          => $search_border,
+    '--tv-venus-shell-background'       => $shell_background,
+    '--tv-venus-shell-border'           => $shell_border,
+    '--tv-venus-card-background'        => $card_background,
+    '--tv-venus-card-border'            => $card_border,
+    '--tv-venus-card-shadow'            => $home_card['box_shadow'] ?? $shadow_card,
+    '--tv-venus-hero-panel-background'  => $hero_panel_background,
+    '--tv-venus-hero-visual-background' => $hero_visual_background,
+    '--tv-venus-hero-title'             => $hero_title,
+    '--tv-venus-hero-text'              => $hero_text,
+    '--tv-venus-cta-background'         => $cta_background,
+    '--tv-venus-footer-background'      => $footer_background,
+    '--tv-venus-footer-border'          => $footer_border,
+    '--tv-venus-footer-title'           => $footer_title,
+    '--tv-venus-footer-text'            => $footer_text,
+    '--tv-venus-footer-copy-border'     => $footer_copy_border,
+    '--tv-color-rose'                    => '#F3D6D3',
+    '--tv-color-peach'                   => '#F5CFC6',
+    '--tv-page-background'               => '#F5F2F8',
+    '--tv-rating-color'                  => '#C9A24F',
+    '--tv-input-background'              => $search_background,
+    '--tv-stepper-background'            => '#FFFFFF',
+    '--tv-stepper-active-background'     => '#BFAFD0',
+    '--tv-stepper-active-text'           => '#FFFFFF',
+    '--tv-footer-contrast'               => '#F5F2F8',
   ];
 
   $css = ":root {\n";
@@ -140,7 +262,6 @@ function tienda_generar_variables_css($tema_tokens = [], $componentes = []) {
 
   return $css;
 }
-
 
 function tienda_obtener_configuracion_modulo_publico($modulo = [], $codigo = '', $valor_defecto = '') {
   $configuraciones = $modulo['configuraciones'] ?? [];
@@ -217,7 +338,6 @@ function tienda_formatear_telefono_whatsapp_publico($telefono = '') {
   return $numero;
 }
 
-
 function tienda_tema_es_venus_publico($tema = []) {
   $codigo_tema = is_array($tema) ? (string) ($tema['codigo'] ?? '') : (string) $tema;
   return strtolower(trim($codigo_tema)) === 'venus';
@@ -280,7 +400,6 @@ function tienda_generar_url_whatsapp_soporte_publico($telefono = '', $mensaje = 
   return 'https://wa.me/' . rawurlencode($telefono) . '?text=' . rawurlencode((string) $mensaje);
 }
 
-
 function tienda_normalizar_codigo_tema_publico($tema = []) {
   $codigo_tema = is_array($tema) ? (string) ($tema['codigo'] ?? '') : (string) $tema;
   $codigo_tema = strtolower(trim($codigo_tema));
@@ -314,24 +433,29 @@ function tienda_render_head($titulo, $tema_tokens = [], $componentes = [], $tema
   echo '  <meta charset="UTF-8">';
   echo '  <meta name="viewport" content="width=device-width, initial-scale=1.0">';
   echo '  <title>' . htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') . '</title>';
-  echo '  <link rel="preconnect" href="https://fonts.googleapis.com">';
-  echo '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
-  echo '  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">';
   echo '  <link rel="stylesheet" href="/public/assets/css/tienda_publica.css">';
-  echo '  <style>' . PHP_EOL . $css_variables . '  </style>';
 
   if ($archivo_css_tema !== '') {
     echo '  <link rel="stylesheet" href="' . htmlspecialchars($archivo_css_tema, ENT_QUOTES, 'UTF-8') . '">';
   }
+
+  echo '  <style>' . PHP_EOL . $css_variables . '  </style>';
   echo '</head>';
 }
 
-function tienda_render_topbar($modulo = []) {
+function tienda_render_topbar($modulo = [], $tema = []) {
   $configuraciones = $modulo['configuraciones'] ?? [];
-  $mensaje = $configuraciones['tienda_publica.topbar_texto']['valor'] ?? 'Envíos nacionales · Compra segura · Atención por WhatsApp';
+  $mensaje = tienda_texto_comercial_venus_publico(
+    $tema,
+    (string) ($configuraciones['tienda_publica.topbar_texto']['valor'] ?? ''),
+    'Entrega nacional · Edición premium · Compra segura'
+  );
 
   echo '<section class="tv_topbar">';
-  echo '  <div class="tv_topbar_contenido">' . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . '</div>';
+  echo '  <div class="tv_topbar_contenido">';
+  echo '    <span class="tv_topbar_pill">Nuevo tema VENUS</span>';
+  echo '    <p>' . htmlspecialchars((string) $mensaje, ENT_QUOTES, 'UTF-8') . '</p>';
+  echo '  </div>';
   echo '</section>';
 }
 
@@ -339,30 +463,36 @@ function tienda_render_header($branding = [], $menus = [], $pagina_activa = '', 
   $nombre = $branding['nombre_comercial'] ?? 'Tienda Pública Base';
   $total_carrito = tienda_obtener_total_carrito();
   $es_tema_venus = tienda_tema_es_venus_publico($tema);
+  $subtitulo = $es_tema_venus ? 'Maquillaje · Skincare · Accesorios' : 'Compra en línea';
 
   echo '<header class="tv_header tv_header_publico' . ($es_tema_venus ? ' tv_header_venus' : '') . '">';
   echo '  <div class="tv_header_superior">';
   echo '    <div class="tv_header_marca">';
-  echo '      <a href="/" class="tv_logo_link" aria-label="' . htmlspecialchars((string) $nombre, ENT_QUOTES, 'UTF-8') . '">' . tienda_render_logo_publico($branding, $tema, 'tv_logo') . '</a>';
+  echo '      <a href="/" class="tv_logo_link tv_logo_link_stack" aria-label="' . htmlspecialchars((string) $nombre, ENT_QUOTES, 'UTF-8') . '">';
+  echo '        ' . tienda_render_logo_publico($branding, $tema, 'tv_logo') . '';
+  echo '        <span class="tv_logo_caption">' . htmlspecialchars((string) $subtitulo, ENT_QUOTES, 'UTF-8') . '</span>';
+  echo '      </a>';
   echo '    </div>';
-  echo '    <nav class="tv_nav">';
+  echo '    <div class="tv_header_centro">';
+  echo '      <nav class="tv_nav">';
 
   foreach ($menus as $menu) {
     $codigo = $menu['codigo'] ?? '';
     $ruta = tienda_obtener_ruta_publica($codigo, $menu['ruta'] ?? '/');
     $clase = $pagina_activa === $codigo ? ' tv_nav_link_activo' : '';
-    echo '      <a href="' . htmlspecialchars($ruta, ENT_QUOTES, 'UTF-8') . '" class="tv_nav_link' . $clase . '">' . htmlspecialchars($menu['nombre'], ENT_QUOTES, 'UTF-8') . '</a>';
+    echo '        <a href="' . htmlspecialchars($ruta, ENT_QUOTES, 'UTF-8') . '" class="tv_nav_link' . $clase . '">' . htmlspecialchars($menu['nombre'], ENT_QUOTES, 'UTF-8') . '</a>';
   }
 
-  echo '    </nav>';
+  echo '      </nav>';
+  echo '    </div>';
   echo '    <div class="tv_header_acciones">';
   echo '      <form action="/catalogo/" method="get" class="tv_buscador_campo">';
-  echo '        <input type="text" name="buscar" placeholder="Buscar" aria-label="Buscar producto">';
+  echo '        <input type="text" name="buscar" placeholder="Buscar maquillaje, skincare o accesorios" aria-label="Buscar producto">';
   echo '        <button type="submit" class="tv_buscador_boton" aria-label="Buscar">';
   echo '          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>';
   echo '        </button>';
   echo '      </form>';
-  echo '      <a href="/contacto/" class="tv_btn_icono tv_btn_icono_header" aria-label="Perfil y contacto">';
+  echo '      <a href="/contacto/" class="tv_btn_icono tv_btn_icono_header" aria-label="Mi cuenta y contacto">';
   echo '        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 19c1.5-3 4-4.5 7-4.5s5.5 1.5 7 4.5"></path></svg>';
   echo '      </a>';
   echo '      <button type="button" id="btn_abrir_carrito_tienda_publica" class="tv_btn_icono tv_btn_icono_header tv_btn_carrito_encabezado" aria-label="Carrito">';
@@ -390,11 +520,16 @@ function tienda_render_flash() {
 
 function tienda_render_footer($branding = [], $menus = [], $tema = []) {
   $nombre = trim((string) ($branding['nombre_comercial'] ?? 'VENUS'));
-  $texto_footer = trim((string) ($branding['texto_footer'] ?? 'Skincare, maquillaje y accesorios para una compra clara y elegante.'));
+  $texto_footer = tienda_texto_comercial_venus_publico(
+    $tema,
+    (string) ($branding['texto_footer'] ?? ''),
+    'Cosmética premium con una estética editorial, femenina y limpia para cada momento de tu rutina.'
+  );
   $correo = trim((string) ($branding['correo_contacto'] ?? 'contacto@venusbeauty.co'));
   $telefono = trim((string) ($branding['telefono_contacto'] ?? ''));
   $direccion = trim((string) ($branding['direccion'] ?? ''));
   $menus_footer = [];
+  $badges_footer = ['Despacho nacional', 'Pago protegido', 'Atención personalizada'];
 
   foreach ($menus as $menu) {
     $codigo = strtoupper((string) ($menu['codigo'] ?? ''));
@@ -409,66 +544,51 @@ function tienda_render_footer($branding = [], $menus = [], $tema = []) {
     ];
   }
 
-  if (count($menus_footer) === 0) {
-    $menus_footer = [
-      ['nombre' => 'Inicio', 'ruta' => '/'],
-      ['nombre' => 'Catálogo', 'ruta' => '/catalogo/'],
-      ['nombre' => 'Ofertas', 'ruta' => '/ofertas/'],
-      ['nombre' => 'Contacto', 'ruta' => '/contacto/'],
-    ];
-  }
-
   echo '<footer class="tv_footer">';
   echo '  <div class="tv_footer_contenido">';
-  echo '    <div class="tv_footer_copy">' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . ' · Home de belleza · contacto</div>';
+  echo '    <div class="tv_footer_top">';
+  echo '      <div class="tv_footer_logo">' . tienda_render_logo_publico($branding, $tema, 'tv_logo tv_logo_footer') . '</div>';
+  echo '      <p class="tv_footer_copy">' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . ' · Belleza curada para una compra más cómoda y elegante</p>';
+  echo '    </div>';
+  echo '    <div class="tv_footer_badges">';
+  foreach ($badges_footer as $badge_footer) {
+    echo '      <span>' . htmlspecialchars((string) $badge_footer, ENT_QUOTES, 'UTF-8') . '</span>';
+  }
+  echo '    </div>';
   echo '    <div class="tv_footer_columnas">';
   echo '      <article class="tv_footer_bloque tv_footer_bloque_marca">';
-  echo '        <div class="tv_footer_logo">' . tienda_render_logo_publico($branding, $tema, 'tv_logo tv_logo_footer') . '</div>';
+  echo '        <h3>Sobre VENUS</h3>';
   echo '        <p>' . htmlspecialchars($texto_footer, ENT_QUOTES, 'UTF-8') . '</p>';
   echo '      </article>';
   echo '      <article class="tv_footer_bloque">';
-  echo '        <h3>Ayuda</h3>';
+  echo '        <h3>Navegación</h3>';
   echo '        <ul class="tv_footer_lista">';
-
   foreach ($menus_footer as $menu_footer) {
     echo '          <li><a href="' . htmlspecialchars($menu_footer['ruta'], ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($menu_footer['nombre'], ENT_QUOTES, 'UTF-8') . '</a></li>';
   }
-
   echo '        </ul>';
   echo '      </article>';
   echo '      <article class="tv_footer_bloque">';
   echo '        <h3>Contacto</h3>';
-  echo '        <ul class="tv_footer_lista tv_footer_lista_contacto">';
-
+  echo '        <ul class="tv_footer_lista">';
   if ($correo !== '') {
     echo '          <li><a href="mailto:' . htmlspecialchars($correo, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($correo, ENT_QUOTES, 'UTF-8') . '</a></li>';
   }
-
   if ($telefono !== '') {
     echo '          <li><a href="tel:' . htmlspecialchars($telefono, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($telefono, ENT_QUOTES, 'UTF-8') . '</a></li>';
   }
-
   if ($direccion !== '') {
     echo '          <li><span>' . htmlspecialchars($direccion, ENT_QUOTES, 'UTF-8') . '</span></li>';
   }
-
-  if ($correo === '' && $telefono === '' && $direccion === '') {
-    echo '          <li><a href="/contacto/">Canales de atención</a></li>';
-  }
-
   echo '        </ul>';
   echo '      </article>';
   echo '      <article class="tv_footer_bloque">';
-  echo '        <h3>Redes sociales</h3>';
+  echo '        <h3>Servicio</h3>';
   echo '        <ul class="tv_footer_lista">';
-  echo '          <li><a href="/contacto/">Facebook</a></li>';
-  echo '          <li><a href="/contacto/">Instagram</a></li>';
-  echo '          <li><a href="/contacto/">WhatsApp</a></li>';
+  echo '          <li><span>Entrega nacional</span></li>';
+  echo '          <li><span>Pagos seguros</span></li>';
+  echo '          <li><span>Atención postcompra</span></li>';
   echo '        </ul>';
-  echo '      </article>';
-  echo '      <article class="tv_footer_bloque">';
-  echo '        <h3>Aviso legal</h3>';
-  echo '        <p class="tv_footer_legal">Contenido, campañas, branding, imágenes destacadas y textos visibles desde parametrización.</p>';
   echo '      </article>';
   echo '    </div>';
   echo '  </div>';
@@ -497,31 +617,33 @@ function tienda_render_producto_media($producto, $clase_adicional = '', $lazy = 
 function tienda_render_producto_card($producto) {
   $url = '/producto/?slug=' . urlencode((string) $producto['slug']);
   $descuento = (int) ($producto['descuento_porcentaje'] ?? 0);
+  $rating = number_format((float) ($producto['rating'] ?? 0), 1, ',', '.');
+  $stock_texto = ((int) ($producto['stock'] ?? 0) > 0 ? 'Disponible' : 'Sin stock');
 
   echo '<article class="tv_producto_card tv_producto_card_tienda">';
-
-  if ($descuento > 0) {
-    echo '  <span class="tv_producto_descuento">-' . $descuento . '%</span>';
-  }
-
   echo '  <a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" class="tv_producto_media_enlace">';
   tienda_render_producto_media($producto, 'tv_producto_media_card');
   echo '  </a>';
   echo '  <div class="tv_producto_contenido">';
-  echo '    <span class="tv_etiqueta">' . htmlspecialchars((string) ($producto['etiqueta'] ?? ''), ENT_QUOTES, 'UTF-8') . '</span>';
+  echo '    <div class="tv_producto_badges">';
+  if ((string) ($producto['etiqueta'] ?? '') !== '') {
+    echo '      <span class="tv_etiqueta">' . htmlspecialchars((string) ($producto['etiqueta'] ?? ''), ENT_QUOTES, 'UTF-8') . '</span>';
+  }
+  if ($descuento > 0) {
+    echo '      <span class="tv_producto_descuento">-' . $descuento . '%</span>';
+  }
+  echo '    </div>';
   echo '    <h3><a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars((string) ($producto['nombre'] ?? ''), ENT_QUOTES, 'UTF-8') . '</a></h3>';
   echo '    <p>' . htmlspecialchars((string) ($producto['resumen'] ?? ''), ENT_QUOTES, 'UTF-8') . '</p>';
   echo '    <div class="tv_producto_meta">';
   echo '      <strong>$' . number_format((int) ($producto['precio'] ?? 0), 0, ',', '.') . '</strong>';
-
   if ((int) ($producto['precio_anterior'] ?? 0) > (int) ($producto['precio'] ?? 0)) {
     echo '      <span>$' . number_format((int) ($producto['precio_anterior'] ?? 0), 0, ',', '.') . '</span>';
   }
-
   echo '    </div>';
   echo '    <div class="tv_producto_extra">';
-  echo '      <span>★ ' . number_format((float) ($producto['rating'] ?? 0), 1, ',', '.') . '</span>';
-  echo '      <span>' . ((int) ($producto['stock'] ?? 0) > 0 ? 'Disponible' : 'Sin stock') . '</span>';
+  echo '      <span class="tv_rating">★★★★★ <b>' . $rating . '</b></span>';
+  echo '      <span class="tv_stock">' . htmlspecialchars($stock_texto, ENT_QUOTES, 'UTF-8') . '</span>';
   echo '    </div>';
   echo '    <div class="tv_producto_acciones">';
   echo '      <a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" class="tv_btn tv_btn_secundario">Ver detalle</a>';
@@ -530,7 +652,7 @@ function tienda_render_producto_card($producto) {
   echo '        <input type="hidden" name="slug" value="' . htmlspecialchars((string) ($producto['slug'] ?? ''), ENT_QUOTES, 'UTF-8') . '">';
   echo '        <input type="hidden" name="cantidad" value="1">';
   echo '        <input type="hidden" name="redireccion" value="' . htmlspecialchars((string) ($_SERVER['REQUEST_URI'] ?? '/'), ENT_QUOTES, 'UTF-8') . '">';
-  echo '        <button type="submit" class="tv_btn tv_btn_principal">Agregar</button>';
+  echo '        <button type="submit" class="tv_btn tv_btn_principal">Añadir</button>';
   echo '      </form>';
   echo '    </div>';
   echo '  </div>';

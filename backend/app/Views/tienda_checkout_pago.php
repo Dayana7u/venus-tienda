@@ -22,18 +22,18 @@ if (count($items_resumen) === 0 && isset($_SESSION['tv_checkout_ultimo_items']) 
   $items_resumen = $_SESSION['tv_checkout_ultimo_items'];
 }
 
-$pasarela_titulo = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_titulo', 'Finaliza tu compra');
-$pasarela_descripcion = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_descripcion', 'Selecciona el método de pago y completa solo la información necesaria para continuar con el cobro.');
-$pasarela_encabezado = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_encabezado', 'Paga tu pedido');
-$pasarela_texto = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_texto', 'Selecciona el medio de pago que mejor se adapte a tu compra.');
-$texto_tarjeta = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_tarjeta_texto', 'Tu pago se procesa de forma segura.');
-$texto_pse = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_pse_texto', 'Al continuar serás redirigido a tu banco para completar el pago con PSE.');
-$texto_contra = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_contra_texto', 'Valida quién recibe el pedido y deja lista la entrega.');
-$terminos_texto = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_terminos', 'Acepto el procesamiento del pago y los términos del medio seleccionado');
-$boton_pagar = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_boton', 'Pagar pedido');
-$boton_descargar = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_confirmacion_boton_comprobante', 'Descargar comprobante');
-$boton_soporte = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_confirmacion_boton_soporte', 'Solicitar soporte');
-$boton_seguir = tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_confirmacion_boton_catalogo', 'Seguir comprando');
+$pasarela_titulo = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_titulo', ''), 'Finaliza tu pedido');
+$pasarela_descripcion = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_descripcion', ''), 'Elige el método de pago que prefieras y revisa el resumen antes de confirmar tu compra.');
+$pasarela_encabezado = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_encabezado', ''), 'Pago seguro');
+$pasarela_texto = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_texto', ''), 'Selecciona el medio de pago que mejor se adapte a tu compra y continúa con una validación simple y clara.');
+$texto_tarjeta = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_tarjeta_texto', ''), 'Tus datos se procesan de forma segura.');
+$texto_pse = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_pse_texto', ''), 'Al continuar serás redirigido a tu banco para completar el pago por PSE.');
+$texto_contra = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_contra_texto', ''), 'Confirma quién recibe el pedido y deja lista la entrega.');
+$terminos_texto = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_terminos', ''), 'Acepto el procesamiento del pago y los términos del medio seleccionado');
+$boton_pagar = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_pago_boton', ''), 'Pagar pedido');
+$boton_descargar = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_confirmacion_boton_comprobante', ''), 'Descargar comprobante');
+$boton_soporte = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_confirmacion_boton_soporte', ''), 'Solicitar soporte');
+$boton_seguir = tienda_texto_comercial_venus_publico($tema, tienda_obtener_configuracion_modulo_publico($modulo, 'tienda_publica.checkout_confirmacion_boton_catalogo', ''), 'Seguir comprando');
 
 $metodos_pago = [
   'tarjeta' => [
@@ -78,7 +78,7 @@ $soporte_url = '/contacto/?pedido=' . urlencode($pedido_codigo) . '&cliente=' . 
 tienda_render_head('Checkout · Pago', $tema_tokens, $componentes, $tema);
 ?>
 <body>
-  <?php tienda_render_topbar($contexto['modulo'] ?? []); ?>
+  <?php tienda_render_topbar($contexto['modulo'] ?? [], $tema); ?>
   <?php tienda_render_header($branding, $menus, 'CHECKOUT', $tema); ?>
   <?php tienda_render_flash(); ?>
 
@@ -100,7 +100,7 @@ tienda_render_head('Checkout · Pago', $tema_tokens, $componentes, $tema);
       <section class="tv_bloque tv_bloque_checkout_amplio tv_checkout_exito tv_checkout_exito_pago">
         <span class="tv_etiqueta">Pago registrado</span>
         <h3>Pedido <?php echo htmlspecialchars((string) ($pedido['codigo'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></h3>
-        <p>La compra quedó registrada para <?php echo htmlspecialchars((string) ($pedido['cliente'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>.</p>
+        <p>Tu compra quedó registrada para <?php echo htmlspecialchars((string) ($pedido['cliente'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>.</p>
         <div class="tv_checkout_exito_resumen">
           <article><span>Método</span><strong><?php echo htmlspecialchars((string) tienda_formatear_metodo_pago_publico((string) ($pedido['metodo_pago'] ?? '')), ENT_QUOTES, 'UTF-8'); ?></strong></article>
           <article><span>Estado pago</span><strong><?php echo htmlspecialchars((string) ($pedido['estado_pago'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></strong></article>
@@ -327,7 +327,7 @@ tienda_render_head('Checkout · Pago', $tema_tokens, $componentes, $tema);
             <div><span>Envío</span><strong>$<?php echo number_format((int) ($carrito['envio'] ?? 0), 0, ',', '.'); ?></strong></div>
             <div class="tv_checkout_total_principal"><span>Total</span><strong>$<?php echo number_format((int) ($carrito['total'] ?? 0), 0, ',', '.'); ?></strong></div>
           </div>
-          <div class="tv_checkout_resumen_beneficios tv_checkout_resumen_cliente">
+          <div class="tv_checkout_resumen_beneficios tv_checkout_resumen_beneficios_venus tv_checkout_resumen_cliente">
             <article><span>Comprador</span><strong><?php echo htmlspecialchars(trim((string) (($checkout_datos['nombres'] ?? '') . ' ' . ($checkout_datos['apellidos'] ?? ''))), ENT_QUOTES, 'UTF-8'); ?></strong></article>
             <article><span>Entrega</span><strong><?php echo htmlspecialchars((string) ($checkout_datos['ciudad'] ?? ''), ENT_QUOTES, 'UTF-8'); ?> · <?php echo htmlspecialchars((string) ($checkout_datos['departamento'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></strong></article>
           </div>

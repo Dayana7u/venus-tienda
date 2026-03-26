@@ -1,0 +1,639 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #111111;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+}
+
+a {
+  color: #0b57d0;
+  text-decoration: underline;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+[type='button'],
+[type='submit'],
+.dx_btn,
+.tda_btn,
+.tv_btn,
+.btn-admin {
+  padding: 8px 12px;
+  border: 1px solid #9a9a9a;
+  border-radius: 4px;
+  background: #f3f3f3;
+  color: #111111;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+button:disabled,
+[type='button']:disabled,
+[type='submit']:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'],
+input[type='date'],
+input[type='search'],
+input[type='tel'],
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #9a9a9a;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #111111;
+}
+
+textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+small {
+  color: #555555;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #d0d0d0;
+}
+
+.dx_login,
+.dx_layout,
+.tda_login_principal,
+.tda_admin_layout,
+.tv_page,
+.tv_pagina_modulo,
+.tv_tienda {
+  width: 100%;
+}
+
+.dx_sidebar,
+.dx_contenido,
+.dx_panel_contenido,
+.dx_modal_contenido,
+.dx_login_panel,
+.dx_login_columna,
+.dx_resumen_tarjeta,
+.dx_tarjeta_resumen,
+.dx_seccion,
+.tda_login_panel,
+.tda_login_info,
+.tda_login_formulario_columna,
+.tda_admin_sidebar,
+.tda_admin_contenido,
+.tda_admin_bloque,
+.tda_admin_card_formulario,
+.tda_admin_card_listado,
+.tda_admin_metric_card,
+.tda_admin_panel,
+.tda_admin_resumen_card,
+.tda_admin_modulo_card,
+.tda_admin_card_categoria,
+.tda_admin_card_producto,
+.tda_admin_card_imagen,
+.tda_admin_card_fila,
+.tda_admin_card_pedido,
+.tv_topbar,
+.tv_header,
+.tv_hero,
+.tv_bloque,
+.tv_section,
+.tv_shell,
+.tv_footer,
+.tv_checkout_panel,
+.tv_cart_item,
+.tv_cart_summary,
+.tv_product_gallery,
+.tv_product_summary,
+.tv_product_buy_box,
+.tv_campaign_card,
+.tv_category_card,
+.tv_categoria_card,
+.tv_linea_card,
+.tv_producto_card,
+.tv_producto_card_tienda,
+.tv_producto_card_comercial,
+.tv_testimonio_card,
+.tv_faq_card,
+.tv_contact_card,
+.tv_newsletter_card,
+.tv_home_cta_block,
+.tv_comprobante_panel,
+.tv_support_banner,
+.tv_drawer_carrito,
+.tv_modal_checkout_dialogo {
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.dx_login_panel,
+.dx_sidebar,
+.dx_contenido,
+.dx_panel_contenido,
+.dx_modal_contenido,
+.dx_resumen_tarjeta,
+.dx_tarjeta_resumen,
+.dx_seccion,
+.tda_login_info,
+.tda_login_formulario_columna,
+.tda_admin_sidebar,
+.tda_admin_contenido,
+.tda_admin_bloque,
+.tda_admin_card_formulario,
+.tda_admin_card_listado,
+.tda_admin_metric_card,
+.tda_admin_panel,
+.tda_admin_resumen_card,
+.tda_admin_modulo_card,
+.tda_admin_card_categoria,
+.tda_admin_card_producto,
+.tda_admin_card_imagen,
+.tda_admin_card_fila,
+.tda_admin_card_pedido,
+.tv_topbar,
+.tv_header,
+.tv_hero,
+.tv_bloque,
+.tv_section,
+.tv_shell,
+.tv_footer,
+.tv_checkout_panel,
+.tv_cart_item,
+.tv_cart_summary,
+.tv_product_gallery,
+.tv_product_summary,
+.tv_product_buy_box,
+.tv_campaign_card,
+.tv_category_card,
+.tv_categoria_card,
+.tv_linea_card,
+.tv_producto_card,
+.tv_producto_card_tienda,
+.tv_producto_card_comercial,
+.tv_testimonio_card,
+.tv_faq_card,
+.tv_contact_card,
+.tv_newsletter_card,
+.tv_home_cta_block,
+.tv_comprobante_panel,
+.tv_support_banner,
+.tv_drawer_carrito,
+.tv_modal_checkout_dialogo {
+  padding: 16px;
+}
+
+.dx_header,
+.dx_header_acciones,
+.dx_modulos_admin,
+.dx_sidebar_nav,
+.dx_formulario_acciones,
+.dx_modal_acciones,
+.tda_login_acciones,
+.tda_admin_brand,
+.tda_admin_nav,
+.tda_admin_topbar,
+.tda_admin_topbar_acciones,
+.tda_admin_card_acciones,
+.tda_admin_card_acciones_inline,
+.tda_admin_modal_acciones,
+.tda_admin_pedido_acciones,
+.tda_admin_pedido_acciones_bloque,
+.tv_topbar_contenido,
+.tv_header_superior,
+.tv_header_acciones,
+.tv_nav,
+.tv_breadcrumb,
+.tv_home_hero_actions,
+.tv_hero_acciones,
+.tv_checkout_pasos,
+.tv_checkout_acciones_compactas,
+.tv_checkout_exito_botones,
+.tv_checkout_exito_botones_v26,
+.tv_checkout_metodos,
+.tv_checkout_metodos_pago,
+.tv_checkout_acciones_pago,
+.tv_cart_summary_actions,
+.tv_support_actions,
+.tv_newsletter_acciones,
+.tv_footer_badges,
+.tv_footer_nav,
+.tv_modal_checkout_acciones,
+.tv_drawer_botones,
+.tv_drawer_item_acciones,
+.tv_producto_acciones,
+.tv_producto_pie,
+.tv_header_centro,
+.tv_header_marca,
+.tv_form_agregar_carrito,
+.tv_form_actualizar_carrito,
+.tv_form_eliminar_carrito {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.dx_campos,
+.dx_resumen,
+.dx_secciones,
+.tda_admin_metricas_grid,
+.tda_admin_paneles_dashboard,
+.tda_admin_resumen_grid,
+.tda_admin_resumen_grid_ventas,
+.tda_admin_modulos_grid,
+.tda_admin_listado_grid,
+.tda_admin_listado_grid_catalogo,
+.tda_admin_listado_cards,
+.tda_admin_top_grid,
+.tda_admin_dos_columnas,
+.tda_admin_dos_columnas_resumen,
+.tv_grid_beneficios,
+.tv_grid_colecciones,
+.tv_grid_lineas,
+.tv_grid_categorias,
+.tv_grid_productos,
+.tv_grid_mas_vendidos,
+.tv_grid_rutina,
+.tv_grid_ofertas,
+.tv_grid_testimonios,
+.tv_grid_faq,
+.tv_contacto_grid_secundario,
+.tv_campaign_grid,
+.tv_category_grid,
+.tv_product_grid,
+.tv_product_grid_home,
+.tv_checkout_grid,
+.tv_checkout_grid_dos,
+.tv_cart_layout,
+.tv_catalog_layout,
+.tv_product_layout,
+.tv_comprobante_grid,
+.tv_checkout_tarjeta_grid_v24,
+.tv_checkout_pse_grid_v24 {
+  display: grid;
+  gap: 16px;
+}
+
+.dx_campos,
+.tda_admin_metricas_grid,
+.tda_admin_paneles_dashboard,
+.tda_admin_resumen_grid,
+.tda_admin_resumen_grid_ventas,
+.tda_admin_modulos_grid,
+.tda_admin_listado_grid,
+.tda_admin_listado_grid_catalogo,
+.tda_admin_listado_cards,
+.tda_admin_top_grid,
+.tda_admin_dos_columnas,
+.tda_admin_dos_columnas_resumen,
+.tv_grid_beneficios,
+.tv_grid_colecciones,
+.tv_grid_lineas,
+.tv_grid_categorias,
+.tv_grid_productos,
+.tv_grid_mas_vendidos,
+.tv_grid_rutina,
+.tv_grid_ofertas,
+.tv_grid_testimonios,
+.tv_grid_faq,
+.tv_contacto_grid_secundario,
+.tv_campaign_grid,
+.tv_category_grid,
+.tv_product_grid,
+.tv_product_grid_home,
+.tv_checkout_grid,
+.tv_checkout_grid_dos,
+.tv_checkout_tarjeta_grid_v24,
+.tv_checkout_pse_grid_v24 {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.dx_layout,
+.tda_admin_layout,
+.tv_cart_layout,
+.tv_catalog_layout,
+.tv_product_layout {
+  display: grid;
+  gap: 16px;
+}
+
+.dx_header,
+.tda_admin_topbar,
+.tda_admin_pagina_encabezado,
+.tv_topbar,
+.tv_header,
+.tv_hero,
+.tv_bloque,
+.tv_section,
+.tv_footer,
+.tv_bloque_checkout_amplio,
+.tv_shell,
+.tv_section_head,
+.tv_section_head_catalog,
+.tv_checkout_intro,
+.tv_checkout_intro_pago_v24,
+.tv_checkout_intro_texto,
+.tv_support_banner,
+.tv_comprobante_bloque {
+  margin-bottom: 16px;
+}
+
+.dx_login_badge,
+.dx_login_etiqueta,
+.dx_sidebar_badge,
+.dx_header_etiqueta,
+.tda_login_badge,
+.tda_login_etiqueta,
+.tda_admin_badge,
+.tda_admin_etiqueta,
+.tv_etiqueta,
+.tv_topbar_pill,
+.tv_drawer_item_badge,
+.tv_drawer_item_etiqueta,
+.tv_checkout_pago_badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid #bfbfbf;
+  border-radius: 4px;
+  background: #f7f7f7;
+  color: #333333;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.dx_alerta,
+.tda_login_alerta,
+.tda_admin_alerta,
+.tv_alerta,
+.tv_checkout_alerta,
+.tv_checkout_alerta_compacta,
+.tv_checkout_alerta_compacta_contra,
+.tv_flash_ok,
+.tv_toast,
+.tv_mensaje {
+  margin-bottom: 8px;
+  padding: 12px;
+  border: 1px solid #bfbfbf;
+  border-radius: 4px;
+  background: #f7f7f7;
+  color: #111111;
+}
+
+.dx_login_mensaje,
+.dx_mensajes,
+.tda_login_mensaje,
+.tda_admin_mensajes,
+.tv_mensajes,
+.tv_toast_contenedor {
+  min-height: 24px;
+}
+
+.dx_tabla_scroll,
+.tda_admin_chart,
+.tv_comprobante_tabla,
+.tv_comprobante_tabla_head {
+  overflow: auto;
+}
+
+table,
+.dx_tabla,
+.tv_comprobante_tabla,
+.tv_comprobante_tabla_head {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #d0d0d0;
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+ul,
+ol {
+  margin-top: 0;
+}
+
+.dx_oculto,
+.dx_sidebar_backdrop.dx_oculto,
+.tv_oculto,
+.tda_admin_modal_oculto,
+.tda_admin_btn_oculto {
+  display: none !important;
+}
+
+.dx_sidebar_backdrop,
+.dx_panel_backdrop,
+.dx_modal_backdrop,
+.tda_admin_modal_backdrop,
+.tv_backdrop,
+.tv_drawer_backdrop,
+.tv_modal_checkout_backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.dx_panel_formulario,
+.dx_modal_confirmacion,
+.tda_admin_modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.dx_panel_contenido,
+.dx_modal_contenido,
+.tda_admin_modal_dialogo {
+  position: relative;
+  z-index: 1;
+  max-width: 920px;
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  margin: 24px auto;
+}
+
+.tv_drawer_carrito,
+.tv_modal_checkout_dialogo {
+  position: relative;
+  z-index: 1;
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+}
+
+.tv_drawer_carrito {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(420px, 100%);
+  height: 100vh;
+  border-radius: 0;
+  z-index: 1001;
+}
+
+.tv_modal_checkout_dialogo {
+  max-width: 820px;
+  margin: 24px auto;
+}
+
+.tv_modal_checkout_backdrop,
+.tv_drawer_backdrop,
+.tv_backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.dx_sidebar_nav a,
+.dx_modulo_link,
+.tda_admin_nav_link,
+.tv_nav_link,
+.tv_link_button {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background: #fafafa;
+  color: #111111;
+  text-decoration: none;
+}
+
+.dx_modulo_link_activo,
+.tda_admin_nav_link_activo,
+.tv_nav_link_activo,
+.tv_checkout_paso_activo,
+.tv_checkout_pago_metodo_activo,
+.tv_checkout_metodo_pago_card_activo {
+  font-weight: 700;
+  border-color: #777777;
+  background: #ededed;
+}
+
+.dx_header_acciones input,
+.tda_admin_topbar_busqueda input,
+.tv_buscador_campo input {
+  min-width: 240px;
+}
+
+.dx_campo,
+.dx_login_grupo,
+.tda_login_grupo,
+.tda_admin_grupo,
+.tv_checkout_panel label,
+.tv_cart_line_form,
+.tv_variant_group,
+.tv_filter_group {
+  margin-bottom: 12px;
+}
+
+.dx_campo_completo {
+  grid-column: 1 / -1;
+}
+
+.tv_logo,
+.tv_logo_link,
+.tda_admin_brand h1,
+.dx_sidebar h1,
+.dx_header h2,
+.tda_login_info h1,
+.tda_login_encabezado h2 {
+  font-weight: 700;
+}
+
+.tv_stock,
+.tv_texto_muted,
+.dx_texto_muted,
+.tda_admin_panel_subtitulo,
+.tda_admin_sidebar_texto,
+.tda_admin_brand_subtitulo,
+.tv_logo_caption,
+.tv_checkout_legal,
+.tv_checkout_legal_pasarela,
+.tv_drawer_nota,
+.tv_footer_copy,
+.tv_footer_lista,
+.tv_producto_extra,
+.tv_product_meta_row,
+.tv_catalog_side_note,
+.tv_empty_state,
+.tv_vacio {
+  color: #555555;
+}
+
+.tv_sr_only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@media (min-width: 960px) {
+  .dx_layout,
+  .tda_admin_layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+
+  .tv_cart_layout,
+  .tv_catalog_layout,
+  .tv_product_layout {
+    grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+  }
+}
+
+@media (max-width: 959px) {
+  .dx_layout,
+  .tda_admin_layout,
+  .tv_cart_layout,
+  .tv_catalog_layout,
+  .tv_product_layout {
+    grid-template-columns: 1fr;
+  }
+
+  .dx_sidebar,
+  .tda_admin_sidebar {
+    border-right: 1px solid #d0d0d0;
+  }
+}

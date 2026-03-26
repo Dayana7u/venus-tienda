@@ -73,5 +73,7 @@ $tienda_publica_model = new tienda_publica_model();
 $tienda_admin_datos   = $tienda_admin_model->tienda_admin_listar_dashboard();
 $tda_datos            = ($tienda_admin_datos['datos'] ?? []);
 $tda_tema             = $tienda_publica_model->consultar_tema_tienda_publica();
+$tda_tema_tokens      = $tienda_publica_model->consultar_tema_tokens_tienda_publica();
+$tda_componentes      = $tienda_publica_model->consultar_tema_componentes_tienda_publica();
 $tda_branding         = $tienda_publica_model->consultar_branding_tienda_publica();
 $tda_pagina_activa    = $tda_pagina_activa ?? 'DASHBOARD';
